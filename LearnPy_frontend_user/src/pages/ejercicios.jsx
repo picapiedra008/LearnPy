@@ -1,7 +1,113 @@
 "use client"
+
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import { Code, X } from "lucide-react"
 import "./ejercicios.css"
 
-const Ejercicios = ({ exercises, setExercises, formErrors }) => {
+// Componentes personalizados
+const Button = ({ children, type = "button", className = "", variant = "default", onClick, disabled }) => {
+  const getButtonClass = () => {
+    if (variant === "destructive") return "btn btn-destructive"
+    if (variant === "outline") return "btn btn-outline"
+    return "btn"
+  }
+
+  return (
+    <button type={type} className={`${getButtonClass()} ${className}`} onClick={onClick} disabled={disabled}>
+      {children}
+    </button>
+  )
+}
+
+const Input = ({ id, type = "text", value, onChange, className = "", placeholder }) => {
+  return (
+    <input
+      id={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      className={`input ${className}`}
+      placeholder={placeholder}
+    />
+  )
+}
+
+const Textarea = ({ id, value, onChange, className = "", placeholder, rows = 3 }) => {
+  return (
+    <textarea
+      id={id}
+      value={value}
+      onChange={onChange}
+      className={`textarea ${className}`}
+      placeholder={placeholder}
+      rows={rows}
+    />
+  )
+}
+
+const Label = ({ htmlFor, children, className = "" }) => {
+  return (
+    <label htmlFor={htmlFor} className={`label ${className}`}>
+      {children}
+    </label>
+  )
+}
+
+const Card = ({ children, className = "" }) => {
+  return <div className={`card ${className}`}>{children}</div>
+}
+
+const CardContent = ({ children, className = "" }) => {
+  return <div className={`card-content ${className}`}>{children}</div>
+}
+
+const Ejercicios = () => {
+  const [exercises, setExercises] = useState([
+    {
+      title: "Crear una función factorial",
+      description: "Implementa una función recursiva para calcular el factorial de un número",
+      hasCode: true,
+      expectedOutput: "El factorial de 5 es 120",
+      code: `# Ejemplo de código Python
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n-1)
+
+# Prueba la función
+numero = 5
+resultado = factorial(numero)
+print(f"El factorial de {numero} es {resultado}")
+`,
+    },
+    {
+      title: "Proyecto: Analizador de texto",
+      description: "Crea un programa que analice un texto y muestre estadísticas como frecuencia de palabras",
+      hasCode: true,
+      expectedOutput: "Palabra más frecuente: 'Python' (5 veces)",
+      code: `# Analizador de texto
+def analizar_texto(texto):
+    palabras = texto.lower().split()
+    frecuencia = {}
+    
+    for palabra in palabras:
+        if palabra in frecuencia:
+            frecuencia[palabra] += 1
+        else:
+            frecuencia[palabra] = 1
+    
+    palabra_mas_frecuente = max(frecuencia, key=frecuencia.get)
+    return palabra_mas_frecuente, frecuencia[palabra_mas_frecuente]
+
+texto = "Python es genial. Python es poderoso. Python es Python."
+palabra, veces = analizar_texto(texto)
+print(f"Palabra más frecuente: '{palabra}' ({veces} veces)")
+`,
+    },
+  ])
+
   const handleExerciseChange = (index, field, value) => {
     const newExercises = [...exercises]
     newExercises[index][field] = value
@@ -9,7 +115,7 @@ const Ejercicios = ({ exercises, setExercises, formErrors }) => {
   }
 
   const addExercise = () => {
-    setExercises([...exercises, { title: "", description: "", hasCode: false, expectedOutput: "" }])
+    setExercises([...exercises, { title: "", description: "", hasCode: false, expectedOutput: "", code: "" }])
   }
 
   const removeExercise = (index) => {
@@ -21,80 +127,87 @@ const Ejercicios = ({ exercises, setExercises, formErrors }) => {
   }
 
   return (
-    <div className="ejercicios-tab">
-      <h3 className="content-title">Ejercicios</h3>
-
-      {formErrors.exercises && (
-        <div className="error-banner">
-          <i className="warning-icon"></i>
-          <p>Todos los ejercicios deben tener título y descripción</p>
+    <div className="min-h-screen flex flex-col">
+      <header className="header green">
+        <div className="container header-container">
+          <h1 className="header-title">LearnPy</h1>
+          <nav>
+            <Link to="/" className="nav-link">
+              Perfil
+            </Link>
+          </nav>
         </div>
-      )}
+      </header>
 
-      <div className="ejercicios-list">
-        {exercises.map((exercise, index) => (
-          <div key={index} className="ejercicio-card">
-            <div className="ejercicio-header">
-              <h4 className="ejercicio-title">Ejercicio {index + 1}</h4>
-              <button
-                className="remove-ejercicio-btn"
-                onClick={() => removeExercise(index)}
-                disabled={exercises.length === 1}
-              >
-                <span className="close-icon-small"></span>
-              </button>
-            </div>
+      <main className="container main">
+        <div className="page-header">
+          <h2 className="page-title">Ejemplo de Ejercicios</h2>
+          <p className="page-description">Visualización de ejercicios para la lección</p>
+        </div>
 
-            <div className="ejercicio-form">
-              <div className="form-group">
-                <label htmlFor={`exercise-title-${index}`} className="form-label">
-                  Título <span className="required">*</span>
-                </label>
-                <input
-                  id={`exercise-title-${index}`}
-                  type="text"
-                  value={exercise.title}
-                  onChange={(e) => handleExerciseChange(index, "title", e.target.value)}
-                  className={`form-input ${!exercise.title && formErrors.exercises ? "error" : ""}`}
-                  placeholder="Ej: Crear una función para calcular el factorial"
-                />
-              </div>
+        <Card>
+          <CardContent className="pt-6">
+            <h3 className="card-title">Ejercicios</h3>
 
-              <div className="form-group">
-                <label htmlFor={`exercise-description-${index}`} className="form-label">
-                  Descripción <span className="required">*</span>
-                </label>
-                <textarea
-                  id={`exercise-description-${index}`}
-                  value={exercise.description}
-                  onChange={(e) => handleExerciseChange(index, "description", e.target.value)}
-                  className={`form-textarea ${!exercise.description && formErrors.exercises ? "error" : ""}`}
-                  placeholder="Instrucciones detalladas del ejercicio"
-                  rows={4}
-                ></textarea>
-              </div>
+            {exercises.map((exercise, index) => (
+              <div key={index} className="activity-card">
+                <div className="activity-header">
+                  <h4 className="activity-name">Ejercicio {index + 1}</h4>
+                  <button
+                    onClick={() => removeExercise(index)}
+                    className="remove-activity-button"
+                    disabled={exercises.length === 1}
+                  >
+                    <X className="icon-small" />
+                  </button>
+                </div>
 
-              <div className="code-toggle">
-                <label className="toggle-container">
-                  <input
-                    type="checkbox"
-                    checked={exercise.hasCode}
-                    onChange={(e) => handleExerciseChange(index, "hasCode", e.target.checked)}
-                  />
-                  <span className="toggle-slider"></span>
-                </label>
-                <span className="toggle-label">Incluir editor de código Python</span>
-              </div>
+                <div className="activity-form">
+                  <div className="form-group">
+                    <Label htmlFor={`exercise-title-${index}`}>Título</Label>
+                    <Input
+                      id={`exercise-title-${index}`}
+                      value={exercise.title}
+                      onChange={(e) => handleExerciseChange(index, "title", e.target.value)}
+                      placeholder="Ej: Crear una función para calcular el factorial"
+                    />
+                  </div>
 
-              {exercise.hasCode && (
-                <div className="code-section">
-                  <div className="code-editor">
-                    <div className="code-header">
-                      <i className="code-icon"></i>
-                      <span>Editor de código Python</span>
-                    </div>
-                    <div className="code-area">
-                      <pre>{`# Ejemplo de código Python
+                  <div className="form-group">
+                    <Label htmlFor={`exercise-description-${index}`}>Descripción</Label>
+                    <Textarea
+                      id={`exercise-description-${index}`}
+                      value={exercise.description}
+                      onChange={(e) => handleExerciseChange(index, "description", e.target.value)}
+                      placeholder="Instrucciones detalladas del ejercicio"
+                    />
+                  </div>
+
+                  <div className="code-switch-container">
+                    <input
+                      id={`exercise-code-${index}`}
+                      type="checkbox"
+                      checked={exercise.hasCode}
+                      onChange={(e) => handleExerciseChange(index, "hasCode", e.target.checked)}
+                      className="switch-input"
+                    />
+                    <Label htmlFor={`exercise-code-${index}`} className="code-switch-label">
+                      Incluir editor de código Python
+                    </Label>
+                  </div>
+
+                  {exercise.hasCode && (
+                    <div className="code-editor">
+                      <div className="code-header">
+                        <Code className="code-icon" />
+                        <span className="code-title">Editor de código Python</span>
+                      </div>
+                      <div className="code-content">
+                        <textarea
+                          className="code-editor-textarea"
+                          value={
+                            exercise.code ||
+                            `# Ejemplo de código Python
 def factorial(n):
     if n == 0 or n == 1:
         return 1
@@ -105,35 +218,37 @@ def factorial(n):
 numero = 5
 resultado = factorial(numero)
 print(f"El factorial de {numero} es {resultado}")
-`}</pre>
+`
+                          }
+                          onChange={(e) => handleExerciseChange(index, "code", e.target.value)}
+                        />
+                      </div>
+                      <div className="form-group mt-4">
+                        <Label htmlFor={`exercise-expected-output-${index}`}>Salida esperada (opcional)</Label>
+                        <Textarea
+                          id={`exercise-expected-output-${index}`}
+                          value={exercise.expectedOutput}
+                          onChange={(e) => handleExerciseChange(index, "expectedOutput", e.target.value)}
+                          placeholder="Ej: El factorial de 5 es 120"
+                          className="font-mono"
+                          rows={2}
+                        />
+                        <p className="hint-text">
+                          Ingrese la salida esperada para verificar automáticamente las respuestas de los estudiantes
+                        </p>
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor={`exercise-expected-output-${index}`} className="form-label">
-                      Salida esperada (opcional)
-                    </label>
-                    <textarea
-                      id={`exercise-expected-output-${index}`}
-                      value={exercise.expectedOutput}
-                      onChange={(e) => handleExerciseChange(index, "expectedOutput", e.target.value)}
-                      className="form-textarea code-output"
-                      placeholder="Ej: El factorial de 5 es 120"
-                    ></textarea>
-                    <p className="help-text">
-                      Ingrese la salida esperada para verificar automáticamente las respuestas de los estudiantes
-                    </p>
-                  </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+              </div>
+            ))}
 
-      <button type="button" className="add-ejercicio-btn" onClick={addExercise}>
-        <i className="plus-icon"></i> Agregar otro ejercicio
-      </button>
+            <Button type="button" variant="outline" onClick={addExercise} className="add-activity-button">
+              Agregar otro ejercicio
+            </Button>
+          </CardContent>
+        </Card>
+      </main>
     </div>
   )
 }

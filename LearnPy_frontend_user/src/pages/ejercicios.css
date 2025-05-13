@@ -1,268 +1,350 @@
-/* ejercicios.css */
-
-.ejercicios-tab {
-  background-color: #e3f2fd;
-  border-radius: 8px;
-  padding: 24px;
-  border: 1px solid #bbdefb;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.error-banner {
-  background-color: #ffebee;
-  border: 1px solid #ffcdd2;
-  border-radius: 8px;
-  padding: 12px 16px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Corregir los iconos */
-.warning-icon,
-.code-icon,
-.plus-icon {
-  background-position: center;
-}
-
-.warning-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23e74c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>');
-  background-size: contain;
-  background-repeat: no-repeat;
-  flex-shrink: 0;
-}
-
-.error-banner p {
-  font-size: 14px;
-  color: #e53935;
+/* Estilos generales */
+html,
+body {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
-.ejercicios-list {
+#root {
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 24px;
-  width: 100%;
 }
 
-.ejercicio-card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
-  width: 100%;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.ejercicio-header {
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+  line-height: 1.5;
+  color: #333;
+  background-color: #f9fafb;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+/* Estilos para el header */
+.header {
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  display: block; /* Asegura que el header sea visible */
+}
+
+.header.green {
+  background-color: #16a34a;
+  color: white;
+}
+
+.header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #e3f2fd;
-  background-color: #f5f9ff;
+  width: 100%;
 }
 
-.ejercicio-title {
-  font-size: 16px;
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.page-description {
+  color: #6b7280;
+}
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+.card-content.pt-6 {
+  padding-top: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.125rem;
   font-weight: 500;
-  color: #2c3e50;
-  margin: 0;
+  margin-bottom: 1rem;
 }
 
-.remove-ejercicio-btn {
+/* Activities */
+.activity-card {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.activity-name {
+  font-weight: 500;
+}
+
+.remove-activity-button {
+  color: #ef4444;
   background: none;
   border: none;
-  color: #e74c3c;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
 }
 
-.remove-ejercicio-btn:hover {
-  background-color: #ffebee;
+.remove-activity-button:hover {
+  color: #dc2626;
 }
 
-.remove-ejercicio-btn:disabled {
-  color: #bdc3c7;
+.remove-activity-button:disabled {
+  color: #9ca3af;
   cursor: not-allowed;
 }
 
-.ejercicio-form {
-  padding: 20px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.code-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.toggle-container {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 24px;
-}
-
-.toggle-container input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggle-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-  border-radius: 24px;
-}
-
-.toggle-slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-}
-
-input:checked + .toggle-slider {
-  background-color: #3498db;
-}
-
-input:checked + .toggle-slider:before {
-  transform: translateX(20px);
-}
-
-.toggle-label {
-  font-size: 14px;
-  color: #2c3e50;
-}
-
-.code-section {
-  margin-top: 16px;
+.activity-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1rem;
 }
 
-.code-editor {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  overflow: hidden;
+/* Form elements */
+.form-group {
+  margin-bottom: 1rem;
   width: 100%;
+}
+
+.form-group.mt-4 {
+  margin-top: 1rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+}
+
+.textarea.font-mono {
+  font-family: monospace;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.hint-text {
+  color: #6b7280;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Switch */
+.code-switch-container {
+  display: flex;
+  align-items: center;
+}
+
+.switch-input {
+  position: relative;
+  width: 2.5rem;
+  height: 1.25rem;
+  appearance: none;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.switch-input:checked {
+  background-color: #3b82f6;
+}
+
+.switch-input::before {
+  content: "";
+  position: absolute;
+  left: 0.125rem;
+  top: 0.125rem;
+  width: 1rem;
+  height: 1rem;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+.switch-input:checked::before {
+  left: 1.375rem;
+}
+
+.code-switch-label {
+  margin-left: 0.5rem;
+}
+
+/* Code editor */
+.code-editor {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  background-color: #f3f4f6;
+}
+
+.code-editor-textarea {
+  width: 100%;
+  min-height: 200px;
+  background-color: #111827;
+  color: #f9fafb;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  border: none;
+  resize: vertical;
+}
+
+.code-editor-textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
 .code-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0.5rem;
 }
 
 .code-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%233498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>');
-  background-size: contain;
-  background-repeat: no-repeat;
+  color: #2563eb;
+  margin-right: 0.5rem;
 }
 
-.code-header span {
-  font-size: 14px;
+.code-title {
   font-weight: 500;
-  color: #2c3e50;
 }
 
-.code-area {
-  background-color: #263238;
-  color: #eeffff;
-  padding: 16px;
-  font-family: "Fira Code", "Courier New", monospace;
-  font-size: 14px;
-  line-height: 1.5;
+.code-content {
+  background-color: #111827;
+  color: #f9fafb;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  white-space: pre;
   overflow-x: auto;
-  width: 100%;
-  box-sizing: border-box;
 }
 
-.code-area pre {
-  margin: 0;
+/* Icons */
+.icon-small {
+  width: 1rem;
+  height: 1rem;
 }
 
-.code-output {
-  font-family: "Fira Code", "Courier New", monospace;
-  font-size: 14px;
-}
-
-.help-text {
-  font-size: 12px;
-  color: #7f8c8d;
-  margin-top: 4px;
-}
-
-.add-ejercicio-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: white;
-  color: #3498db;
-  border: 1px solid #3498db;
-  border-radius: 8px;
-  font-size: 14px;
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  border: none;
+  background-color: #f3f4f6;
+  color: #1f2937;
 }
 
-.add-ejercicio-btn:hover {
-  background-color: #f5f9ff;
+.btn:hover {
+  background-color: #e5e7eb;
 }
 
-.add-ejercicio-btn .plus-icon {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%233498db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>');
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid #d1d5db;
 }
 
-/* Corregir el icono de cierre */
-.close-icon-small {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+.btn-outline:hover {
+  background-color: #f3f4f6;
 }
 
-/* Asegurar que los campos de formulario ocupen todo el ancho */
-.form-group {
+.add-activity-button {
   width: 100%;
+  margin-top: 0.5rem;
 }
