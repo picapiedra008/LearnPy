@@ -6,13 +6,12 @@ main = Blueprint('lessons_blueprint', __name__)
 @main.route('/create_lesson', methods=['POST'])
 def create_lesson():
     try:
-        data = request.json
-        user_code = int(data['user_code'])
-        level_code = int(data['level_code'])
-        visibility_code = int(data['visibility_code'])
-        title = str(data['title'])
-        description = str(data['description'])
-        front_page = str(data['front_page'])
+        user_code = int(request.json['user_code'])
+        level_code = int(request.json['level_code'])
+        visibility_code = int(request.json['visibility_code'])
+        title = str(request.json['title'])
+        description = str(request.json['description'])
+        front_page = str(request.json['front_page'])
         result, resp = Lesson.create_lesson(user_code, level_code, visibility_code, title, description, front_page)
         return jsonify(result), resp
     except Exception as ex:
@@ -30,14 +29,13 @@ def get_lesson():
 @main.route('/update_lesson', methods=['PUT'])
 def update_lesson():
     try:
-        data = request.json
-        lesson_code = int(data['lesson_code'])
-        user_code = int(data['user_code'])
-        level_code = int(data['level_code'])
-        visibility_code = int(data['visibility_code'])
-        title = str(data['title'])
-        description = str(data['description'])
-        front_page = str(data['front_page'])
+        lesson_code = int(request.json['lesson_code'])
+        user_code = int(request.json['user_code'])
+        level_code = int(request.json['level_code'])
+        visibility_code = int(request.json['visibility_code'])
+        title = str(request.json['title'])
+        description = str(request.json['description'])
+        front_page = str(request.json['front_page'])
         result, resp = Lesson.update_lesson(lesson_code, user_code, level_code, visibility_code, title, description, front_page)
         return jsonify(result), resp
     except Exception as ex:
@@ -58,11 +56,10 @@ def delete_lesson():
 @main.route('/create_exercise', methods=['POST'])
 def create_exercise():
     try:
-        data = request.json
-        lesson_code = int(data['lesson_code'])
-        title = str(data['title'])
-        instructions = str(data['instructions'])
-        content = str(data['content'])
+        lesson_code = int(request.json['lesson_code'])
+        title = str(request.json['title'])
+        instructions = str(request.json['instructions'])
+        content = str(request.json['content'])
         result, resp = Lesson.insert_exercise(lesson_code, title, instructions, content)
         return jsonify(result), resp
     except Exception as ex:
@@ -80,12 +77,11 @@ def get_exercise():
 @main.route('/update_exercise', methods=['PUT'])
 def update_exercise():
     try:
-        data = request.json
-        exercise_code = int(data['exercise_code'])
-        lesson_code = int(data['lesson_code'])
-        title = str(data['title'])
-        instructions = str(data['instructions'])
-        content = str(data['content'])
+        exercise_code = int(request.json['exercise_code'])
+        lesson_code = int(request.json['lesson_code'])
+        title = str(request.json['title'])
+        instructions = str(request.json['instructions'])
+        content = str(request.json['content'])
         result, resp = Lesson.update_exercise(exercise_code, lesson_code, title, instructions, content)
         return jsonify(result), resp
     except Exception as ex:
@@ -96,6 +92,31 @@ def delete_exercise():
     try:
         exercise_code = int(request.json['exercise_code'])
         result, resp = Lesson.delete_exercise(exercise_code)
+        return jsonify(result), resp
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
+    
+@main.route('/get_levels', methods=['POST'])
+def get_levels():
+    try:
+        result, resp = Lesson.get_levels()
+        return jsonify(result), resp
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
+
+@main.route('/get_visibilities', methods=['POST'])
+def get_visibilities():
+    try:
+        result, resp = Lesson.get_visibilities()
+        return jsonify(result), resp
+    except Exception as ex:
+        return jsonify({'message': str(ex)}), 500
+
+@main.route('/get_lessons', methods=['POST'])
+def get_lessons():
+    try:
+        user_code = int(request.json['user_code'])
+        result, resp = Lesson.get_lessons(user_code)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
