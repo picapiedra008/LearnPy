@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from src.models.exercise import Lesson
+from src.models.exercise import Exercise
 
 main = Blueprint('exercises_blueprint', __name__)
 
@@ -10,7 +10,7 @@ def create_exercise():
         title = str(request.json['title'])
         instructions = str(request.json['instructions'])
         content = str(request.json['content'])
-        result, resp = Lesson.insert_exercise(lesson_code, title, instructions, content)
+        result, resp = Exercise.insert_exercise(lesson_code, title, instructions, content)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
@@ -19,7 +19,7 @@ def create_exercise():
 def get_exercise():
     try:
         exercise_code = int(request.json['exercise_code'])
-        result, resp = Lesson.get_exercise(exercise_code)
+        result, resp = Exercise.get_exercise(exercise_code)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
@@ -32,7 +32,7 @@ def update_exercise():
         title = str(request.json['title'])
         instructions = str(request.json['instructions'])
         content = str(request.json['content'])
-        result, resp = Lesson.update_exercise(exercise_code, lesson_code, title, instructions, content)
+        result, resp = Exercise.update_exercise(exercise_code, lesson_code, title, instructions, content)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
@@ -41,7 +41,7 @@ def update_exercise():
 def delete_exercise():
     try:
         exercise_code = int(request.json['exercise_code'])
-        result, resp = Lesson.delete_exercise(exercise_code)
+        result, resp = Exercise.delete_exercise(exercise_code)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
