@@ -69,16 +69,16 @@ class Exercise():
             db.close()
 
     @classmethod
-    def get_exercise(self, exercise_code: int):
+    def get_exercises(self, lesson_code: int):
         try:
             db = get_connection()
             cursor = db.cursor()
 
             cursor.execute('''
-                SELECT exercise_code, lesson_code, exercise_title, 
-                       exercise_instructions, exercise_content
+                SELECT exercise_code, exercise_title, 
+                       exercise_instructions, exercise_answer
                 FROM get_exercises(%s);
-            ''', (exercise_code,))
+            ''', (lesson_code,))
 
             row = cursor.fetchone()
 
@@ -87,10 +87,9 @@ class Exercise():
 
             exercise = {
                 "exercise_code": int(row[0]),
-                "lesson_code": int(row[1]),
-                "exercise_title": str(row[2]).strip(),
-                "exercise_instructions": str(row[3]).strip(),
-                "exercise_content": str(row[4]).strip()
+                "exercise_title": str(row[1]).strip(),
+                "exercise_instructions": str(row[2]).strip(),
+                "exercise_content": str(row[3]).strip()
             }
 
             return exercise, 200

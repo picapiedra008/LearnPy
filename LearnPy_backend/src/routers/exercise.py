@@ -15,11 +15,11 @@ def create_exercise():
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
-@main.route('/get_exercise', methods=['POST'])
-def get_exercise():
+@main.route('/get_exercises', methods=['POST'])
+def get_exercises():
     try:
-        exercise_code = int(request.json['exercise_code'])
-        result, resp = Exercise.get_exercise(exercise_code)
+        lesson_code = int(request.json['lesson_code'])
+        result, resp = Exercise.get_exercises(lesson_code)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500

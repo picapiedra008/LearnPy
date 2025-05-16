@@ -15,7 +15,7 @@ class Lesson():
                 SELECT create_lesson(%s, %s, %s, %s, %s, %s);
             ''', (user_code, level_code, visibility_code,
                   lesson_title, lesson_description, lesson_front_page))
-
+            db.commit()
             result = cursor.fetchone()
 
             if result is None:
