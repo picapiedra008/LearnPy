@@ -1,20 +1,38 @@
 from src.database.postgres import get_connection
 from src.utils.security import convert_bcrypt, validate_password, email_exists, get_connection, is_password_secure, is_valid_email, is_valid_name
+from src.drive.service import upload_file_to_drive, delete_file_from_drive
+import os
 
 class Lesson():
-    
-    
+
     @classmethod
-    def create_lesson(self, user_code: int, level_code: int, visibility_code: int,
-                      lesson_title: str, lesson_description: str, lesson_front_page: str):
+    def create_lesson(cls, user_code: int, level_code: int, visibility_code: int,
+                    lesson_title: str, lesson_description: str, file: str):
+
+        db = None
+        cursor = None
+
         try:
+            if file.filename == '':
+                return {'error': 'No selected file'}, 400
+
+            file_path = f"./{file.filename}"
+            file.save(file_path)
+
+            # Subir a Google Drive
+            uploaded_file = upload_file_to_drive(file_path, file.filename, file.mimetype)
+            file_id = uploaded_file.get('id')
+
+            # Eliminar el archivo temporal después de la subida
+            os.remove(file_path)
+
             db = get_connection()
             cursor = db.cursor()
 
             cursor.execute('''
                 SELECT create_lesson(%s, %s, %s, %s, %s, %s);
             ''', (user_code, level_code, visibility_code,
-                  lesson_title, lesson_description, lesson_front_page))
+                lesson_title, lesson_description, file_id))
             db.commit()
             result = cursor.fetchone()
 
@@ -22,35 +40,45 @@ class Lesson():
                 return {"message": "Lesson not created"}, 400
 
             lesson_code = result[0]
-
             return {"lesson_code": lesson_code, "message": "Lesson created successfully."}, 201
 
         except Exception as ex:
             return {"error": f"Error creating lesson: {str(ex)}"}, 500
 
         finally:
-            cursor.close()
-            db.close()
+
+            if cursor:
+                cursor.close()
+            if db:
+                db.close()
+
     
     @classmethod
-    def delete_lesson(self, lesson_code: int):
+    def delete_lesson(self, lesson_code: int, file_id: str):
         try:
+            # Intentar eliminar el archivo de Google Drive
+            delete_file_from_drive(file_id)
+
             db = get_connection()
-            cursor = db.cursor()
+            with db.cursor() as cursor:
+                # Ejecutar la función para eliminar la lección
+                cursor.execute('SELECT delete_lesson(%s);', (lesson_code,))
+                db.commit()
+                result = cursor.fetchone()
+                
+                if result and result[0] == 1:
+                    return {
+                        "success": True,
+                        "message": "Lesson deleted successfully"
+                    }, 200
+                else:
+                    return {
+                        "error": "Lesson not found or already deleted"
+                    }, 404
 
-            cursor.execute('''
-                SELECT delete_lesson(%s);
-            ''', (lesson_code,))
+        except Exception as e:
+            return {'error': str(e)}, 500
 
-            db.commit()
-            return {"message": "Lesson deleted successfully."}, 200
-
-        except Exception as ex:
-            return {"error": f"Error deleting lesson: {str(ex)}"}, 500
-
-        finally:
-            cursor.close()
-            db.close()
 
     @classmethod
     def update_lesson(self, lesson_code: int, user_code: int, level_code: int, visibility_code: int,

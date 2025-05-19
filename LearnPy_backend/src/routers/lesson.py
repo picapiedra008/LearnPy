@@ -6,16 +6,30 @@ main = Blueprint('lessons_blueprint', __name__)
 @main.route('/create_lesson', methods=['POST'])
 def create_lesson():
     try:
-        user_code = int(request.json['user_code'])
-        level_code = int(request.json['level_code'])
-        visibility_code = int(request.json['visibility_code'])
-        title = str(request.json['title'])
-        description = str(request.json['description'])
-        front_page = str(request.json['front_page'])
-        result, resp = Lesson.create_lesson(user_code, level_code, visibility_code, title, description, front_page)
+        print("Form Data:", request.form)
+        print("Files:", request.files)
+
+        if 'front_page' not in request.files:
+            return jsonify({'error': 'No file part (front_page)'}), 400
+        
+        user_code = int(request.form.get('user_code'))
+
+        level_code = int(request.form.get('level_code'))
+
+        visibility_code = int(request.form.get('visibility_code'))
+
+        title = str(request.form.get('title'))
+
+        description = str(request.form.get('description'))
+
+        file = request.files['front_page']
+
+        result, resp = Lesson.create_lesson(user_code, level_code, visibility_code, title, description, file)
         return jsonify(result), resp
     except Exception as ex:
+        print("Error:", ex)
         return jsonify({'message': str(ex)}), 500
+
 
 @main.route('/get_lesson', methods=['POST'])
 def get_lesson():
@@ -45,7 +59,8 @@ def update_lesson():
 def delete_lesson():
     try:
         lesson_code = int(request.json['lesson_code'])
-        result, resp = Lesson.delete_lesson(lesson_code)
+        file_id = str(request.json['front_page'])
+        result, resp = Lesson.delete_lesson(lesson_code, file_id)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
