@@ -6,8 +6,6 @@ main = Blueprint('lessons_blueprint', __name__)
 @main.route('/create_lesson', methods=['POST'])
 def create_lesson():
     try:
-        print("Form Data:", request.form)
-        print("Files:", request.files)
 
         if 'front_page' not in request.files:
             return jsonify({'error': 'No file part (front_page)'}), 400
@@ -43,14 +41,18 @@ def get_lesson():
 @main.route('/update_lesson', methods=['PUT'])
 def update_lesson():
     try:
-        lesson_code = int(request.json['lesson_code'])
-        user_code = int(request.json['user_code'])
-        level_code = int(request.json['level_code'])
-        visibility_code = int(request.json['visibility_code'])
-        title = str(request.json['title'])
-        description = str(request.json['description'])
+
+        if 'front_page' not in request.files:
+            return jsonify({'error': 'No file part (front_page)'}), 400
+        
+        lesson_code = int(request.form.get('lesson_code'))
+        level_code = int(request.form.get('level_code'))
+        visibility_code = int(request.form.get('visibility_code'))
+        title = str(request.form.get('title'))
+        description = str(request.form.get('description'))
         front_page = str(request.json['front_page'])
-        result, resp = Lesson.update_lesson(lesson_code, user_code, level_code, visibility_code, title, description, front_page)
+        file = request.files['front_page']
+        result, resp = Lesson.update_lesson(lesson_code, level_code, visibility_code, title, description, front_page, file)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500

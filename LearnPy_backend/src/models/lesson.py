@@ -81,22 +81,36 @@ class Lesson():
 
 
     @classmethod
-    def update_lesson(self, lesson_code: int, user_code: int, level_code: int, visibility_code: int,
-                      lesson_title: str, lesson_description: str, lesson_front_page: str):
+    def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file: int):
         try:
             db = get_connection()
             cursor = db.cursor()
 
+            if file is not None:
+
+                delete_file_from_drive(front_page)
+
+                file_path = f"./{file.filename}"
+                file.save(file_path)
+
+                # Subir a Google Drive
+                uploaded_file = upload_file_to_drive(file_path, file.filename, file.mimetype)
+                file_id = uploaded_file.get('id')
+
+                # Eliminar el archivo temporal después de la subida
+                os.remove(file_path)
+
+                front_page = file_id
+
             cursor.execute('''
-                SELECT update_lesson(%s, %s, %s, %s, %s, %s, %s);
+                SELECT update_lesson(%s, %s, %s, %s, %s, %s);
             ''', (
                 lesson_code,
-                user_code,
                 level_code,
                 visibility_code,
-                lesson_title,
-                lesson_description,
-                lesson_front_page
+                title,
+                description,
+                front_page
             ))
 
             db.commit()
