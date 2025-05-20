@@ -6,8 +6,8 @@ import os
 class Lesson():
 
     @classmethod
-    def create_lesson(cls, user_code: int, level_code: int, visibility_code: int,
-                    lesson_title: str, lesson_description: str, file: str):
+    def create_lesson(self, user_code: int, level_code: int, visibility_code: int,
+                    lesson_title: str, lesson_description: str, file):
 
         db = None
         cursor = None
@@ -19,7 +19,7 @@ class Lesson():
             file_path = f"./{file.filename}"
             file.save(file_path)
 
-            # Subir a Google Drive
+            # Subir a Google Drive            
             uploaded_file = upload_file_to_drive(file_path, file.filename, file.mimetype)
             file_id = uploaded_file.get('id')
 
@@ -81,7 +81,7 @@ class Lesson():
 
 
     @classmethod
-    def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file: int):
+    def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file):
         try:
             db = get_connection()
             cursor = db.cursor()

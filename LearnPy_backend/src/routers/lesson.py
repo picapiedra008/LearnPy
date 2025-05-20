@@ -42,7 +42,7 @@ def get_lesson():
 def update_lesson():
     try:
 
-        if 'front_page' not in request.files:
+        if 'file' not in request.files:
             return jsonify({'error': 'No file part (front_page)'}), 400
         
         lesson_code = int(request.form.get('lesson_code'))
@@ -50,8 +50,8 @@ def update_lesson():
         visibility_code = int(request.form.get('visibility_code'))
         title = str(request.form.get('title'))
         description = str(request.form.get('description'))
-        front_page = str(request.json['front_page'])
-        file = request.files['front_page']
+        front_page = str(request.form.get('front_page'))
+        file = request.files['file']
         result, resp = Lesson.update_lesson(lesson_code, level_code, visibility_code, title, description, front_page, file)
         return jsonify(result), resp
     except Exception as ex:
