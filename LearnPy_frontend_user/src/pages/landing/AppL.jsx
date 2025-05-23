@@ -100,9 +100,6 @@ function App() {
             <a href="#testimonials" className="nav-link">
               Testimonios
             </a>
-            <a href="#pricing" className="nav-link">
-              Precios
-            </a>
           </motion.nav>
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -177,7 +174,7 @@ function App() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                     className="hero-title"
                   >
-                    Domina Python con nuestra plataforma futurista
+                    Domina Python con nuestra plataforma Educativa
                   </motion.h1>
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
