@@ -95,7 +95,7 @@ function App() {
               Características
             </a>
             <a href="#courses" className="nav-link">
-              Cursos
+              lecciones
             </a>
             <a href="#testimonials" className="nav-link">
               Testimonios
@@ -182,7 +182,7 @@ function App() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="hero-description"
                   >
-                    Aprende a programar con Python de manera efectiva con nuestros cursos interactivos, simuladores
+                    Aprende a programar con Python de manera efectiva con nuestros Lecciones y cursos interactivos, simuladores
                     visuales y evaluaciones en tiempo real.
                   </motion.p>
                 </div>
@@ -207,7 +207,7 @@ function App() {
                 >
                   <div className="feature-item">
                     <CheckCircle className="feature-icon purple" />
-                    <span>Cursos interactivos</span>
+                    <span>Lecciones interactivos</span>
                   </div>
                   <div className="feature-item">
                     <CheckCircle className="feature-icon blue" />
@@ -415,9 +415,9 @@ function App() {
             >
               <div className="section-header-content">
                 <div className="section-badge">
-                  <span className="badge-text">Cursos</span>
+                  <span className="badge-text">Lecciones y cursos</span>
                 </div>
-                <h2 className="section-title">Nuestros cursos de Python</h2>
+                <h2 className="section-title">Nuestros Lecciones de Python</h2>
                 <p className="section-description">
                   Desde principiantes hasta expertos, tenemos el curso perfecto para ti
                 </p>
@@ -484,7 +484,7 @@ function App() {
               className="courses-button-container"
             >
               <Button className="view-all-button">
-                <span className="relative z-10">Ver todos los cursos</span>
+                <span className="relative z-10">Ver todos los Lecciones</span>
               </Button>
             </motion.div>
           </div>
@@ -530,7 +530,7 @@ function App() {
                 </div>
                 <h2 className="section-title">Lo que dicen nuestros estudiantes</h2>
                 <p className="section-description">
-                  Miles de estudiantes han transformado sus carreras con nuestros cursos
+                  Miles de estudiantes han transformado sus carreras con nuestros Lecciones y cursos 
                 </p>
               </div>
             </motion.div>
@@ -546,7 +546,7 @@ function App() {
                   name: "Ana Martínez",
                   role: "Desarrolladora Web",
                   content:
-                    "Gracias a los cursos de Python, pude cambiar de carrera y ahora trabajo como desarrolladora. Los simuladores visuales fueron clave para entender conceptos complejos.",
+                    "Gracias a los Leciones de Python, pude cambiar de carrera y ahora trabajo como desarrolladora. Los simuladores visuales fueron clave para entender conceptos complejos.",
                   avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
                 },
                 {
@@ -766,7 +766,7 @@ function App() {
                 <span className="footer-logo-text">LearnPy</span>
               </motion.div>
               <p className="footer-description">
-                Plataforma líder en enseñanza de Python con cursos interactivos y herramientas innovadoras.
+                Plataforma líder en enseñanza de Python con Lecciones y cursos interactivos y herramientas innovadoras.
               </p>
               <div className="footer-social">
                 <a href="#" className="social-link" aria-label="Facebook">
