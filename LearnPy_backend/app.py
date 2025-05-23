@@ -1,18 +1,22 @@
 from flask import Flask
 from flask_cors import CORS
-from src.routers import user
-
+from src.routers import user, exercise, lesson
 app = Flask(__name__)
+
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024
 
 CORS(app, resources={
     r"/*": {
         "origins": ["http://localhost:5173", "https://siloroll.netlify.app"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
     }
 })
 
 app.register_blueprint(user.main, url_prefix='/user')
+app.register_blueprint(lesson.main, url_prefix='/lesson')
+app.register_blueprint(exercise.main, url_prefix='/exercise')
 
 if __name__ == "__main__":
     import os
