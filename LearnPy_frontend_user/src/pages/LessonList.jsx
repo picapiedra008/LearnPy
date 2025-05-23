@@ -45,7 +45,7 @@ const LessonList = () => {
         <div className="list-header">
           <h2 className="page-title">Mis Lecciones</h2>
           <Link to="/crear-leccion">
-            <Button className="btn-green">Agregar Lección</Button>
+            <Button className="btn-green btn-success">Agregar Lección</Button>
           </Link>
         </div>
 

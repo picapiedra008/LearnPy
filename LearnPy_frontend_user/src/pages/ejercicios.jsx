@@ -63,50 +63,9 @@ const CardContent = ({ children, className = "" }) => {
 }
 
 const Ejercicios = () => {
-  const [exercises, setExercises] = useState([
-    {
-      title: "Crear una función factorial",
-      description: "Implementa una función recursiva para calcular el factorial de un número",
-      hasCode: true,
-      expectedOutput: "El factorial de 5 es 120",
-      code: `# Ejemplo de código Python
-def factorial(n):
-    if n == 0 or n == 1:
-        return 1
-    else:
-        return n * factorial(n-1)
 
-# Prueba la función
-numero = 5
-resultado = factorial(numero)
-print(f"El factorial de {numero} es {resultado}")
-`,
-    },
-    {
-      title: "Proyecto: Analizador de texto",
-      description: "Crea un programa que analice un texto y muestre estadísticas como frecuencia de palabras",
-      hasCode: true,
-      expectedOutput: "Palabra más frecuente: 'Python' (5 veces)",
-      code: `# Analizador de texto
-def analizar_texto(texto):
-    palabras = texto.lower().split()
-    frecuencia = {}
-    
-    for palabra in palabras:
-        if palabra in frecuencia:
-            frecuencia[palabra] += 1
-        else:
-            frecuencia[palabra] = 1
-    
-    palabra_mas_frecuente = max(frecuencia, key=frecuencia.get)
-    return palabra_mas_frecuente, frecuencia[palabra_mas_frecuente]
-
-texto = "Python es genial. Python es poderoso. Python es Python."
-palabra, veces = analizar_texto(texto)
-print(f"Palabra más frecuente: '{palabra}' ({veces} veces)")
-`,
-    },
-  ])
+  
+  
 
   const handleExerciseChange = (index, field, value) => {
     const newExercises = [...exercises]
