@@ -1,4 +1,4 @@
-# 📘 API – Plataforma LearnPy
+#  API – Plataforma LearnPy
 
 Este documento detalla los endpoints disponibles en la API del backend de LearnPy, organizados por módulos funcionales: Usuarios, Ejercicios, Lecciones y Materiales.
 
