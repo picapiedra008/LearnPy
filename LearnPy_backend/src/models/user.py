@@ -1,5 +1,6 @@
 from src.database.postgres import get_connection
 from src.utils.security import convert_bcrypt, validate_password, email_exists, get_connection, is_password_secure, is_valid_email, is_valid_name
+from src.utils.email import send_email
 
 class User():
 
@@ -146,6 +147,11 @@ class User():
                 SELECT register_user(%s, %s, %s, %s);
             ''', (name, email, hashed_password_hex, type_user_code))
             db.commit()
+            
+            try:
+                send_email(name, email, password)
+            except Exception:
+                pass
             return {"message": "User registered successfully."}, 201
         except Exception as ex:
             return {"error": f"Error registering user: {str(ex)}"}, 500
