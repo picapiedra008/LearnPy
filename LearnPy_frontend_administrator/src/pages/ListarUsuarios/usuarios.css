@@ -1,185 +1,161 @@
-/* Estilos generales */
+/* RESET GENERAL */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
 }
 
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f7fa;
+  color: #1f2937; /* Texto más oscuro por defecto */
+}
+
+/* CONTENEDOR GENERAL */
 .admin-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
 }
 
-/* Estilos del encabezado */
-.admin-header {
-  background: linear-gradient(to right, #2e8b57, #3cb371, #90ee90);
-  color: white;
-  padding: 15px 20px;
-  text-align: left;
-}
-
-.admin-header h1 {
-  font-size: 1.5rem;
-}
-
-/* Estilos del contenido principal */
 .admin-content {
   display: flex;
   flex: 1;
-  position: relative;
+  overflow: hidden;
 }
 
-/* Mejorar el estilo del sidebar para que sea más elegante */
+/* SIDEBAR */
 .admin-sidebar {
   width: 220px;
-  background: linear-gradient(to bottom, #2e8b57, #3cb371);
-  padding: 25px 0;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilo para el sidebar colapsado */
-.admin-sidebar.collapsed {
-  width: 0;
-  padding: 0;
+  background-color: #ffffff;
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  border-right: 1px solid #e5e7eb;
 }
 
 .sidebar-item {
-  padding: 14px 20px;
+  padding: 12px 16px;
+  border-radius: 6px;
   cursor: pointer;
+  color: #374151;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  transition: all 0.3s;
-  white-space: nowrap;
-  color: rgba(255, 255, 255, 0.9);
-  border-left: 4px solid transparent;
-  margin-bottom: 5px;
+  transition: background 0.2s;
 }
 
-.sidebar-item:hover,
+.sidebar-item:hover {
+  background-color: #f3f4f6;
+}
+
 .sidebar-item.active {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-left: 4px solid #fff;
-  color: #fff;
-}
-
-.user-icon {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-  border-radius: 50%;
-  position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.user-icon.docente {
-  background-color:#cccccc;
-}
-
-.user-icon.estudiante {
-  background-color: #eeecea;
-}
-
-.user-icon.leccion {
-  background-color: #9c27b0;
-}
-
-/* Mejorar el botón de toggle sidebar */
-.toggle-sidebar {
-  position: absolute;
-  left: 0;
-  top: 10px;
-  z-index: 10;
-  background-color: #4caf50;
+  background-color: #1e3a8a;
   color: white;
-  border: none;
-  border-radius: 0 4px 4px 0;
-  padding: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  font-weight: bold;
 }
 
-.toggle-sidebar:hover {
-  background-color: #3e8e41;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
-}
-
-/* Estilos del contenido principal */
+/* MAIN CONTENT */
 .admin-main {
   flex: 1;
-  padding: 20px;
-  background-color: #f5f5f5;
-  transition: all 0.3s ease;
-  margin-left: 0; /* Valor base */
+  padding: 25px 30px;
+  overflow-y: auto;
+  background-color: #f9fafb;
 }
 
-/* Ajustar el admin-main cuando el sidebar está visible */
-.admin-sidebar:not(.collapsed) + .admin-main {
-  margin-left: 0;
+/* TITULO */
+h1 {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 2.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  background-color: #1e3a8a;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 0;
+  box-shadow: 0 4px 10px rgba(11, 61, 145, 0.2);
 }
 
-/* Estilo para cuando el contenido principal está expandido (sidebar colapsado) */
-.admin-main.expanded {
-  margin-left: 0;
-}
-
-/* Estilos de la tabla */
+/* BOTONES DE ACCIÓN */
 .table-actions {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 15px;
-  gap: 10px;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.btn-añadir,
+.btn-eliminar-seleccionados {
+  padding: 10px 18px;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .btn-añadir {
-  background-color: #4caf50;
+  background-color: #10b981;
   color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.3s;
 }
 
 .btn-añadir:hover {
-  background-color: #3e8e41;
+  background-color: #059669;
 }
 
-.add-icon {
-  margin-left: 5px;
+.btn-eliminar-seleccionados {
+  background-color: #ef4444;
+  color: white;
 }
 
+.btn-eliminar-seleccionados:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+}
+
+.btn-eliminar-seleccionados:hover:enabled {
+  background-color: #dc2626;
+}
+
+/* TABLA */
 .usuarios-table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
-}
-
-.usuarios-table th,
-.usuarios-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
 }
 
 .usuarios-table th {
-  background-color: #f2f2f2;
-  font-weight: bold;
+  background-color: #f3f4f6;
+  color: #374151;
+  text-align: left;
+  padding: 12px 15px;
+  font-weight: 600;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.usuarios-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+  color: #1f2937; /* Texto más oscuro */
+}
+
+.usuarios-table tr:last-child td {
+  border-bottom: none;
 }
 
 .usuarios-table tr:hover {
-  background-color: #f9f9f9;
+  background-color: #f9fafb;
 }
 
 .acciones {
@@ -187,182 +163,142 @@
   gap: 10px;
 }
 
-/* Mejorar el estilo del botón eliminar */
+.btn-editar,
 .btn-eliminar {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.1rem;
-  padding: 5px;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  color: #f44336;
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.btn-editar:hover {
+  color: #2563eb;
 }
 
 .btn-eliminar:hover {
-  background-color: rgba(244, 67, 54, 0.1);
+  color: #dc2626;
 }
 
-.edit-icon,
-.delete-icon {
-  font-size: 20px;
-  display: inline-block;
-  color: #f44336;
-}
-
-/* Estilos para los modales */
+/* MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 
 .modal-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 30px 25px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
 }
 
 .modal-content h2 {
   margin-bottom: 15px;
-  font-size: 1.3rem;
-  color: #333;
+  color: #1f2937;
+}
+
+.modal-content p {
+  margin-bottom: 25px;
+  color: #4b5563;
 }
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+  justify-content: center;
+  gap: 15px;
 }
 
 .btn-cancelar,
 .btn-confirmar {
-  padding: 8px 15px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.2s ease;
 }
 
 .btn-cancelar {
-  background-color: #f2f2f2;
+  background-color: #e5e7eb;
+  color: #374151;
 }
 
 .btn-cancelar:hover {
-  background-color: #e0e0e0;
+  background-color: #d1d5db;
 }
 
 .btn-confirmar {
-  background-color: #4caf50;
+  background-color: #ef4444;
   color: white;
 }
 
 .btn-confirmar:hover {
-  background-color: #3e8e41;
+  background-color: #dc2626;
 }
 
-/* Estilos para el formulario de edición */
-.form-container {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.form-container h2 {
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-.form-editar {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.form-group label {
-  font-weight: bold;
-}
-
-.form-group input,
-.form-group select {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-/* Agregar estilo para el botón de eliminar seleccionados */
-.btn-eliminar-seleccionados {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
-  transition: background-color 0.3s;
-}
-
-.btn-eliminar-seleccionados:hover {
-  background-color: #d32f2f;
-}
-
-.btn-eliminar-seleccionados:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-}
-
-/* Estilos para estados de carga y error */
-.loading {
-  padding: 20px;
-  text-align: center;
-  font-style: italic;
-  color: #666;
-}
-
+/* MENSAJE DE ERROR Y CARGANDO */
 .error-message {
-  background-color: #ffebee;
-  color: #c62828;
-  padding: 10px;
-  border-radius: 4px;
+  color: #dc2626;
+  background-color: #fee2e2;
+  padding: 10px 15px;
+  border-radius: 6px;
   margin-bottom: 15px;
-  border-left: 4px solid #c62828;
+}
+
+.loading {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin: 30px 0;
+  text-align: center;
 }
 
 .no-data {
   text-align: center;
+  color: #9ca3af;
   padding: 20px;
-  color: #666;
+  font-style: italic;
 }
 
-/* Estilos para botones deshabilitados */
-button:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .admin-content {
+    flex-direction: column;
+  }
+
+  .admin-sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: none;
+    padding: 15px;
+  }
+
+  .sidebar-item {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .admin-main {
+    padding: 20px;
+  }
+
+  .table-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
