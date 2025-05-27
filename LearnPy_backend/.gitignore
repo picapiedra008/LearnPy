@@ -1,3 +1,8 @@
 venv/
 .env
 src/drive/learnpy.json
+src/database/__pychache__/
+src/models/__pychache__/
+src/routers/__pychache__/
+src/utils/__pychache__/
+*.pyc
