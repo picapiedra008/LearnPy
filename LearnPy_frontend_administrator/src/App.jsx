@@ -8,6 +8,7 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register'; 
 import Usuarios from './pages/ListarUsuarios/usuarios';
 import EditUser from './pages/EditUser/EditUser';
+import Lecciones from './pages/Lecciones/Lecciones';
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
           <Route
             path="/editar/:id"
             element={<PrivateRoute element={<EditUser />} />} 
+          />
+          <Route
+            path="/lecciones"
+            element={<PrivateRoute element={<Lecciones />}/>}
           />
         </Routes>
       </Router>
