@@ -41,15 +41,6 @@ def get_materials_by_lesson():
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
-@main.route('/get_materials_by_lesson', methods=['POST'])
-def get_materials_by_lesson():
-    try:
-        lesson_code = int(request.json['lesson_code'])
-        result, resp = Material.get_materials_by_lesson(lesson_code)
-        return jsonify(result), resp
-    except Exception as ex:
-        return jsonify({'message': str(ex)}), 500
-
 @main.route('/get_material_types', methods=['GET'])
 def get_material_types():
     try:
