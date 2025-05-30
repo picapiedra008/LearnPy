@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import App from "./App"
 import CrearLecciones from "./pages/crearLecciones"
+import EditarLecciones from "./pages/editarLecciones"
 import Ejercicios from "./pages/ejercicios"
 import LessonList from "./pages/LessonList"
 
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/" element={<App />} />
         <Route path="/listar" element={<LessonList />} />
         <Route path="/crear-leccion" element={<CrearLecciones />} />
+        <Route path="/editar-leccion" element={<EditarLecciones />} />
         <Route path="/ejercicios" element={<Ejercicios />} />
       </Routes>
     </Router>
