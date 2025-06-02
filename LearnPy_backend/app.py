@@ -7,7 +7,7 @@ app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024
 
 CORS(app, resources={
     r"/*": {
-        "origins": ["http://localhost:5173", "https://siloroll.netlify.app"],
+        "origins": ["http://localhost:5173","http://localhost:5174", "https://siloroll.netlify.app"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True

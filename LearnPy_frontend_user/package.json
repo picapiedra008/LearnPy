@@ -10,9 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
+    "framer-motion": "^12.12.1",
     "learnpy": "file:..",
+    "lucide-react": "^0.510.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.6.0",
+    "react-tsparticles": "^2.12.2",
+    "skulpt": "^1.2.0",
+    "socket.io-client": "^4.8.1",
+    "tsparticles-slim": "^2.12.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
