@@ -1,0 +1,13 @@
+Endpoints:
+
+Ruta	Método	Descripción
+/create_material	POST	Crear material (con archivo)
+/delete_material	POST	Eliminar material por código y ruta
+/get_materials_by_lesson	POST	Obtener materiales según lesson_code
+/get_material_types	GET	Listar tipos de materiales disponibles
+
+-La ruta /create_material espera dos archivos: front_page y file, además de datos vía form.
+-material_name está siendo tratado como entero (int(request.form.get('material_name'))) — confirma si ese campo debería ser numérico o texto.
+-Las respuestas están cubiertas con códigos posibles: 200 (OK), 400 (mal solicitud), 500 (error interno), y 204 (sin contenido).
+
+pytest tests/test_material.py
