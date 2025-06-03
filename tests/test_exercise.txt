@@ -1,0 +1,14 @@
+Contiene pruebas para:
+
+-Crear ejercicio (/create_exercise)
+-Obtener ejercicios (/get_exercises)
+-Actualizar ejercicio (/update_exercise)
+-Eliminar ejercicio (/delete_exercise)
+
+Cada prueba:
+
+-Usa client = app.test_client() para enviar peticiones al backend.
+-Verifica status codes esperados (200, 404, 400, etc.).
+-Confirma estructura de la respuesta (por ejemplo: si contiene un dict o list).
+
+pytest tests/test_exercise.py
