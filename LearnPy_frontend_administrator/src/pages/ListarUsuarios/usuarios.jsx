@@ -86,6 +86,7 @@ const Usuarios = () => {
 
   const irAEditar = (usuario) => navigate(`/editar/${usuario.code}`);
   const añadirUsuario = () => navigate("/register");
+  const leccionU = () => navigate("/lecciones")
 
   const handleSeleccion = (code) => {
     setSeleccionados((prev) =>
@@ -143,9 +144,10 @@ const Usuarios = () => {
           <div className={claseSidebar(1)} onClick={() => setTipoUsuario(1)}>
             <i className="user-icon estudiante"></i> Estudiantes
           </div>
-          <div className="sidebar-item">
-            <i className="user-icon leccion"></i> Lecciones
+          <div className="sidebar-item" onClick={leccionU}>
+             <i className="user-icon leccion"></i> Lecciones
           </div>
+
         </aside>
 
         <main className="admin-main">
