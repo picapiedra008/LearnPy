@@ -70,6 +70,15 @@ def delete_lesson():
     result, resp = Lesson.delete_lesson(lesson_code, file_id)
     return jsonify(result), resp
 
+@main.route('/delete_lessons', methods=['DELETE'])
+@handle_exceptions
+def delete_lessons():
+    data = request.get_json()
+    if not isinstance(data, list):
+        return jsonify({"error": "Se espera una lista"}), 400
+    result, resp = Lesson.delete_lessons(data)
+    return jsonify(result), resp
+
 @main.route('/get_levels', methods=['GET'])
 @handle_exceptions
 def get_levels():

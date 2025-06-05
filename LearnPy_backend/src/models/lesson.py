@@ -60,7 +60,7 @@ class Lesson():
             db = get_connection()
             with db.cursor() as cursor:
                 # Ejecutar la función para eliminar la lección
-                cursor.execute('SELECT delete_lesson(%s);', (lesson_code,))
+                cursor.execute('delete from lessons where lesson_code = (%s);', (lesson_code,))
                 db.commit()
                 result = cursor.fetchone()
                 
@@ -77,6 +77,30 @@ class Lesson():
         except Exception as e:
             return {'error': str(e)}, 500
 
+    @classmethod
+    def delete_lessons(self, data: list):
+        results = []
+        for lesson in data:
+            code = lesson.get('code')
+            file_id = lesson.get('front_page')
+            if code is None or file_id is None:
+                results.append({
+                    "code": code,
+                    "success": False,
+                    "error": "Missing code or front_page"
+                })
+                continue
+
+            result, status = self.delete_lesson(code, file_id)
+            results.append({
+                "code": code,
+                "success": status == 200,
+                "message": result.get('message') if status == 200 else result.get('error')
+            })
+
+        return {
+            "results": results
+        }, 200
 
     @classmethod
     def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file):

@@ -3,11 +3,12 @@ import Header from "../../components/Header/Header";
 import ModalEliminar from "../../components/ModalEliminar/ModalEliminar";
 import "./lecciones.css";
 
-import { obtenerLecciones, eliminarLeccionPorId, eliminarLeccionesPorIds } from "../../repositories/LeccionRepository";
+import { obtenerLecciones } from "../../repositories/LeccionRepository";
 
 const API_URL = "http://localhost:5000/lesson";
 
 const Lecciones = () => {
+    const [userCode] = useState(1);
     const [lecciones, setLecciones] = useState([]);
     const [seleccionados, setSeleccionados] = useState([]);
     const [modalEliminar, setModalEliminar] = useState(false);
@@ -24,7 +25,11 @@ const Lecciones = () => {
         setError(null);
         try {
             // Usamos los datos falsos
-            var data = await fetch(`${API_URL}/get_user`);
+            var data = await fetch(`${API_URL}/get_lessons`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user_code: userCode })
+            });
             console.log(data)
             if (!data.ok) {
                 data = await obtenerLecciones();
@@ -39,24 +44,29 @@ const Lecciones = () => {
         } finally {
             setCargando(false);
         }
-    }, []);
+    }, [userCode]);
 
     useEffect(() => {
         cargarLecciones();
-    }, [cargando]);
-    // Función simulada para eliminar lecciones
-    const eliminarLecciones = async (tipo, datos) => {
-        // Simulamos un retraso de red
-        await new Promise(resolve => setTimeout(resolve, 500));
+    }, [cargarLecciones]);
 
-        if (tipo === "delete_many") {
-            // Eliminar múltiples lecciones
-            await eliminarLeccionesPorIds(datos.ids);
-            setLecciones(prev => prev.filter(l => !datos.ids.includes(l.id)));
-        } else {
-            // Eliminar una sola lección
-            await eliminarLeccionPorId(datos.id);
-            setLecciones(prev => prev.filter(l => l.id != datos.id));
+    const eliminarLeccion = async (endpoint, code) => {
+        const response = await fetch(`${API_URL}/${endpoint}/${code}`, {
+            method: "DELETE",
+        });
+        if (!response.ok) {
+            throw new Error(`Error al eliminar: ${response.status}`);
+        }
+    };
+
+    const eliminarLecciones = async (endpoint, body) => {
+        const response = await fetch(`${API_URL}/${endpoint}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        if (!response.ok) {
+            throw new Error(`Error al eliminar: ${response.status}`);
         }
     };
 
@@ -65,61 +75,30 @@ const Lecciones = () => {
         setError(null);
         try {
             if (haySeleccionados) {
-                await eliminarLecciones("delete_many", { ids: seleccionados });
+                await eliminarLecciones("delete_lessons", { codes: seleccionados });
                 setSeleccionados([]);
             } else {
-                await eliminarLecciones("delete", { id: leccionEliminar.id });
+                console.log("Code a eliminar: " + leccionEliminar.code)
+                await eliminarLeccion("delete_lesson2", { code: leccionEliminar.code });
             }
+            cargarLecciones();
             setModalEliminar(false);
         } catch (err) {
-            setError("Error al eliminar lecciones");
-            console.error(err);
+            setError(err.message);
+            console.error("Error al eliminar: ", err);
         } finally {
             setCargando(false);
         }
     };
 
-    /**    useEffect(() => {
-            cargarLecciones();
-        }, [cargarLecciones]);
-    
-        const eliminarLecciones = async (endpoint, body) => {
-            const response = await fetch(`${API_URL}/${endpoint}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body),
-            });
-            if (!response.ok) throw new Error("Error al eliminar lecciones");
-        };
-    
-        const confirmarEliminar = async () => {
-            setCargando(true);
-            setError(null);
-            try {
-                if (haySeleccionados) {
-                    await eliminarLecciones("delete_many", { ids: seleccionados });
-                    setSeleccionados([]);
-                } else {
-                    await eliminarLecciones("delete", { id: leccionEliminar.id });
-                }
-                cargarLecciones();
-                setModalEliminar(false);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setCargando(false);
-            }
-        };
-        */
-
-    const handleSeleccion = (id) => {
+    const handleSeleccion = (code) => {
         setSeleccionados((prev) =>
-            prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+            prev.includes(code) ? prev.filter((id) => id !== code) : [...prev, code]
         );
     };
 
     const seleccionarTodos = () => {
-        setSeleccionados(todosSeleccionados ? [] : lecciones.map((l) => l.id));
+        setSeleccionados(todosSeleccionados ? [] : lecciones.map((l) => l.code));
     };
 
     const abrirModalEliminar = (leccion) => {
@@ -133,12 +112,12 @@ const Lecciones = () => {
     };
 
     const renderLeccionFila = (leccion) => (
-        <tr key={leccion.id}>
+        <tr key={leccion.code}>
             <td>
                 <input
                     type="checkbox"
-                    checked={seleccionados.includes(leccion.id)}
-                    onChange={() => handleSeleccion(leccion.id)}
+                    checked={seleccionados.includes(leccion.code)}
+                    onChange={() => handleSeleccion(leccion.code)}
                 />
             </td>
             <td>{leccion.titulo}</td>
