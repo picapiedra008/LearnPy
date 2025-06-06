@@ -1,0 +1,10 @@
+Testear directamente los métodos:
+
+-insert_exercise
+-update_exercise
+-delete_exercise
+-get_exercises
+
+usando mocks para simular la base de datos PostgreSQL.
+
+pytest tests/test_model_exercise.py
