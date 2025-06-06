@@ -1,0 +1,19 @@
+{
+  "name": "learnpy",
+  "version": "1.0.0",
+  "scripts": {
+    "start:admin": "concurrently \"cd LearnPy_frontend_administrator && npm run dev\" \"cd LearnPy_backend && python app.py\"",
+    "start:user": "concurrently \"cd LearnPy_frontend_user && npm run dev\" \"cd LearnPy_backend && python app.py\"",
+    "start:all": "concurrently \"cd LearnPy_frontend_administrator && npm run dev\" \"cd LearnPy_frontend_user && npm run dev\" \"cd LearnPy_backend && python app.py\"",
+    "install:backend": "pip install -r LearnPy_backend/requirements.txt",
+    "install:frontend": "npm install --prefix LearnPy_frontend_administrator && npm install --prefix LearnPy_frontend_user"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "tree-sitter": "^0.22.4",
+    "tree-sitter-python": "^0.23.6"
+  }
+}
