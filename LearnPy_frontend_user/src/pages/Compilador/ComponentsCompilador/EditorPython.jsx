@@ -126,7 +126,12 @@ export default function EditorPython({ code, setCode }) {
           scrollBeyondLastLine: false,
           wordWrap: 'on',
           readOnly: false,
+          quickSuggestions: false,
+          suggestOnTriggerCharacters: false,
+          acceptSuggestionOnEnter: 'off',
+          tabCompletion: 'off',
         }}
+
       />
 
       {error && (
