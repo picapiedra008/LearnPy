@@ -1,0 +1,16 @@
+ENDPOINTS
+
+Ruta	Método	Descripción
+
+/create_lesson		POST	Crear lección (con archivo)
+/get_lesson		POST	Obtener una lección específica
+/update_lesson		PUT	Actualizar lección (con archivo)
+/delete_lesson		POST	Eliminar lección y archivo
+/get_levels		GET	Obtener niveles disponibles
+/get_visibilities	GET	Obtener visibilidades disponibles
+/get_lessons		POST	Obtener lecciones por usuario
+
+Estos tests usan archivos falsos con io.BytesIO() para simular una imagen.
+Las respuestas pueden ser 200, 400, 500, o 204, dependiendo de si los datos ya existen o hay errores; por eso se usan múltiples códigos esperados.
+
+pytest tests/test_model_lesson.py

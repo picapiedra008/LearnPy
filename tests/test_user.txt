@@ -1,0 +1,13 @@
+Endpoints
+
+Ruta	Método	Descripción
+/login_user	POST	Iniciar sesión
+/register_user	POST	Registrar un nuevo usuario
+/get_users	POST	Obtener lista de usuarios por tipo
+/get_user	POST	Obtener usuario por código
+/edit_user	PUT	Editar usuario existente
+/delete_user	POST	Eliminar usuario por código
+/delete_users	POST	Eliminar varios usuarios (lista)
+
+
+pytest tests/test_user.py
