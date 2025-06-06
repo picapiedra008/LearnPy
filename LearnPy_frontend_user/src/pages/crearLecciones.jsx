@@ -489,10 +489,11 @@ print(f"El factorial de {numero} es {resultado}")
                             </div>
                             <Button
                               type="button"
-                              className="btn-blue full-width"
+                              className="btn-blue icon-button"
                               onClick={() => document.getElementById("coverImage")?.click()}
+                              aria-label="Subir imagen de portada"
                             >
-                              Subir una imagen
+                              <Upload className="icon-small" />
                             </Button>
                           </div>
                         </div>
@@ -738,19 +739,7 @@ print(f"El factorial de {numero} es {resultado}")
                                     className="code-editor-textarea"
                                     value={
                                       exercise.code ||
-                                      `# Ejemplo de código Python
-def factorial(n):
-    if n == 0 or n == 1:
-        return 1
-    else:
-        return 1
-    else:
-        return n * factorial(n-1)
-
-# Prueba la función
-numero = 5
-resultado = factorial(numero)
-print(f"El factorial de {numero} es {resultado}")
+                                      `# 
 `
                                     }
                                     onChange={(e) => handleExerciseChange(index, "code", e.target.value)}

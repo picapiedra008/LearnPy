@@ -1,0 +1,70 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  height: 2.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button-primary {
+  background: linear-gradient(to right, #9333ea, #3b82f6);
+  color: white;
+}
+
+.button-primary:hover {
+  background: linear-gradient(to right, #7e22ce, #2563eb);
+  transform: translateY(-2px);
+}
+
+.button-outline {
+  background: transparent;
+  color: #1a1a1a;
+  border: 1px solid #e5e7eb;
+}
+
+.button-outline:hover {
+  border-color: #d1d5db;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.button-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.button-primary:hover .button-overlay {
+  opacity: 0.1;
+}
+
+.button-outline:hover .button-overlay {
+  background: linear-gradient(to right, #9333ea, #3b82f6);
+  opacity: 0.2;
+}
+
+.button:focus {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
