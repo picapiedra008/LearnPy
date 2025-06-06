@@ -70,7 +70,8 @@ body {
   z-index: 10;
   left: 0;
   right: 0;
-  display: block; /* Asegura que el header sea visible */
+  display: block;
+  /* Asegura que el header sea visible */
 }
 
 .header-container {
@@ -243,7 +244,8 @@ body {
   cursor: pointer;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #1f2937; /* Asegura que el texto sea visible */
+  color: #1f2937;
+  /* Asegura que el texto sea visible */
 }
 
 .tabs-trigger.active {
@@ -254,7 +256,8 @@ body {
 .tabs-content {
   margin-top: 1rem;
   width: 100%;
-  display: block; /* Asegura que el contenido de las pestañas sea visible */
+  display: block;
+  /* Asegura que el contenido de las pestañas sea visible */
   flex: 1;
   flex-direction: column;
 }
@@ -489,17 +492,55 @@ body {
   display: none;
 }
 
+.icon-upload-button {
+  background-color: #2563eb;
+  /* Azul elegante */
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.6rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.icon-upload-button:hover {
+  background-color: #1e40af;
+  /* Azul más oscuro al pasar el mouse */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.icon-upload-button:active {
+  transform: scale(0.97);
+}
+
+.icon-upload-button .icon-small {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
 /* Image preview */
 .image-preview {
   position: relative;
-  margin: 0 auto;
-  max-width: 100%;
+  width: 240px;
+  /* Fijo */
+  height: 180px;
+  /* Fijo */
+  overflow: hidden;
+  border-radius: 0.5rem;
+  border: 1px solid #ccc;
 }
 
 .preview-image {
-  max-height: 10rem;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Recorta sin deformar */
 }
+
 
 .remove-button {
   position: absolute;
