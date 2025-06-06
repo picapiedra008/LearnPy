@@ -50,6 +50,58 @@ class Lesson():
             if db:
                 db.close()
 
+    @classmethod
+    def create_lesson_with_topics(self, lesson_code: int, topics: list):
+
+        db = None
+        cursor = None
+
+        try:
+            db = get_connection()
+            cursor = db.cursor()
+
+            for topic in topics:
+                index = topic.get("index")
+                topic_title = topic.get("topic_title")
+                topic_description = topic.get("topic_description")
+                material_code = topic.get("material_code")
+                exercice_code = topic.get("exercice_code")
+
+                cursor.execute("""
+                    insert into topics (lesson_code, index, topic_title, topic_description)
+                    values (%s, %s, %s, %s)
+                    returning topic_code;
+                """, (lesson_code, index, topic_title, topic_description))
+
+                topic_code = cursor.fetchone()[0]
+
+                if exercice_code:
+                    cursor.execute("""
+                        update exercises
+                        set topic_code = %s
+                        where exercise_code = %s;       
+                    """, (topic_code, exercice_code))
+
+                if material_code:
+                    cursor.execute("""
+                        update materials 
+                        set topic_code = %s
+                        where material_code = %s;       
+                    """, (topic_code, material_code))
+                
+            db.commit()
+            return {
+                "message": "Topicos creados satisfactoriamentes"
+            }, 201
+       
+        except Exception as ex:
+            return {"error": f"Error creando topicos: {str(ex)}"}, 500
+
+        finally:
+            if cursor:
+                cursor.close()
+            if db:
+                db.close()
     
     @classmethod
     def delete_lesson(self, lesson_code: int, file_id: str):
