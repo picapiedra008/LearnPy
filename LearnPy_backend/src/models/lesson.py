@@ -65,7 +65,7 @@ class Lesson():
                 topic_title = topic.get("topic_title")
                 topic_description = topic.get("topic_description")
                 material_code = topic.get("material_code")
-                exercice_code = topic.get("exercice_code")
+                exercises = topic.get("exercice_code")
 
                 cursor.execute("""
                     insert into topics (lesson_code, index, topic_title, topic_description)
@@ -75,12 +75,12 @@ class Lesson():
 
                 topic_code = cursor.fetchone()[0]
 
-                if exercice_code:
+                for exercise in exercises:
                     cursor.execute("""
                         update exercises
                         set topic_code = %s
-                        where exercise_code = %s;       
-                    """, (topic_code, exercice_code))
+                        where exercise_code = %s;            
+                    """, (topic_code, exercise))
 
                 if material_code:
                     cursor.execute("""
