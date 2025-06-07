@@ -3,7 +3,6 @@
 import { Link } from "react-router-dom"
 import { Bell } from "lucide-react"
 import "./lessonList.css"
-import NavBar from "./varios/navbar/navBar"
 // Componente de botón personalizado
 const Button = ({ children, className = "", onClick }) => {
   return (
@@ -16,7 +15,30 @@ const Button = ({ children, className = "", onClick }) => {
 const LessonList = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <NavBar />
+      <header className="header blue">
+        <div className="container header-container">
+          <div className="header-left">
+            <div className="logo">LP</div>
+            <nav className="nav">
+              <Link to="/" className="nav-link active">
+                Mis Lecciones
+              </Link>
+              <Link to="#" className="nav-link">
+                Otros
+              </Link>
+            </nav>
+          </div>
+          <div className="header-right">
+            <button className="icon-button">
+              <Bell className="icon" />
+              <span className="notification-badge"></span>
+            </button>
+            <div className="avatar">
+              <img src="/placeholder.svg?height=32&width=32" alt="Perfil" className="avatar-image" />
+            </div>
+          </div>
+        </div>
+      </header>
 
       <main className="container main">
         <div className="list-header">

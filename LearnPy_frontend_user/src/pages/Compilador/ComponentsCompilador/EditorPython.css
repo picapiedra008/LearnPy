@@ -1,0 +1,11 @@
+.errorHighlight {
+  background-color: rgba(255, 0, 0, 0.3);
+  border-left: 3px solid red;
+}
+
+.errorMessage {
+  margin-top: 0.5rem;
+  color: red;
+  font-family: monospace;
+  white-space: pre-wrap;
+}

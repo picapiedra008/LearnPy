@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
 import { CheckCircle, Code, Zap, BookOpen, MessageSquare, Smartphone, BarChart } from "lucide-react"
 import ParticlesContainer from "./components/ParticlesContainer"
 import Button from "./components/Button"
