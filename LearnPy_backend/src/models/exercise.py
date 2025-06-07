@@ -23,11 +23,11 @@ class Exercise():
 
 
     @classmethod
-    def update_exercise(self, exercise_code: int, lesson_code: int, title: str, instructions: str, content: str):
+    def update_exercise(self, exercise_code: int, topic_code: int, title: str, instructions: str, content: str):
         try:
             db = get_connection()
             cursor = db.cursor()
-            cursor.execute('SELECT update_exercises(%s, %s, %s, %s, %s);', (exercise_code, lesson_code, title, instructions, content))
+            cursor.execute('SELECT update_exercises(%s, %s, %s, %s, %s);', (exercise_code, topic_code, title, instructions, content))
             updated_code = cursor.fetchone()[0]
             db.commit()
 
