@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import "./crearLecciones.css"
 import { Bell, Code, FileText, ImageIcon, Link2, Plus, Upload, Video, X } from "lucide-react"
-import NavBar from "./varios/navbar/navBar"
 // Componentes personalizados para reemplazar los de shadcn/ui
 const Button = ({ children, type = "button", className = "", variant = "default", onClick, disabled }) => {
   const getButtonClass = () => {
@@ -304,7 +303,30 @@ print(f"El factorial de {numero} es {resultado}")
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <NavBar />
+      <header className="header">
+        <div className="container header-container">
+          <div className="header-left">
+            <div className="logo">LP</div>
+            <nav className="nav">
+              <Link to="/" className="nav-link active">
+                Mis Lecciones
+              </Link>
+              <Link to="#" className="nav-link">
+                Otros
+              </Link>
+            </nav>
+          </div>
+          <div className="header-right">
+            <button className="icon-button">
+              <Bell className="icon" />
+              <span className="notification-badge"></span>
+            </button>
+            <div className="avatar">
+              <img src="/placeholder.svg?height=32&width=32" alt="Perfil" />
+            </div>
+          </div>
+        </div>
+      </header>
 
       <main className="container main">
         <div className="page-header">

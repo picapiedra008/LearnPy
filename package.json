@@ -9,6 +9,11 @@
     "install:frontend": "npm install --prefix LearnPy_frontend_administrator && npm install --prefix LearnPy_frontend_user"
   },
   "devDependencies": {
-    "concurrently": "^8.0.0"
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "tree-sitter": "^0.22.4",
+    "tree-sitter-python": "^0.23.6"
   }
 }
