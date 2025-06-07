@@ -3,7 +3,6 @@
 import { Link } from "react-router-dom"
 import { Bell } from "lucide-react"
 import "./lessonList.css"
-
 // Componente de botón personalizado
 const Button = ({ children, className = "", onClick }) => {
   return (

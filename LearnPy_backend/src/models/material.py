@@ -36,7 +36,7 @@ class Material():
             return {"material_code": new_material_code, "message": "Material creado correctamente"}, 201
 
         except Exception as e:
-            print("Error en create_material:", e)
+
             return {"error": str(e)}, 500
 
     @classmethod
@@ -56,7 +56,7 @@ class Material():
             return {"message": "Material eliminado correctamente"}, 200
 
         except Exception as e:
-            print("Error en delete_material:", e)
+
             return {"error": str(e)}, 500
 
     @classmethod
@@ -76,7 +76,7 @@ class Material():
             return materials, 200
 
         except Exception as e:
-            print("Error en get_materials_by_lesson:", e)
+  
             return {"error": str(e)}, 500
 
 
@@ -97,5 +97,5 @@ class Material():
             return result, 200
 
         except Exception as e:
-            print("Error en get_material_types:", e)
+
             return {"error": str(e)}, 500
