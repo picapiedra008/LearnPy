@@ -4,11 +4,11 @@ from src.utils.security import  get_connection
 class Exercise():
     
     @classmethod
-    def insert_exercise(self, lesson_code: int, title: str, instructions: str, content: str):
+    def insert_exercise(self, topic_code: int, title: str, instructions: str, content: str):
         try:
             db = get_connection()
             cursor = db.cursor()
-            cursor.execute('SELECT insert_exercises(%s, %s, %s, %s);', (lesson_code, title, instructions, content))
+            cursor.execute('SELECT insert_exercises(%s, %s, %s, %s);', (topic_code, title, instructions, content))
             new_code = cursor.fetchone()[0]
             db.commit()
 
@@ -59,7 +59,7 @@ class Exercise():
             db.close()
 
     @classmethod
-    def get_exercises(self, lesson_code: int):
+    def get_exercises(self, topic_code: int):
         try:
             db = get_connection()
             cursor = db.cursor()
@@ -68,7 +68,7 @@ class Exercise():
                 SELECT exercise_code, exercise_title, 
                        exercise_instructions, exercise_answer
                 FROM get_exercises(%s);
-            ''', (lesson_code,))
+            ''', (topic_code,))
 
             row = cursor.fetchone()
 
