@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import "./crearLecciones.css"
+import "./editarLecciones.css"
+import NavBar from "./varios/navbar/navBar"
 import { Bell, Code, FileText, ImageIcon, Link2, Plus, Upload, Video, X } from "lucide-react"
+
 // Componentes personalizados para reemplazar los de shadcn/ui
 const Button = ({ children, type = "button", className = "", variant = "default", onClick, disabled }) => {
   const getButtonClass = () => {
@@ -156,7 +158,7 @@ const SelectItem = ({ value, children }) => {
   return <option value={value}>{children}</option>
 }
 
-const CrearLecciones = () => {
+const EditarLecciones = () => {
   const navigate = useNavigate()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -194,11 +196,21 @@ print(f"El factorial de {numero} es {resultado}")
   ])
 
   const handleTitleChange = (e) => {
-    setTitle(e.target.value)
+    const value = e.target.value
+    setTitle(value)
+    setFormErrors((prev) => ({
+      ...prev,
+      title: value.trim() === "" ? true : false
+    }))
   }
 
   const handleDescriptionChange = (e) => {
-    setDescription(e.target.value)
+    const value = e.target.value
+    setDescription(value)
+    setFormErrors((prev) => ({
+      ...prev,
+      description: value.trim() === "" ? true : false
+    }))
   }
 
   const handleCoverImageUpload = (e) => {
@@ -302,35 +314,11 @@ print(f"El factorial de {numero} es {resultado}")
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      <header className="header">
-        <div className="container header-container">
-          <div className="header-left">
-            <div className="logo">LP</div>
-            <nav className="nav">
-              <Link to="/" className="nav-link active">
-                Mis Lecciones
-              </Link>
-              <Link to="#" className="nav-link">
-                Otros
-              </Link>
-            </nav>
-          </div>
-          <div className="header-right">
-            <button className="icon-button">
-              <Bell className="icon" />
-              <span className="notification-badge"></span>
-            </button>
-            <div className="avatar">
-              <img src="/placeholder.svg?height=32&width=32" alt="Perfil" />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="container main">
+    <div className="app">
+      <NavBar />
+      <main className="main-content">
         <div className="page-header">
-          <h2 className="page-title">Crear Nueva Lección</h2>
+          <h2 className="page-title">Editar Lección</h2>
           <p className="page-description">
             Complete todos los campos requeridos para crear una nueva lección de Python
           </p>
@@ -844,4 +832,4 @@ print(f"El factorial de {numero} es {resultado}")
   )
 }
 
-export default CrearLecciones
+export default EditarLecciones

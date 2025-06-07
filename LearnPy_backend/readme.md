@@ -1,4 +1,4 @@
-# 📘 API – Plataforma LearnPy
+#  API – Plataforma LearnPy
 
 Este documento detalla los endpoints disponibles en la API del backend de LearnPy, organizados por módulos funcionales: Usuarios, Ejercicios, Lecciones y Materiales.
 
@@ -42,7 +42,7 @@ Respuesta: Usuario autenticado
 ```
 #### Obtener lista de usuarios por tipo
 - **URL**: `/user/get_users`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "type": 1
@@ -52,7 +52,7 @@ Respuesta: Lista de usuarios por tipo
 
 #### Obtener usuario por codigo
 - **URL**: `/user/get_user`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "code": 12
@@ -62,7 +62,7 @@ Respuesta: Usuario con el código especificado
 
 #### Eliminar usuario
 - **URL**: `/user/delete_user`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "code": 123
@@ -72,7 +72,7 @@ Respuesta: Usuario eliminado
 
 #### Eliminar múltiples usuarios
 - **URL**: `/user/delete_users`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "codes": [2, 4, 5]
@@ -124,7 +124,7 @@ Respuesta: Ejercicio creado correctamente
 
 #### Obtener ejercicios por lección
 - **URL**: `/exercise/get_exercises`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 101
@@ -148,7 +148,7 @@ Respuesta: Ejercicio actualizado correctamente.
 
 #### Eliminar ejercicio
 - **URL**: `/exercise/delete_exercise`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "exercise_code": 5
@@ -174,7 +174,7 @@ Respuesta: La leccion a sido creada correctamente
 
 #### Obtener lección por codigo
 - **URL**: `/lesson/get_lesson`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 12
@@ -192,7 +192,7 @@ Respuesta: la leccion fue actualizado correctamente
 
 #### Eliminar lección
 - **URL**: `/lesson/delete_lesson`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 12,
@@ -215,7 +215,7 @@ Respuesta: Las visibilidades a sido obtenido correctamente
 
 #### Obtener lecciones de un usuario
 - **URL**: `/lesson/get_lessons`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "user_code": 2
@@ -239,7 +239,7 @@ Respuesta: El materia fue creado correctamente
 
 #### Eliminar material
 - **URL**: `/material/delete_material`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "material_code": 1,
@@ -250,7 +250,7 @@ Respuesta: El materia fue eliminado correctamente
 
 #### Obtener materiales por lección
 - **URL**: `/material/get_materials_by_lesson`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 101

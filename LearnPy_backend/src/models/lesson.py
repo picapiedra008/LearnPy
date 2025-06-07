@@ -38,9 +38,8 @@ class Lesson():
             if result is None:
                 return {"message": "Lesson not created"}, 400
 
-            lesson_code = result[0]
-            return {"lesson_code": lesson_code, "message": "Lesson created successfully."}, 201
-
+            return {"lesson_code": result[0], "message": "Lesson created successfully."}, 201
+        
         except Exception as ex:
             return {"error": f"Error creating lesson: {str(ex)}"}, 500
 
@@ -81,6 +80,9 @@ class Lesson():
 
     @classmethod
     def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file):
+        
+        db = None
+        cursor = None
         try:
             db = get_connection()
             cursor = db.cursor()
