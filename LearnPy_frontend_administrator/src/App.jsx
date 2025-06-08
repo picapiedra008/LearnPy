@@ -23,21 +23,16 @@ function App() {
           />
           <Route
             path="/listUsers"
-            element={<Usuarios />}
+            element={<PrivateRoute element={<Usuarios />} />}
           />
 
           <Route
             path="/editar/:id"
             element={<PrivateRoute element={<EditUser />} />}
           />
-
           <Route
             path="/lecciones"
             element={<Lecciones />}
-          />
-          <Route
-            path="/lecciones"
-            element={<PrivateRoute element={<Lecciones />}/>}
           />
         </Routes>
       </Router>

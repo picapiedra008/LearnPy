@@ -20,11 +20,16 @@ def get_param(name, cast_type=str):
 @main.route('/create_exercise', methods=['POST'])
 @handle_exceptions
 def create_exercise():
-    topic_code = get_param('topic_code', int)
+    try:
+        topic_code = get_param('topic_code', int)
+    except Exception:
+        topic_code = None
+
     title = get_param('title')
     instructions = get_param('instructions')
-    content = get_param('content')
-    result, resp = Exercise.insert_exercise(topic_code, title, instructions, content)
+    answer = get_param('answer')
+    initial_code = get_param('initial_code')
+    result, resp = Exercise.insert_exercise(topic_code, title, instructions, answer, initial_code)
     return jsonify(result), resp
 
 @main.route('/get_exercises', methods=['POST'])
