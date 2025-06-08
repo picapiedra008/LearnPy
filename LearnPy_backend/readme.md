@@ -117,7 +117,8 @@ Respuesta: Usuario actualizado correctamente
   "topic_code": 101,
   "title": "Ejercicio 1",
   "instructions": "Resuelve el siguiente problema de variables.",
-  "content": "print('Hola, Mundo')"
+  "answer": "72",
+  "initial_code": "####"
 }
 ```
 Respuesta: Ejercicio creado correctamente
@@ -235,6 +236,15 @@ Respuesta: Las lecciones han sido obtenido correctamente
 - `material_name`: string  
 - `file`: archivo  
 
+#### Crear material de ejercicio
+- **URL**: `/material/create_material_of_exercise`
+- **Método**: `POST`
+**FormData**:
+- `exercise_code`: int  
+- `material_type_code`: int  
+- `material_name`: string  
+- `file`: archivo  
+
 Respuesta: El materia fue creado correctamente
 
 #### Eliminar material
@@ -283,7 +293,32 @@ Respuesta: El materia de ejercicio fue eliminado correctamente
 
 ##  API de Topicos
 
-#### Eliminar topico
+### Crear Topico
+- **URL**: `/lesson/topics`
+- **Método**: `POST`
+```json
+{
+  "lesson_code": 1,
+  "topics": [
+        {
+            "index": 1,
+            "topic_title": "Topic",
+            "topic_description": "Description",
+            "material_code": 4,
+            "exercises": [3, 2]
+        },
+        {
+            "index": 2,
+            "topic_title": "Topic2",
+            "topic_description": "Description2",
+            "material_code": 5,
+            "exercises": [5, 4]
+        }
+    ] 
+}
+```
+
+### Eliminar topico
 - **URL**: `/topic/delete_topic`
 - **Método**: `POST`
 ```json
