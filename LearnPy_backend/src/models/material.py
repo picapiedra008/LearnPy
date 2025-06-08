@@ -60,7 +60,7 @@ class Material():
             cur = conn.cursor()
 
             cur.execute(
-                "SELECT create_material(%s, %s, %s, %s)",
+                "SELECT create_exercise_material(%s, %s, %s, %s)",
                 (exercise_code, material_type_code, material_name, file_id)
             )
             new_material_code = cur.fetchone()[0]
