@@ -65,10 +65,10 @@ class Lesson():
                 topic_title = topic.get("topic_title")
                 topic_description = topic.get("topic_description")
                 material_code = topic.get("material_code")
-                exercises = topic.get("exercice_code")
+                exercises = topic.get("exercises")
 
                 cursor.execute("""
-                    insert into topics (lesson_code, index, topic_title, topic_description)
+                    insert into topics (lesson_code, topic_index, topic_title, topic_description)
                     values (%s, %s, %s, %s)
                     returning topic_code;
                 """, (lesson_code, index, topic_title, topic_description))

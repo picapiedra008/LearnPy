@@ -27,12 +27,12 @@ def create_material():
 def create_material_of_exercise():
     try:
 
-        if 'front_page' not in request.files:
+        if 'file' not in request.files:
             return jsonify({'error': 'No file part (front_page)'}), 400
         
         exercise_code = int(request.form.get('exercise_code'))
         material_type_code = int(request.form.get('material_type_code'))
-        material_name = int(request.form.get('material_name'))
+        material_name = request.form.get('material_name')
         file = request.files['file']
 
         result, resp = Material.create_material_of_exercise(exercise_code, file, material_type_code, material_name)
