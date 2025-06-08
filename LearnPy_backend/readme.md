@@ -114,7 +114,7 @@ Respuesta: Usuario actualizado correctamente
 - **Método**: `POST`
 ```json
 {
-  "lesson_code": 101,
+  "topic_code": 101,
   "title": "Ejercicio 1",
   "instructions": "Resuelve el siguiente problema de variables.",
   "content": "print('Hola, Mundo')"
@@ -122,12 +122,12 @@ Respuesta: Usuario actualizado correctamente
 ```
 Respuesta: Ejercicio creado correctamente
 
-#### Obtener ejercicios por lección
+#### Obtener ejercicios por topico
 - **URL**: `/exercise/get_exercises`
 - **Método**: `POST`
 ```json
 {
-  "lesson_code": 101
+  "topic_code": 101
 }
 ```
 Respuesta: Lista de ejercicios asociados a la lección.
@@ -138,7 +138,7 @@ Respuesta: Lista de ejercicios asociados a la lección.
 ```json
 {
   "exercise_code": 5,
-  "lesson_code": 101,
+  "topic_code": 101,
   "title": "Ejercicio 1 (Actualizado)",
   "instructions": "Completa el siguiente código.",
   "content": "print('Hola, Python')"
@@ -230,7 +230,7 @@ Respuesta: Las lecciones han sido obtenido correctamente
 - **URL**: `/material/create_material`
 - **Método**: `POST`
 **FormData**:
-- `lesson_code`: int  
+- `topic_code`: int  
 - `material_type_code`: int  
 - `material_name`: string  
 - `file`: archivo  
@@ -264,3 +264,32 @@ Respuesta: Los materiales fueron obtenidos por leccion correctamente
 
 ---
 Respuesta: Los tipos de materiales fueron obtenidos correctamente
+---
+
+##  API de Exercise Materials
+
+#### Eliminar material
+- **URL**: `/exercise_material/delete_exercise_material`
+- **Método**: `POST`
+```json
+{
+  "exercise_material_code": 1,
+  "rute": "ruta_del_archivo"
+}
+```
+Respuesta: El materia de ejercicio fue eliminado correctamente
+
+--
+
+##  API de Topicos
+
+#### Eliminar topico
+- **URL**: `/topic/delete_topic`
+- **Método**: `POST`
+```json
+{
+  "topic_code": 5
+}
+```
+Respuesta: Topico eliminado correctamente.
+---
