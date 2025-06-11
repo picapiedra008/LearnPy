@@ -39,7 +39,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
 }
 
-/* Header */
+/* Header mejorado */
 .header {
   background: var(--white);
   border-bottom: 1px solid var(--gray-100);
@@ -679,7 +679,6 @@
   margin-bottom: 0.5rem;
   line-height: 1.4;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -784,7 +783,7 @@
   line-height: 1.5;
 }
 
-/* Modal */
+/* Modal Mejorado */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -803,8 +802,8 @@
   background: var(--white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-xl);
-  max-width: 90vw;
-  max-height: 90vh;
+  max-width: 95vw;
+  max-height: 95vh;
   width: 100%;
   overflow-y: auto;
 }
@@ -941,7 +940,7 @@
   background: #d1fae5;
 }
 
-/* Code Editor */
+/* Code Editor Mejorado */
 .code-editor-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -970,17 +969,73 @@
   padding: 1.5rem;
 }
 
+/* Editor wrapper mejorado */
+.code-editor-wrapper {
+  border: 1px solid var(--gray-600);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--gray-800);
+}
+
+.code-editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--gray-700);
+  border-bottom: 1px solid var(--gray-600);
+}
+
+.code-editor-toolbar.output {
+  background: #fbbf24;
+  border-bottom-color: #f59e0b;
+}
+
+.code-editor-toolbar.console {
+  background: var(--gray-800);
+  border-bottom-color: var(--gray-700);
+}
+
+.editor-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.code-editor-toolbar.output .editor-title {
+  color: #92400e;
+}
+
+.editor-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.editor-btn {
+  background: none;
+  border: none;
+  color: var(--gray-300);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: var(--transition);
+}
+
+.editor-btn:hover {
+  background: var(--gray-600);
+}
+
 .code-textarea {
   width: 100%;
   background: var(--gray-800);
   color: #10b981;
-  border: 1px solid var(--gray-600);
-  border-radius: var(--border-radius);
+  border: none;
   padding: 0.75rem;
   font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 0.875rem;
   resize: none;
-  min-height: 300px;
+  min-height: 400px;
+  line-height: 1.5;
 }
 
 .code-textarea::placeholder {
@@ -989,8 +1044,6 @@
 
 .code-textarea:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
 .code-actions {

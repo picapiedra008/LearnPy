@@ -1,9 +1,13 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Link, useParams } from "react-router-dom"
 import "./crearLeccion.css"
 
 const CrearLeccion = () => {
+  const { id } = useParams()
+  const isEditing = Boolean(id)
+
   const [activeTab, setActiveTab] = useState("general")
   const [validationErrors, setValidationErrors] = useState({})
   const [touchedFields, setTouchedFields] = useState({})
@@ -281,7 +285,7 @@ const CrearLeccion = () => {
 
   return (
     <div className="crear-leccion-container">
-      {/* Header */}
+      {/* Header mejorado */}
       <header className="header">
         <div className="header-content">
           <div className="header-left">
@@ -296,11 +300,12 @@ const CrearLeccion = () => {
 
           <div className="header-right">
             <button className="notification-btn">
-              <i className="icon-bell"></i>
+              <span className="bell-icon">🔔</span>
               <span className="notification-badge"></span>
             </button>
             <div className="avatar">
               <img src="/placeholder.svg?height=32&width=32" alt="Avatar" />
+              <span className="avatar-fallback">JD</span>
             </div>
           </div>
         </div>
@@ -309,23 +314,23 @@ const CrearLeccion = () => {
       <div className="main-content">
         {/* Navigation and Save buttons */}
         <div className="action-buttons">
-          <button className="back-btn">
-            <i className="icon-arrow-left"></i>
+          <Link to="/listar" className="back-btn">
+            <span className="icon-arrow-left">←</span>
             <span>Volver a Lecciones</span>
-          </button>
+          </Link>
 
           <button
             onClick={handleSaveLesson}
             className={`save-btn ${isFormValid() ? "enabled" : "disabled"}`}
             disabled={!isFormValid()}
           >
-            <i className="icon-save"></i>
-            <span>Guardar Lección</span>
+            <span className="icon-save">💾</span>
+            <span>{isEditing ? "Actualizar Lección" : "Guardar Lección"}</span>
           </button>
         </div>
 
         <div className="content-grid">
-          {/* Sidebar */}
+          {/* Sidebar compacto */}
           <div className="sidebar">
             <div className="summary-card">
               <div className="summary-header">
@@ -334,32 +339,32 @@ const CrearLeccion = () => {
               <div className="summary-content">
                 <div className="summary-item">
                   <div className="summary-item-left">
-                    <i className="icon-book"></i>
-                    <span>Tópicos</span>
+                    <span className="icon-book">📚</span>
+                    <span className="text-gray-600">Tópicos</span>
                   </div>
                   <span className="summary-badge">{topics.length}</span>
                 </div>
 
                 <div className="summary-item">
                   <div className="summary-item-left">
-                    <i className="icon-code"></i>
-                    <span>Ejercicios</span>
+                    <span className="icon-code">💻</span>
+                    <span className="text-gray-600">Ejercicios</span>
                   </div>
                   <span className="summary-badge">{getTotalExercises()}</span>
                 </div>
 
                 <div className="summary-item">
                   <div className="summary-item-left">
-                    <i className="icon-file-text"></i>
-                    <span>Materiales</span>
+                    <span className="icon-file-text">📄</span>
+                    <span className="text-gray-600">Materiales</span>
                   </div>
                   <span className="summary-badge">{getTotalMaterials()}</span>
                 </div>
 
                 <div className="summary-progress">
                   <div className="progress-header">
-                    <span>Completado</span>
-                    <span>{getCompletionPercentage()}%</span>
+                    <span className="text-gray-600">Completado</span>
+                    <span className="font-medium">{getCompletionPercentage()}%</span>
                   </div>
                   <div className="progress-bar">
                     <div className="progress-fill" style={{ width: `${getCompletionPercentage()}%` }}></div>
@@ -367,12 +372,12 @@ const CrearLeccion = () => {
                   <div className="progress-status">
                     {isFormValid() ? (
                       <>
-                        <i className="icon-check-circle success"></i>
+                        <span className="icon-check-circle success">✅</span>
                         <span className="success">Listo para guardar</span>
                       </>
                     ) : (
                       <>
-                        <i className="icon-alert-circle warning"></i>
+                        <span className="icon-alert-circle warning">⚠️</span>
                         <span className="warning">Faltan campos</span>
                       </>
                     )}
@@ -382,7 +387,7 @@ const CrearLeccion = () => {
             </div>
           </div>
 
-          {/* Main Content */}
+          {/* Contenido principal */}
           <div className="main-panel">
             <div className="tabs-container">
               <div className="tabs-list">
@@ -406,7 +411,7 @@ const CrearLeccion = () => {
                   <div className="card">
                     <div className="card-header">
                       <h2 className="card-title">
-                        <i className="icon-book"></i>
+                        <span className="icon-book">📚</span>
                         Información Básica
                       </h2>
                     </div>
@@ -428,7 +433,7 @@ const CrearLeccion = () => {
                             />
                             {validationErrors.title && (
                               <p className="error-message">
-                                <i className="icon-alert-circle"></i>
+                                <span className="icon-alert-circle">⚠️</span>
                                 {validationErrors.title}
                               </p>
                             )}
@@ -449,7 +454,7 @@ const CrearLeccion = () => {
                             />
                             {validationErrors.description && (
                               <p className="error-message">
-                                <i className="icon-alert-circle"></i>
+                                <span className="icon-alert-circle">⚠️</span>
                                 {validationErrors.description}
                               </p>
                             )}
@@ -507,12 +512,12 @@ const CrearLeccion = () => {
                                     setLesson((prev) => ({ ...prev, coverImage: null }))
                                   }}
                                 >
-                                  <i className="icon-x"></i>
+                                  <span className="icon-x">×</span>
                                 </button>
                               </div>
                             ) : (
                               <div className="upload-placeholder">
-                                <i className="icon-upload"></i>
+                                <span className="icon-upload">📤</span>
                                 <p>Arrastra una imagen o haz clic para subir</p>
                                 <p className="upload-hint">PNG, JPG hasta 5MB</p>
                               </div>
@@ -550,7 +555,7 @@ const CrearLeccion = () => {
                   <div className="topics-header">
                     <h3>Tópicos del Curso</h3>
                     <button onClick={addTopic} className="add-topic-btn">
-                      <i className="icon-plus"></i>
+                      <span className="icon-plus">+</span>
                       Nuevo Tópico
                     </button>
                   </div>
@@ -558,7 +563,7 @@ const CrearLeccion = () => {
                   {topics.length > 0 && (
                     <div className="topic-navigation">
                       <button onClick={prevTopic} disabled={currentTopicIndex === 0} className="nav-btn prev">
-                        <i className="icon-chevron-left"></i>
+                        <span className="icon-chevron-left">‹</span>
                         Anterior
                       </button>
                       <div className="topic-indicator">
@@ -570,7 +575,7 @@ const CrearLeccion = () => {
                         className="nav-btn next"
                       >
                         Siguiente
-                        <i className="icon-chevron-right"></i>
+                        <span className="icon-chevron-right">›</span>
                       </button>
                     </div>
                   )}
@@ -590,7 +595,7 @@ const CrearLeccion = () => {
                               }
                             }}
                           >
-                            <i className="icon-x"></i>
+                            <span className="icon-x">×</span>
                           </button>
                         )}
                       </div>
@@ -612,7 +617,7 @@ const CrearLeccion = () => {
                           />
                           {validationErrors.topics?.[currentTopicIndex]?.title && (
                             <p className="error-message">
-                              <i className="icon-alert-circle"></i>
+                              <span className="icon-alert-circle">⚠️</span>
                               {validationErrors.topics[currentTopicIndex].title}
                             </p>
                           )}
@@ -634,7 +639,7 @@ const CrearLeccion = () => {
                           />
                           {validationErrors.topics?.[currentTopicIndex]?.description && (
                             <p className="error-message">
-                              <i className="icon-alert-circle"></i>
+                              <span className="icon-alert-circle">⚠️</span>
                               {validationErrors.topics[currentTopicIndex].description}
                             </p>
                           )}
@@ -644,7 +649,7 @@ const CrearLeccion = () => {
                         <div className="materials-section">
                           <div className="materials-header">
                             <h4>
-                              <i className="icon-upload"></i>
+                              <span className="icon-upload">📤</span>
                               Materiales de Estudio
                             </h4>
                             <div className="material-buttons">
@@ -661,7 +666,7 @@ const CrearLeccion = () => {
                                   input.click()
                                 }}
                               >
-                                <i className="icon-file-text"></i>
+                                <span className="icon-file-text">📄</span>
                                 Documentos
                               </button>
                               <button
@@ -675,7 +680,7 @@ const CrearLeccion = () => {
                                   input.click()
                                 }}
                               >
-                                <i className="icon-video"></i>
+                                <span className="icon-video">🎥</span>
                                 Videos
                               </button>
                               <button
@@ -689,7 +694,7 @@ const CrearLeccion = () => {
                                   input.click()
                                 }}
                               >
-                                <i className="icon-image"></i>
+                                <span className="icon-image">🖼️</span>
                                 Imágenes
                               </button>
                             </div>
@@ -706,7 +711,7 @@ const CrearLeccion = () => {
                                         className="remove-material-btn"
                                         onClick={() => removeMaterial(currentTopicIndex, materialIndex)}
                                       >
-                                        <i className="icon-x"></i>
+                                        <span className="icon-x">×</span>
                                       </button>
                                     </div>
                                     <div className="material-info">
@@ -723,7 +728,11 @@ const CrearLeccion = () => {
                                         className="material-title-input"
                                       />
                                       <div className="material-type">
-                                        <i className={`icon-${material.type}`}></i>
+                                        <span className={`icon-${material.type}`}>
+                                          {material.type === "document" && "📄"}
+                                          {material.type === "video" && "🎥"}
+                                          {material.type === "image" && "🖼️"}
+                                        </span>
                                         <span>{material.fileExtension || material.type}</span>
                                       </div>
                                     </div>
@@ -732,7 +741,7 @@ const CrearLeccion = () => {
                               </div>
                             ) : (
                               <div className="empty-materials">
-                                <i className="icon-upload"></i>
+                                <span className="icon-upload">📤</span>
                                 <p>No hay materiales agregados</p>
                                 <p className="empty-hint">Usa los botones de arriba para agregar archivos</p>
                               </div>
@@ -745,7 +754,7 @@ const CrearLeccion = () => {
                           <div className="exercises-header">
                             <h4>Ejercicios Prácticos</h4>
                             <button className="add-exercise-btn" onClick={() => addExercise(currentTopicIndex)}>
-                              <i className="icon-plus"></i>
+                              <span className="icon-plus">+</span>
                               Nuevo Ejercicio
                             </button>
                           </div>
@@ -764,7 +773,7 @@ const CrearLeccion = () => {
                                         setTopics(updatedTopics)
                                       }}
                                     >
-                                      <i className="icon-x"></i>
+                                      <span className="icon-x">×</span>
                                     </button>
                                   </div>
 
@@ -806,7 +815,7 @@ const CrearLeccion = () => {
                                       <div className="documents-header">
                                         <div className="documents-info">
                                           <label className="form-label">
-                                            <i className="icon-file-text"></i>
+                                            <span className="icon-file-text">📄</span>
                                             Documentos del ejercicio
                                           </label>
                                           <p className="documents-hint">
@@ -827,7 +836,7 @@ const CrearLeccion = () => {
                                             input.click()
                                           }}
                                         >
-                                          <i className="icon-plus"></i>
+                                          <span className="icon-plus">+</span>
                                           Agregar Archivo
                                         </button>
                                       </div>
@@ -851,21 +860,21 @@ const CrearLeccion = () => {
                                                   removeDocument(currentTopicIndex, exerciseIndex, documentIndex)
                                                 }
                                               >
-                                                <i className="icon-x"></i>
+                                                <span className="icon-x">×</span>
                                               </button>
                                             </div>
                                           ))}
                                         </div>
                                       ) : (
                                         <div className="empty-documents">
-                                          <i className="icon-file-text"></i>
+                                          <span className="icon-file-text">📄</span>
                                           <p>No hay documentos agregados</p>
                                           <p className="empty-hint">Agrega documentos para complementar el ejercicio</p>
                                         </div>
                                       )}
                                     </div>
 
-                                    {/* Code Editor */}
+                                    {/* Code Editor Mejorado */}
                                     <div className="code-editor-section">
                                       <div className="code-editor-header">
                                         <label className="switch-container">
@@ -882,43 +891,70 @@ const CrearLeccion = () => {
                                           <span className="switch-slider"></span>
                                         </label>
                                         <label className="code-editor-label">
-                                          <i className="icon-code"></i>
+                                          <span className="icon-code">💻</span>
                                           Incluir editor de código Python
                                         </label>
                                       </div>
 
                                       {exercise.hasCodeEditor && (
                                         <div className="code-editor-content">
-                                          <div className="form-group">
-                                            <label className="form-label code-label">Código inicial (opcional)</label>
-                                            <textarea
-                                              placeholder="# Código inicial para el estudiante..."
-                                              value={exercise.starterCode}
-                                              onChange={(e) => {
-                                                const updatedTopics = [...topics]
-                                                updatedTopics[currentTopicIndex].exercises[exerciseIndex].starterCode =
-                                                  e.target.value
-                                                setTopics(updatedTopics)
-                                              }}
-                                              className="code-textarea"
-                                              rows="6"
-                                            />
-                                          </div>
-                                          <div className="form-group">
-                                            <label className="form-label code-label">Salida esperada (opcional)</label>
-                                            <textarea
-                                              placeholder="Resultado esperado del código..."
-                                              value={exercise.expectedOutput}
-                                              onChange={(e) => {
-                                                const updatedTopics = [...topics]
-                                                updatedTopics[currentTopicIndex].exercises[
-                                                  exerciseIndex
-                                                ].expectedOutput = e.target.value
-                                                setTopics(updatedTopics)
-                                              }}
-                                              className="code-textarea output"
-                                              rows="3"
-                                            />
+                                          <div className="code-editor-grid">
+                                            <div className="code-input-section">
+                                              <label className="code-label">Código inicial (opcional)</label>
+                                              <div className="code-editor-wrapper">
+                                                <div className="code-editor-toolbar">
+                                                  <span className="editor-title">Python</span>
+                                                  <div className="editor-controls">
+                                                    <button className="editor-btn" type="button">
+                                                      <span>📋</span>
+                                                    </button>
+                                                    <button className="editor-btn" type="button">
+                                                      <span>🔄</span>
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                                <textarea
+                                                  placeholder="# Código inicial para el estudiante..."
+                                                  value={exercise.starterCode}
+                                                  onChange={(e) => {
+                                                    const updatedTopics = [...topics]
+                                                    updatedTopics[currentTopicIndex].exercises[
+                                                      exerciseIndex
+                                                    ].starterCode = e.target.value
+                                                    setTopics(updatedTopics)
+                                                  }}
+                                                  className="code-textarea starter-code"
+                                                  rows="12"
+                                                />
+                                              </div>
+                                            </div>
+
+                                            <div className="code-output-section">
+                                              <label className="code-label">Salida esperada (opcional)</label>
+                                              <div className="code-editor-wrapper">
+                                                <div className="code-editor-toolbar output">
+                                                  <span className="editor-title">Salida esperada</span>
+                                                  <div className="editor-controls">
+                                                    <button className="editor-btn" type="button">
+                                                      <span>👁️</span>
+                                                    </button>
+                                                  </div>
+                                                </div>
+                                                <textarea
+                                                  placeholder="Resultado esperado del código..."
+                                                  value={exercise.expectedOutput}
+                                                  onChange={(e) => {
+                                                    const updatedTopics = [...topics]
+                                                    updatedTopics[currentTopicIndex].exercises[
+                                                      exerciseIndex
+                                                    ].expectedOutput = e.target.value
+                                                    setTopics(updatedTopics)
+                                                  }}
+                                                  className="code-textarea output-code"
+                                                  rows="12"
+                                                />
+                                              </div>
+                                            </div>
                                           </div>
                                         </div>
                                       )}

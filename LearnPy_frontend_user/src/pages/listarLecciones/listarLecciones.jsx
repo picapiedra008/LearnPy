@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import "./listarLecciones.css"
 
 const ListarLecciones = () => {
@@ -109,7 +110,7 @@ const ListarLecciones = () => {
 
   return (
     <div className="listar-lecciones-container">
-      {/* Header */}
+      {/* Header mejorado */}
       <header className="header">
         <div className="header-content">
           <div className="header-left">
@@ -124,11 +125,12 @@ const ListarLecciones = () => {
 
           <div className="header-right">
             <button className="notification-btn">
-              <span className="icon-bell">🔔</span>
+              <span className="bell-icon">🔔</span>
               <span className="notification-badge"></span>
             </button>
             <div className="avatar">
               <img src="/placeholder.svg?height=32&width=32" alt="Avatar" />
+              <span className="avatar-fallback">JD</span>
             </div>
           </div>
         </div>
@@ -143,10 +145,10 @@ const ListarLecciones = () => {
               <p className="page-subtitle">Gestiona y crea contenido educativo interactivo</p>
             </div>
 
-            <a href="/crear-leccion" className="new-lesson-btn">
+            <Link to="/crear-leccion" className="new-lesson-btn">
               <span className="icon-plus">+</span>
               Nueva Lección
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -219,15 +221,15 @@ const ListarLecciones = () => {
                     Actualizado: {new Date(lesson.lastUpdated).toLocaleDateString("es-ES")}
                   </span>
                   <div className="lesson-actions">
-                    <a href={`/crear-leccion?edit=${lesson.id}`} className="action-btn edit-btn">
+                    <Link to={`/crear-leccion/${lesson.id}`} className="action-btn edit-btn">
                       <span className="icon-edit">✏️</span>
-                    </a>
+                    </Link>
                     <button onClick={() => handleDelete(lesson)} className="action-btn delete-btn">
                       <span className="icon-trash">🗑️</span>
                     </button>
-                    <a href={`/curso/${lesson.id}`} className="action-btn view-btn">
+                    <Link to={`/curso/${lesson.id}`} className="action-btn view-btn">
                       <span className="icon-users">👥</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

@@ -39,7 +39,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
 }
 
-/* Header */
+/* Header mejorado */
 .header {
   background: var(--white);
   border-bottom: 1px solid var(--gray-100);
@@ -111,6 +111,10 @@
   background: #f3e8ff;
 }
 
+.bell-icon {
+  font-size: 1.25rem;
+}
+
 .notification-badge {
   position: absolute;
   top: -2px;
@@ -121,10 +125,28 @@
   border-radius: 50%;
 }
 
-.avatar img {
+.avatar {
+  position: relative;
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
+  overflow: hidden;
+  background: var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-fallback {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--gray-600);
 }
 
 /* Main Content */
@@ -245,6 +267,10 @@
   color: var(--gray-600);
 }
 
+.text-gray-600 {
+  color: var(--gray-600);
+}
+
 .summary-badge {
   background: var(--gray-200);
   color: var(--gray-800);
@@ -265,6 +291,10 @@
   justify-content: space-between;
   font-size: 0.75rem;
   margin-bottom: 0.5rem;
+}
+
+.font-medium {
+  font-weight: 500;
 }
 
 .progress-bar {
@@ -289,11 +319,11 @@
   font-size: 0.75rem;
 }
 
-.progress-status.success {
+.success {
   color: var(--success-color);
 }
 
-.progress-status.warning {
+.warning {
   color: var(--warning-color);
 }
 
@@ -889,7 +919,7 @@ input:checked + .slider:before {
   height: 200px;
 }
 
-.empty-materials i {
+.empty-materials span {
   font-size: 3rem;
   color: var(--gray-300);
   margin-bottom: 0.75rem;
@@ -1131,13 +1161,13 @@ input:checked + .slider:before {
   color: var(--gray-500);
 }
 
-.empty-documents i {
+.empty-documents span {
   font-size: 2.5rem;
   color: var(--gray-300);
   margin-bottom: 0.5rem;
 }
 
-/* Code Editor Section */
+/* Code Editor Section Mejorado */
 .code-editor-section {
   background: var(--gray-900);
   border-radius: var(--border-radius-lg);
@@ -1208,22 +1238,107 @@ input:checked + .switch-slider:before {
 .code-editor-content {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+}
+
+/* Grid mejorado para el editor de código */
+.code-editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.code-input-section,
+.code-output-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .code-label {
   color: var(--gray-300) !important;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
-.code-textarea {
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
-  font-size: 0.875rem;
-  background: var(--gray-800);
-  color: #10b981;
+/* Editor wrapper mejorado */
+.code-editor-wrapper {
   border: 1px solid var(--gray-600);
   border-radius: var(--border-radius);
+  overflow: hidden;
+  background: var(--gray-800);
+}
+
+.code-editor-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--gray-700);
+  border-bottom: 1px solid var(--gray-600);
+}
+
+.code-editor-toolbar.output {
+  background: #fbbf24;
+  border-bottom-color: #f59e0b;
+}
+
+.code-editor-toolbar.console {
+  background: var(--gray-800);
+  border-bottom-color: var(--gray-700);
+}
+
+.editor-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--white);
+}
+
+.code-editor-toolbar.output .editor-title {
+  color: #92400e;
+}
+
+.editor-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.editor-btn {
+  background: none;
+  border: none;
+  color: var(--gray-300);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: var(--transition);
+}
+
+.editor-btn:hover {
+  background: var(--gray-600);
+}
+
+/* Textarea mejorado */
+.code-textarea {
+  width: 100%;
+  border: none;
   padding: 0.75rem;
-  resize: vertical;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  resize: none;
+  background: transparent;
+}
+
+.code-textarea.starter-code {
+  background: var(--gray-800);
+  color: #10b981;
+  min-height: 300px;
+}
+
+.code-textarea.output-code {
+  background: #fffbeb;
+  color: #92400e;
+  min-height: 300px;
 }
 
 .code-textarea::placeholder {
@@ -1232,59 +1347,13 @@ input:checked + .switch-slider:before {
 
 .code-textarea:focus {
   outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
 }
 
-.code-textarea.output {
-  color: var(--gray-300);
-}
-
-/* Icons - Usando caracteres Unicode como fallback */
-.icon-arrow-left::before {
-  content: "←";
-}
-.icon-save::before {
-  content: "💾";
-}
-.icon-bell::before {
-  content: "🔔";
-}
-.icon-book::before {
-  content: "📖";
-}
-.icon-code::before {
-  content: "💻";
-}
-.icon-file-text::before {
-  content: "📄";
-}
-.icon-check-circle::before {
-  content: "✅";
-}
-.icon-alert-circle::before {
-  content: "⚠️";
-}
-.icon-plus::before {
-  content: "+";
-}
-.icon-x::before {
-  content: "×";
-}
-.icon-chevron-left::before {
-  content: "‹";
-}
-.icon-chevron-right::before {
-  content: "›";
-}
-.icon-upload::before {
-  content: "📤";
-}
-.icon-video::before {
-  content: "🎥";
-}
-.icon-image::before {
-  content: "🖼️";
+/* Responsive para el editor */
+@media (max-width: 1024px) {
+  .code-editor-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Responsive Design */

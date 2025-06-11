@@ -1,16 +1,18 @@
 "use client"
 
 import { useState } from "react"
+import { Link, useParams } from "react-router-dom"
 import "./verLeccion.css"
 
 const VerLeccion = () => {
+  const { id } = useParams()
   const [activeTab, setActiveTab] = useState("contenido")
   const [selectedExercise, setSelectedExercise] = useState(null)
   const [showExerciseModal, setShowExerciseModal] = useState(false)
   const [userCode, setUserCode] = useState("")
 
   const mockCourse = {
-    id: 1,
+    id: Number.parseInt(id) || 1,
     title: "Fundamentos de Python",
     description:
       "Aprende los conceptos básicos de Python desde cero: variables, tipos de datos, operadores y estructuras básicas de programación",
@@ -339,14 +341,14 @@ const VerLeccion = () => {
 
   return (
     <div className="ver-leccion-container">
-      {/* Header */}
+      {/* Header mejorado */}
       <header className="header">
         <div className="header-content">
           <div className="header-left">
-            <a href="/" className="back-btn">
+            <Link to="/listar" className="back-btn">
               <span className="icon-arrow-left">←</span>
               Volver
-            </a>
+            </Link>
             <div className="logo-section">
               <img src="/placeholder.svg?height=32&width=32" alt="LearnPy" className="logo" />
               <div className="logo-text">
@@ -601,7 +603,7 @@ const VerLeccion = () => {
           )}
         </div>
 
-        {/* Exercise Modal */}
+        {/* Exercise Modal Mejorado */}
         {showExerciseModal && selectedExercise && (
           <div className="modal-overlay">
             <div className="modal-content">
@@ -642,20 +644,33 @@ const VerLeccion = () => {
                   </div>
                 )}
 
-                {/* Code Editor */}
+                {/* Code Editor Mejorado */}
                 <div className="code-editor-grid">
                   <div className="code-editor-card">
                     <div className="code-editor-header">
                       <h3 className="editor-title">💻 Editor de Código Python</h3>
                     </div>
                     <div className="code-editor-content">
-                      <textarea
-                        value={userCode}
-                        onChange={(e) => setUserCode(e.target.value)}
-                        className="code-textarea"
-                        placeholder="Escribe tu código aquí..."
-                        rows="15"
-                      />
+                      <div className="code-editor-wrapper">
+                        <div className="code-editor-toolbar">
+                          <span className="editor-title">Python</span>
+                          <div className="editor-controls">
+                            <button className="editor-btn" type="button">
+                              <span>📋</span>
+                            </button>
+                            <button className="editor-btn" type="button">
+                              <span>🔄</span>
+                            </button>
+                          </div>
+                        </div>
+                        <textarea
+                          value={userCode}
+                          onChange={(e) => setUserCode(e.target.value)}
+                          className="code-textarea"
+                          placeholder="Escribe tu código aquí..."
+                          rows="20"
+                        />
+                      </div>
                       <div className="code-actions">
                         <button className="code-btn run-btn">▶️ Ejecutar</button>
                         <button className="code-btn reset-btn">🔄 Reiniciar</button>
@@ -671,7 +686,12 @@ const VerLeccion = () => {
                         <h4 className="output-title">👁️ Salida Esperada</h4>
                       </div>
                       <div className="output-content">
-                        <pre className="output-text expected">{selectedExercise.expectedOutput}</pre>
+                        <div className="code-editor-wrapper">
+                          <div className="code-editor-toolbar output">
+                            <span className="editor-title">Salida esperada</span>
+                          </div>
+                          <pre className="output-text expected">{selectedExercise.expectedOutput}</pre>
+                        </div>
                       </div>
                     </div>
 
@@ -681,7 +701,12 @@ const VerLeccion = () => {
                         <h4 className="output-title">Consola</h4>
                       </div>
                       <div className="console-content">
-                        <div className="console-text">Ejecuta tu código para ver la salida...</div>
+                        <div className="code-editor-wrapper">
+                          <div className="code-editor-toolbar console">
+                            <span className="editor-title">Consola</span>
+                          </div>
+                          <div className="console-text">Ejecuta tu código para ver la salida...</div>
+                        </div>
                       </div>
                     </div>
                   </div>
