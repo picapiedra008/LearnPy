@@ -50,6 +50,58 @@ class Lesson():
             if db:
                 db.close()
 
+    @classmethod
+    def create_lesson_with_topics(self, lesson_code: int, topics: list):
+
+        db = None
+        cursor = None
+
+        try:
+            db = get_connection()
+            cursor = db.cursor()
+
+            for topic in topics:
+                index = topic.get("index")
+                topic_title = topic.get("topic_title")
+                topic_description = topic.get("topic_description")
+                material_code = topic.get("material_code")
+                exercises = topic.get("exercises")
+
+                cursor.execute("""
+                    insert into topics (lesson_code, topic_index, topic_title, topic_description)
+                    values (%s, %s, %s, %s)
+                    returning topic_code;
+                """, (lesson_code, index, topic_title, topic_description))
+
+                topic_code = cursor.fetchone()[0]
+
+                for exercise in exercises:
+                    cursor.execute("""
+                        update exercises
+                        set topic_code = %s
+                        where exercise_code = %s;            
+                    """, (topic_code, exercise))
+
+                if material_code:
+                    cursor.execute("""
+                        update materials 
+                        set topic_code = %s
+                        where material_code = %s;       
+                    """, (topic_code, material_code))
+                
+            db.commit()
+            return {
+                "message": "Topicos creados satisfactoriamentes"
+            }, 201
+       
+        except Exception as ex:
+            return {"error": f"Error creando topicos: {str(ex)}"}, 500
+
+        finally:
+            if cursor:
+                cursor.close()
+            if db:
+                db.close()
     
     @classmethod
     def delete_lesson(self, lesson_code: int, file_id: str):
@@ -60,7 +112,7 @@ class Lesson():
             db = get_connection()
             with db.cursor() as cursor:
                 # Ejecutar la función para eliminar la lección
-                cursor.execute('SELECT delete_lesson(%s);', (lesson_code,))
+                cursor.execute('delete from lessons where lesson_code = (%s);', (lesson_code,))
                 db.commit()
                 result = cursor.fetchone()
                 
@@ -77,6 +129,30 @@ class Lesson():
         except Exception as e:
             return {'error': str(e)}, 500
 
+    @classmethod
+    def delete_lessons(self, data: list):
+        results = []
+        for lesson in data:
+            code = lesson.get('code')
+            file_id = lesson.get('front_page')
+            if code is None or file_id is None:
+                results.append({
+                    "code": code,
+                    "success": False,
+                    "error": "Missing code or front_page"
+                })
+                continue
+
+            result, status = self.delete_lesson(code, file_id)
+            results.append({
+                "code": code,
+                "success": status == 200,
+                "message": result.get('message') if status == 200 else result.get('error')
+            })
+
+        return {
+            "results": results
+        }, 200
 
     @classmethod
     def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file):

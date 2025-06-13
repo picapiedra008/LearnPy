@@ -7,15 +7,35 @@ main = Blueprint('materials_blueprint', __name__)
 def create_material():
     try:
 
-        if 'front_page' not in request.files:
+        if 'file' not in request.files:
             return jsonify({'error': 'No file part (front_page)'}), 400
         
-        lesson_code = int(request.form.get('lesson_code'))
+        topic_code_str = request.form.get('topic_code')
+        topic_code = int(topic_code_str) if topic_code_str else None
         material_type_code = int(request.form.get('material_type_code'))
-        material_name = int(request.form.get('material_name'))
+        material_name = request.form.get('material_name')
         file = request.files['file']
 
-        result, resp = Material.create_material(lesson_code, file, material_type_code, material_name)
+        print("###########")
+        result, resp = Material.create_material(topic_code, file, material_type_code, material_name)
+        return jsonify(result), resp
+    except Exception as ex:
+        print("Error:", ex)
+        return jsonify({'message': str(ex)}), 500
+
+@main.route('/create_material_of_exercise', methods=['POST'])
+def create_material_of_exercise():
+    try:
+
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part (front_page)'}), 400
+        
+        exercise_code = int(request.form.get('exercise_code'))
+        material_type_code = int(request.form.get('material_type_code'))
+        material_name = request.form.get('material_name')
+        file = request.files['file']
+
+        result, resp = Material.create_material_of_exercise(exercise_code, file, material_type_code, material_name)
         return jsonify(result), resp
     except Exception as ex:
         print("Error:", ex)

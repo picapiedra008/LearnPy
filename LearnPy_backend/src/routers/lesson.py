@@ -38,6 +38,27 @@ def create_lesson():
     result, resp = Lesson.create_lesson(user_code, level_code, visibility_code, title, description, file)
     return jsonify(result), resp
 
+@main.route('/topics', methods=['POST'])
+@handle_exceptions
+def create_lesson_with_topics():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({
+            'error': 'Body no recibido'
+        }), 400
+
+    lesson_code = data.get('lesson_code')
+    topics = data.get('topics', [])
+
+    if lesson_code is None or not isinstance(topics, list):
+        return jsonify({
+            'error': 'lesson_code o topics invalido'
+        }), 400
+
+    result, resp = Lesson.create_lesson_with_topics(lesson_code, topics)
+    return jsonify(result), resp
+
 @main.route('/get_lesson', methods=['POST'])
 @handle_exceptions
 def get_lesson():
@@ -68,6 +89,15 @@ def delete_lesson():
     lesson_code = get_param('lesson_code', int)
     file_id = get_param('front_page')
     result, resp = Lesson.delete_lesson(lesson_code, file_id)
+    return jsonify(result), resp
+
+@main.route('/delete_lessons', methods=['DELETE'])
+@handle_exceptions
+def delete_lessons():
+    data = request.get_json()
+    if not isinstance(data, list):
+        return jsonify({"error": "Se espera una lista"}), 400
+    result, resp = Lesson.delete_lessons(data)
     return jsonify(result), resp
 
 @main.route('/get_levels', methods=['GET'])
