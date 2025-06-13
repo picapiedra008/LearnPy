@@ -1,3 +1,4 @@
+import os
 import smtplib
 from email.message import EmailMessage
 
@@ -40,10 +41,9 @@ Estamos felices de tenerte con nosotros.
     msg['Subject'] = subject
     msg['To'] = email
 
-    user = ''  # Correo del remitente
+    user = os.getenv('EMAIL_USER')
     msg['From'] = f"LearnPy <{user}>"
-    msg['Reply-To'] = user
-    passKey = ''  # Clave de aplicación
+    passKey = os.getenv('EMAIL_PASS')
 
     msg.set_content(text_body)
     msg.add_alternative(html_body, subtype='html')
