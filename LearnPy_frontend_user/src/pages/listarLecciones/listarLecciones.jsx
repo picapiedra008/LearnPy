@@ -221,7 +221,7 @@ const ListarLecciones = () => {
                     Actualizado: {new Date(lesson.lastUpdated).toLocaleDateString("es-ES")}
                   </span>
                   <div className="lesson-actions">
-                    <Link to={`/crear-leccion/${lesson.id}`} className="action-btn edit-btn">
+                    <Link to={`/editar-leccion/${lesson.id}`} className="action-btn edit-btn">
                       <span className="icon-edit">✏️</span>
                     </Link>
                     <button onClick={() => handleDelete(lesson)} className="action-btn delete-btn">

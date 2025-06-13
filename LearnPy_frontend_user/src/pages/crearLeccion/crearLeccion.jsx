@@ -15,10 +15,13 @@ const CrearLeccion = () => {
   const [lesson, setLesson] = useState({
     title: "",
     description: "",
-    level: "",
+    level: 1,
     coverImage: null,
-    isVisible: true,
+    visibility: "",
   })
+
+  const [visibilities, setVisibilities] = useState([])
+  const [levels, setLevels] = useState([])
 
   const [topics, setTopics] = useState([
     {
@@ -31,6 +34,108 @@ const CrearLeccion = () => {
       order: 1,
     },
   ])
+
+
+  //obtener visibilidades
+
+
+  useEffect(() => {
+    const fetchVisibilities = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/lesson/get_visibilities", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+        const data = await res.json()
+        setVisibilities(data)
+      } catch (error) {
+        console.error("Error al obtener visibilidades:", error)
+      }
+    }
+
+    fetchVisibilities()
+  }, [])
+  
+
+
+
+    //obtener niveles
+
+
+  useEffect(() => {
+    const fetchLevels = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:5000/lesson/get_levels", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        })
+        const data = await res.json()
+        setLevels(data)
+      } catch (error) {
+        console.error("Error al obtener visibilidades:", error)
+      }
+    }
+
+    fetchLevels()
+  }, [])
+
+
+
+
+
+
+  //obtener leccion y demas
+  useEffect(() => {
+    if (isEditing) {
+      const obtenerLeccion = async () => {
+        try {
+          //leccion
+          const res = await fetch("http://127.0.0.1:5000/lesson/get_lesson", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lesson_code:Number(id) }),
+          })
+
+          const data = await res.json()
+          console.log("Leccion:", data)
+
+          //visibilidad
+          /*res = await fetch("http://127.0.0.1:5000/lesson/get_visibilities", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+
+
+    uri: "https://drive.google.com/uc?export=view&id=1BZr6hdsHUMQdxZ6stbBZ0tVhUVtZSWMa",
+  }}
+
+            body: JSON.stringify({ lesson_code:Number(id) }),
+          })
+          data = await res.json()*/
+
+
+
+
+          setLesson({
+
+            title: data.lesson_title,
+            description: data.lesson_description,
+            level:data.level_code,
+            coverImage: "https://drive.google.com/uc?export=view&id="+data.lesson_front_page+"&authuser=0",
+            visibility: data.visibility_code,
+            // otros campos
+          })
+
+          setTopics(data.topics || [])
+        } catch (error) {
+          console.error("Error al obtener lección:", error)
+        }
+      }
+
+      obtenerLeccion()
+    }
+  }, [id, isEditing])
+
+
 
   // Validación en tiempo real solo para campos tocados
   useEffect(() => {
@@ -54,6 +159,9 @@ const CrearLeccion = () => {
 
     if (touchedFields.level && !lesson.level) {
       errors.level = "Selecciona un nivel"
+    }
+    if (touchedFields.visibility && !lesson.visibility) {
+      errors.level = "Selecciona una visibilidad"
     }
 
     const topicErrors = {}
@@ -387,6 +495,10 @@ const CrearLeccion = () => {
             </div>
           </div>
 
+
+
+
+
           {/* Contenido principal */}
           <div className="main-panel">
             <div className="tabs-container">
@@ -466,14 +578,16 @@ const CrearLeccion = () => {
                             </label>
                             <select
                               value={lesson.level}
-                              onChange={(e) => setLesson((prev) => ({ ...prev, level: e.target.value }))}
+                              onChange={(e) => setLesson((prev) => ({ ...prev, level: Number(e.target.value) }))}
                               onBlur={() => handleFieldTouch("level")}
                               className={`form-select ${validationErrors.level ? "error" : ""}`}
                             >
                               <option value="">Seleccionar nivel</option>
-                              <option value="principiante">Principiante</option>
-                              <option value="intermedio">Intermedio</option>
-                              <option value="avanzado">Avanzado</option>
+                              {levels.map((l) => (
+                                <option key={l.level_code} value={l.level_code}>
+                                  {l.level_name}
+                                </option>
+                              ))}
                             </select>
                             {validationErrors.level && <p className="error-message">{validationErrors.level}</p>}
                           </div>
@@ -527,22 +641,24 @@ const CrearLeccion = () => {
                       </div>
 
                       {/* Visibility Settings */}
-                      <div className="settings-section">
-                        <h3>Configuración de la Lección</h3>
-                        <div className="setting-item">
-                          <div className="setting-info">
-                            <label className="setting-label">Lección Visible</label>
-                            <p className="setting-description">Los estudiantes pueden encontrar esta lección</p>
-                          </div>
-                          <label className="switch">
-                            <input
-                              type="checkbox"
-                              checked={lesson.isVisible}
-                              onChange={(e) => setLesson((prev) => ({ ...prev, isVisible: e.target.checked }))}
-                            />
-                            <span className="slider"></span>
-                          </label>
-                        </div>
+                      <div className="form-group">
+                            <label className="form-label">
+                              Visibilidad <span className="required">*</span>
+                            </label>
+                            <select
+                              value={lesson.visibility}
+                              onChange={(e) => setLesson((prev) => ({ ...prev, visibility: Number(e.target.value) }))}
+                              onBlur={() => handleFieldTouch("visibility")}
+                              className={`form-select ${validationErrors.visibility ? "error" : ""}`}
+                            >
+                              <option value="">Seleccionar nivel</option>
+                              {visibilities.map((v) => (
+                                <option key={v.visibility_code} value={v.visibility_code}>
+                                  {v.visibility_name}
+                                </option>
+                              ))}
+                            </select>
+                            {validationErrors.visibility && <p className="error-message">{validationErrors.visibility}</p>}
                       </div>
                     </div>
                   </div>

@@ -8,9 +8,8 @@ import CrearLeccion from "./pages/crearLeccion/crearLeccion"
 import VerLeccion from "./pages/verLecciones/verLeccion"
 import App from "./App"
 import "./index.css"
-import EditarLeccion from "./pages/editarLeccion/editarLeccion"
-import Ejercicios from "./pages/ejercicios"
-import LessonList from "./pages/LessonList"
+
+
 import Compilador from "./pages/Compilador/compilador"
 import "./index.css"
 
@@ -27,7 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/crear-leccion" element={<CrearLeccion />} />
         
         {/* Ruta para editar lección existente */}
-        <Route path="/editar-leccion/:id" element={<EditarLeccion />} />
+        <Route path="/editar-leccion/:id" element={<CrearLeccion />} />
         
         {/* Ruta para ver lección como estudiante */}
         <Route path="/curso/:id" element={<VerLeccion />} />        
