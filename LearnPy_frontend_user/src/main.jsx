@@ -1,15 +1,15 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
-import App from "./App"
-import CrearLecciones from "./pages/crearLecciones"
-import EditarLecciones from "./pages/editarLecciones"
-import LessonList from "./pages/LessonList"
 
+// Importar los componentes de las páginas
+import ListarLecciones from "./pages/listarLecciones/listarLecciones"
+import CrearLeccion from "./pages/crearLeccion/crearLeccion"
+import VerLeccion from "./pages/verLecciones/verLeccion"
+import App from "./App"
 import "./index.css"
 
-import Ejercicios from "./pages/ejercicios"
-import LessonList from "./pages/LessonList"
+
 import Compilador from "./pages/Compilador/compilador"
 import "./index.css"
 
@@ -17,12 +17,19 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Router>
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/listar" element={<LessonList />} />
-        <Route path="/crear-leccion" element={<CrearLecciones />} />
-        <Route path="/editar-leccion" element={<EditarLecciones />} />
-        <Route path="/ejercicios" element={<Ejercicios />} />
-        <Route path="/compilador" element={<Compilador />} />
+         <Route path="/" element={<App />} />
+
+          {/* Ruta para crear nueva lección */}
+        <Route path="/listar" element={<ListarLecciones />} />
+
+        {/* Ruta para crear nueva lección */}
+        <Route path="/crear-leccion" element={<CrearLeccion />} />
+        
+        {/* Ruta para editar lección existente */}
+        <Route path="/editar-leccion/:id" element={<CrearLeccion />} />
+        
+        {/* Ruta para ver lección como estudiante */}
+        <Route path="/curso/:id" element={<VerLeccion />} />        
       </Routes>
     </Router>
   </React.StrictMode>,
