@@ -4,11 +4,11 @@ from src.utils.security import  get_connection
 class Exercise():
     
     @classmethod
-    def insert_exercise(self, topic_code: int, title: str, instructions: str, answer: str, initial_code: str):
+    def insert_exercise(self, topic_code: int, title: str, instructions: str, answer: str, initial_code: str, with_python_code: bool):
         try:
             db = get_connection()
             cursor = db.cursor()
-            cursor.execute('SELECT insert_exercise(%s, %s, %s, %s, %s);', (topic_code, title, instructions, answer, initial_code))
+            cursor.execute('SELECT insert_exercise(%s, %s, %s, %s, %s, %s);', (topic_code, title, instructions, answer, initial_code, with_python_code))
             new_code = cursor.fetchone()[0]
             db.commit()
 
@@ -23,11 +23,11 @@ class Exercise():
 
 
     @classmethod
-    def update_exercise(self, exercise_code: int, topic_code: int, title: str, instructions: str, content: str):
+    def update_exercise(self,exercise_code, topic_code: int, title: str, instructions: str, answer: str, initial_code: str, with_python_code: bool):
         try:
             db = get_connection()
             cursor = db.cursor()
-            cursor.execute('SELECT update_exercises(%s, %s, %s, %s, %s);', (exercise_code, topic_code, title, instructions, content))
+            cursor.execute('SELECT update_exercises(%s, %s, %s, %s, %s, %s, %s);', (exercise_code,topic_code, title, instructions, answer, initial_code, with_python_code))
             updated_code = cursor.fetchone()[0]
             db.commit()
 
