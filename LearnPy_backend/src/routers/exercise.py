@@ -29,7 +29,8 @@ def create_exercise():
     instructions = get_param('instructions')
     answer = get_param('answer')
     initial_code = get_param('initial_code')
-    result, resp = Exercise.insert_exercise(topic_code, title, instructions, answer, initial_code)
+    with_python_code = get_param('with_python_code')
+    result, resp = Exercise.insert_exercise(topic_code, title, instructions, answer, initial_code,with_python_code)
     return jsonify(result), resp
 
 @main.route('/get_exercises', methods=['POST'])
@@ -42,12 +43,14 @@ def get_exercises():
 @main.route('/update_exercise', methods=['PUT'])
 @handle_exceptions
 def update_exercise():
-    exercise_code = get_param('exercise_code', int)
     topic_code = get_param('topic_code', int)
+    exercise_code = get_param('exercise_code', int)
     title = get_param('title')
     instructions = get_param('instructions')
-    content = get_param('content')
-    result, resp = Exercise.update_exercise(exercise_code, topic_code, title, instructions, content)
+    answer = get_param('answer')
+    initial_code = get_param('initial_code')
+    with_python_code = get_param('with_python_code')
+    result, resp = Exercise.update_exercise(exercise_code,topic_code,  title, instructions, answer, initial_code, with_python_code)
     return jsonify(result), resp
 
 @main.route('/delete_exercise', methods=['POST'])
