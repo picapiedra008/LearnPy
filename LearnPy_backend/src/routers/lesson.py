@@ -69,8 +69,6 @@ def get_lesson():
 @main.route('/update_lesson', methods=['PUT'])
 @handle_exceptions
 def update_lesson():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part (file)'}), 400
 
     lesson_code = get_form_param('lesson_code', int)
     level_code = get_form_param('level_code', int)
@@ -78,7 +76,7 @@ def update_lesson():
     title = get_form_param('title')
     description = get_form_param('description')
     front_page = get_form_param('front_page')
-    file = request.files['file']
+    file = request.files.get('file')
 
     result, resp = Lesson.update_lesson(lesson_code, level_code, visibility_code, title, description, front_page, file)
     return jsonify(result), resp
