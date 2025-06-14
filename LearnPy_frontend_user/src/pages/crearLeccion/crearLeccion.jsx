@@ -120,7 +120,7 @@ const CrearLeccion = () => {
             title: data.lesson_title,
             description: data.lesson_description,
             level:data.level_code,
-            coverImage: "https://drive.google.com/uc?export=view&id="+data.lesson_front_page+"&authuser=0",
+            coverImage: "https://drive.google.com/uc?export=view&id="+data.lesson_front_page,
             visibility: data.visibility_code,
             // otros campos
           })
@@ -637,6 +637,9 @@ const CrearLeccion = () => {
                               </div>
                             )}
                           </div>
+
+
+                          
                         </div>
                       </div>
 
