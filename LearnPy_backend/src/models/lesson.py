@@ -155,16 +155,16 @@ class Lesson():
         }, 200
 
     @classmethod
-    def update_lesson(lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file):
+    def update_lesson(cls, lesson_code: int, level_code: int, visibility_code: int, title: str, description:str, front_page: str, file):
         
         db = None
         cursor = None
         try:
             db = get_connection()
             cursor = db.cursor()
-
-            if file is not None:
-
+            print("file:", file)
+            print("file.filename:", file.filename if file else "None")
+            if file and file.filename:
                 delete_file_from_drive(front_page)
 
                 file_path = f"./{file.filename}"

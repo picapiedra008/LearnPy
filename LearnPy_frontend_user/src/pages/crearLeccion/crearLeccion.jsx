@@ -20,12 +20,19 @@ const CrearLeccion = () => {
     visibility: "",
   })
 
+  //materiales y cover si se cambian
+  const [coverInitial, setCoverInitial] = useState(null);
+  const [InitialMaterials, setInitialMaterials] = useState([]);
+  const [InitialExerciseMaterials, setInitialExerciseMaterials] = useState([]);
+
+  const [coverFile,setCoverFile] = useState(null);
+
   const [visibilities, setVisibilities] = useState([])
   const [levels, setLevels] = useState([])
 
   const [topics, setTopics] = useState([
     {
-      id: "1",
+      id: "-1",
       title: "",
       description: "",
       duration: 30,
@@ -34,6 +41,8 @@ const CrearLeccion = () => {
       order: 1,
     },
   ])
+
+  
 
 
   //obtener visibilidades
@@ -81,7 +90,15 @@ const CrearLeccion = () => {
 
 
 
+  const getCoverImageUrl = () => {
+    if (!lesson.coverImage) return "/placeholder.svg";
 
+    // Si ya es una URL completa
+    if (lesson.coverImage.startsWith("blob:http")) return lesson.coverImage;
+
+    // Si solo es un ID de Drive
+    return `https://drive.google.com/uc?export=view&id=${lesson.coverImage}`;
+  };
 
 
   //obtener leccion y demas
@@ -98,34 +115,20 @@ const CrearLeccion = () => {
 
           const data = await res.json()
           console.log("Leccion:", data)
-
-          //visibilidad
-          /*res = await fetch("http://127.0.0.1:5000/lesson/get_visibilities", {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-
-
-    uri: "https://drive.google.com/uc?export=view&id=1BZr6hdsHUMQdxZ6stbBZ0tVhUVtZSWMa",
-  }}
-
-            body: JSON.stringify({ lesson_code:Number(id) }),
-          })
-          data = await res.json()*/
-
-
-
-
+          
+          setCoverInitial(data.lesson_front_page)
+          
           setLesson({
 
             title: data.lesson_title,
             description: data.lesson_description,
             level:data.level_code,
-            coverImage: "https://drive.google.com/uc?export=view&id="+data.lesson_front_page+"&authuser=0",
+            coverImage: data.lesson_front_page,
             visibility: data.visibility_code,
             // otros campos
           })
 
-          setTopics(data.topics || [])
+        
         } catch (error) {
           console.error("Error al obtener lección:", error)
         }
@@ -201,7 +204,7 @@ const CrearLeccion = () => {
 
   const addTopic = () => {
     const newTopic = {
-      id: Date.now().toString(),
+      id: "-1",
       title: "",
       description: "",
       duration: 30,
@@ -258,7 +261,7 @@ const CrearLeccion = () => {
 
   const addExercise = (topicIndex) => {
     const newExercise = {
-      id: Date.now().toString(),
+      id: -1,
       title: "",
       description: "",
       hasCodeEditor: true,
@@ -375,6 +378,44 @@ const CrearLeccion = () => {
   }
 
   const handleSaveLesson = () => {
+    if(isEditing){
+      //leccion
+      const actualizar_leccion = async () => {
+        try {
+          const formData = new FormData()
+          formData.append("lesson_code", id)
+          formData.append("level_code", lesson.level)
+          formData.append("visibility_code", lesson.visibility)
+          formData.append("title", lesson.title)
+          formData.append("description", lesson.description)
+          formData.append("front_page", coverInitial)
+          if (coverFile) {
+            formData.append('file', coverFile);
+          }
+
+
+          const res = await fetch("http://127.0.0.1:5000/lesson/update_lesson", {
+            method: "PUT",
+            body: formData,
+          })
+
+          const data = await res.json()
+          console.log("Lección actualizada:", data)
+
+        
+        } catch (error) {
+          console.error("Error al guardar lección:", error)
+        }
+      }
+      actualizar_leccion()
+
+      //topicos
+        //ejercicios
+    }else{
+
+    }
+
+
     console.log("Guardando lección:", { lesson, topics })
     alert("Lección guardada exitosamente!")
   }
@@ -605,6 +646,7 @@ const CrearLeccion = () => {
                                 const file = e.target.files?.[0]
                                 if (file) {
                                   const url = URL.createObjectURL(file)
+                                  setCoverFile(file)
                                   setLesson((prev) => ({ ...prev, coverImage: url }))
                                 }
                               }
@@ -614,7 +656,7 @@ const CrearLeccion = () => {
                             {lesson.coverImage ? (
                               <div className="image-preview">
                                 <img
-                                  src={lesson.coverImage || "/placeholder.svg"}
+                                  src={getCoverImageUrl()}
                                   alt="Portada"
                                   className="preview-image"
                                 />
@@ -624,6 +666,7 @@ const CrearLeccion = () => {
                                     e.stopPropagation()
                                     if (lesson.coverImage) URL.revokeObjectURL(lesson.coverImage)
                                     setLesson((prev) => ({ ...prev, coverImage: null }))
+                                    setCoverFile(null)
                                   }}
                                 >
                                   <span className="icon-x">×</span>
@@ -637,6 +680,9 @@ const CrearLeccion = () => {
                               </div>
                             )}
                           </div>
+
+
+                          
                         </div>
                       </div>
 
