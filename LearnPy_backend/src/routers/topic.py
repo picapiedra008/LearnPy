@@ -23,3 +23,11 @@ def delete_topic():
     topic_code = get_param('topic_code', int)
     result, resp = Topic.delete_topic(topic_code)
     return jsonify(result), resp
+
+
+@main.route('/get_topics', methods=['POST'])
+@handle_exceptions
+def get_topics():
+    lesson_code = get_param('lesson_code', int)
+    result, resp = Topic.get_topics(lesson_code)
+    return jsonify(result), resp

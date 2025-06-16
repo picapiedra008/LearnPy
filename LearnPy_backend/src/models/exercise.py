@@ -65,24 +65,25 @@ class Exercise():
             cursor = db.cursor()
 
             cursor.execute('''
-                SELECT exercise_code, exercise_title, 
-                       exercise_instructions, exercise_answer
+                SELECT *
                 FROM get_exercises(%s);
             ''', (topic_code,))
 
-            row = cursor.fetchone()
-
-            if row is None:
-                return {}, 204
-
-            exercise = {
+            rows = cursor.fetchall()
+            exercises = []
+            for row in rows:
+                exercises.append({
                 "exercise_code": int(row[0]),
                 "exercise_title": str(row[1]).strip(),
                 "exercise_instructions": str(row[2]).strip(),
-                "exercise_content": str(row[3]).strip()
-            }
+                "exercise_answer": str(row[3]).strip(),
+                "exercise_intial_python_code":str(row[4]).strip(),
+                "with_python_code":bool(row[5])
+                })
+            
 
-            return exercise, 200
+
+            return exercises, 200 if exercises else 204
 
         except Exception as ex:
             return {"error": f"Error retrieving exercise: {str(ex)}"}, 500
