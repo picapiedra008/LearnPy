@@ -42,8 +42,8 @@ const CrearLeccion = () => {
     },
   ])
 
-  
-
+  const [deleted_topics,setDeletedTopics] = useState([])
+  const [deleted_exercises, setDeletedExercises] = useState([])
 
   //obtener visibilidades
 
@@ -107,13 +107,13 @@ const CrearLeccion = () => {
       const obtenerLeccion = async () => {
         try {
           //leccion
-          const res = await fetch("http://127.0.0.1:5000/lesson/get_lesson", {
+          let res = await fetch("http://127.0.0.1:5000/lesson/get_lesson", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ lesson_code:Number(id) }),
           })
 
-          const data = await res.json()
+          let data = await res.json()
           console.log("Leccion:", data)
           
           setCoverInitial(data.lesson_front_page)
@@ -124,9 +124,73 @@ const CrearLeccion = () => {
             description: data.lesson_description,
             level:data.level_code,
             coverImage: data.lesson_front_page,
-            visibility: data.visibility_code,
-            // otros campos
+            visibility: data.visibility_code
+
+            
           })
+          //topicos   
+
+          res = await fetch("http://127.0.0.1:5000/topic/get_topics", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lesson_code:Number(id) }),
+          })
+
+          data = await res.json()
+          console.log("topicos:", data)
+          const topicos_con_todo = [];
+          for (const t of data) {
+            try {
+                res = await fetch("http://127.0.0.1:5000/exercise/get_exercises", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic_code: Number(t.topic_code) }),
+              });
+              let excerc = []
+              const ejercicios = await res.json();
+              console.log("ejercicios para topic", t.topic_code, ":", ejercicios);
+              for (const e of ejercicios){
+                /*res = await fetch("http://127.0.0.1:5000/exercise_material/get_materials_by_lesson", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ topic_code: Number(t.topic_code) }),
+                });*/
+
+
+
+
+                excerc.push({
+                  id: e.exercise_code,
+                  title: e.exercise_title,
+                  description:e.exercise_instructions,
+                  documents:[],
+                  hasCodeEditor:e.with_python_code,
+                  starterCode:e.exercise_initial_python_code,
+                  expectedOutput:e.exercise_answer
+                });
+              }
+              topicos_con_todo.push({
+                id: t.topic_code,
+                title: t.topic_title,
+                description: t.topic_description,
+                duration: 30,
+                materials: [],
+                exercises: excerc,
+                order: t.topic_index,
+              });
+            } catch (error) {
+              console.error("Error al obtener los ejercicios:", error);
+            }
+          }
+          setTopics(topicos_con_todo);
+
+          /*      id: "-1",
+      title: "",
+      description: "",
+      duration: 30,
+      materials: [],
+      exercises: [],
+      order: 1, */
 
         
         } catch (error) {
@@ -400,7 +464,10 @@ const CrearLeccion = () => {
           })
 
           const data = await res.json()
-          console.log("Lección actualizada:", data)
+          console.log("Leccion:", data)
+
+          //topicos
+
 
         
         } catch (error) {
@@ -410,6 +477,8 @@ const CrearLeccion = () => {
       actualizar_leccion()
 
       //topicos
+
+
         //ejercicios
     }else{
 
