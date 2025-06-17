@@ -299,7 +299,7 @@ class Lesson():
 
             cursor.execute('''
                 SELECT lesson_code, lesson_title, lesson_front_page, 
-                       level_name, visibility_name
+                       level_name, visibility_name, lesson_description
                 FROM get_lessons(%s);
             ''', (user_code,))
 
@@ -312,7 +312,8 @@ class Lesson():
                     "lesson_title": str(row[1]).strip(),
                     "lesson_front_page": str(row[2]).strip(),
                     "level_name": str(row[3]).strip(),
-                    "visibility_name": str(row[4]).strip()
+                    "visibility_name": str(row[4]).strip().capitalize,
+                    "lesson_description": str(row[5].strip())
                 })
 
             return lessons, 200 if lessons else 204

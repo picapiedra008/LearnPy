@@ -95,14 +95,14 @@ class Material():
             return {"error": str(e)}, 500
 
     @classmethod
-    def get_materials_by_lesson(self, lesson_code: int):
+    def get_materials_by_topic(self, lesson_code: int):
         try:
             conn = get_connection()
             cur = conn.cursor()
 
-            cur.execute("SELECT * FROM get_materials_by_lesson(%s)", (lesson_code,))
+            cur.execute("SELECT * FROM get_materials_by_topic(%s)", (lesson_code,))
             rows = cur.fetchall()
-            columns = ['material_code', 'lesson_code', 'material_type_name', 'material_name', 'material_rute']
+            columns = ['material_code', 'topic_code', 'material_type_name', 'material_name', 'material_rute']
             materials = [dict(zip(columns, row)) for row in rows]
 
             cur.close()
