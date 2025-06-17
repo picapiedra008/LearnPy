@@ -141,6 +141,29 @@ const CrearLeccion = () => {
           const topicos_con_todo = [];
           for (const t of data) {
             try {
+                res = await fetch("http://127.0.0.1:5000/material/get_materials_by_topic", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ topic_code: Number(t.topic_code) }),
+                });
+                const materiales_topicos = await res.json();
+                console.log("materiales topico", ":", materiales_topicos);
+                let to_mat = []
+                if(res.status !== 204){
+                  for (const tm of materiales_topicos){
+                    to_mat.push({
+                      id:"t"+tm.exercise_material_code,
+                      type:tm.material_type_name,
+                      title:tm.material_name,
+                      file:null,
+                      url:tm.material_rute,
+                      description:"",
+                      fileExtension:tm.material_type_name
+                    })
+                  }
+                }
+
+
                 res = await fetch("http://127.0.0.1:5000/exercise/get_exercises", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -150,20 +173,39 @@ const CrearLeccion = () => {
               const ejercicios = await res.json();
               console.log("ejercicios para topic", t.topic_code, ":", ejercicios);
               for (const e of ejercicios){
-                /*res = await fetch("http://127.0.0.1:5000/exercise_material/get_materials_by_lesson", {
+                res = await fetch("http://127.0.0.1:5000/exercise_material/get_exercise_materials", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ topic_code: Number(t.topic_code) }),
-                });*/
-
-
+                  body: JSON.stringify({ exercise_code: Number(e.exercise_code) }),
+                });
+                let ex_mat = [];
+                if(res.status !== 204){
+                    const materiales_ejercicios = await res.json();
+                    console.log("materiales", ":", materiales_ejercicios);
+                    if(materiales_ejercicios[0]){
+                      for (const em of materiales_ejercicios){
+                        ex_mat.push({
+                          id:em.exercise_material_code,
+                          type:em.material_type_name,
+                          title:em.material_name,
+                          file:null,
+                          url:em.material_rute,
+                          description:"",
+                          fileExtension:em.material_type_name
+                        })
+                      }
+                    }
+                }
+                
+               
+                
 
 
                 excerc.push({
                   id: e.exercise_code,
                   title: e.exercise_title,
                   description:e.exercise_instructions,
-                  documents:[],
+                  documents:ex_mat,
                   hasCodeEditor:e.with_python_code,
                   starterCode:e.exercise_initial_python_code,
                   expectedOutput:e.exercise_answer
@@ -174,7 +216,7 @@ const CrearLeccion = () => {
                 title: t.topic_title,
                 description: t.topic_description,
                 duration: 30,
-                materials: [],
+                materials: to_mat,
                 exercises: excerc,
                 order: t.topic_index,
               });
@@ -183,14 +225,6 @@ const CrearLeccion = () => {
             }
           }
           setTopics(topicos_con_todo);
-
-          /*      id: "-1",
-      title: "",
-      description: "",
-      duration: 30,
-      materials: [],
-      exercises: [],
-      order: 1, */
 
         
         } catch (error) {
@@ -268,7 +302,7 @@ const CrearLeccion = () => {
 
   const addTopic = () => {
     const newTopic = {
-      id: "-1",
+      id: Date.now().toString() + Math.random(),
       title: "",
       description: "",
       duration: 30,
