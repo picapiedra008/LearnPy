@@ -312,7 +312,7 @@ class Lesson():
                     "lesson_title": str(row[1]).strip(),
                     "lesson_front_page": str(row[2]).strip(),
                     "level_name": str(row[3]).strip(),
-                    "visibility_name": str(row[4]).strip().capitalize,
+                    "visibility_name": str(row[4]).strip().capitalize(),
                     "lesson_description": str(row[5].strip())
                 })
 
