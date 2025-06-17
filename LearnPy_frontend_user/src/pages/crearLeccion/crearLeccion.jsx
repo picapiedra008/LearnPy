@@ -1,32 +1,28 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { crearLeccionCompleta, obtenerNiveles, obtenerVisibilidades } from "./apiCrearLeccion"
 import "./crearLeccion.css"
 
 const CrearLeccion = () => {
-  const { id } = useParams()
-  const isEditing = Boolean(id)
+  const navigate = useNavigate()
 
   const [activeTab, setActiveTab] = useState("general")
   const [validationErrors, setValidationErrors] = useState({})
   const [touchedFields, setTouchedFields] = useState({})
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0)
+  const [saving, setSaving] = useState(false)
+
   const [lesson, setLesson] = useState({
     title: "",
     description: "",
-    level: 1,
+    level: "",
     coverImage: null,
     visibility: "",
   })
 
-  //materiales y cover si se cambian
-  const [coverInitial, setCoverInitial] = useState(null);
-  const [InitialMaterials, setInitialMaterials] = useState([]);
-  const [InitialExerciseMaterials, setInitialExerciseMaterials] = useState([]);
-
-  const [coverFile,setCoverFile] = useState(null);
-
+  const [coverFile, setCoverFile] = useState(null)
   const [visibilities, setVisibilities] = useState([])
   const [levels, setLevels] = useState([])
 
@@ -42,169 +38,29 @@ const CrearLeccion = () => {
     },
   ])
 
-  const [deleted_topics,setDeletedTopics] = useState([])
-  const [deleted_exercises, setDeletedExercises] = useState([])
-
-  //obtener visibilidades
-
-
+  // Cargar datos iniciales
   useEffect(() => {
-    const fetchVisibilities = async () => {
+    const loadInitialData = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:5000/lesson/get_visibilities", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        })
-        const data = await res.json()
-        setVisibilities(data)
+        const [visibilitiesData, levelsData] = await Promise.all([obtenerVisibilidades(), obtenerNiveles()])
+
+        setVisibilities(visibilitiesData)
+        setLevels(levelsData)
       } catch (error) {
-        console.error("Error al obtener visibilidades:", error)
+        console.error("Error loading initial data:", error)
       }
     }
 
-    fetchVisibilities()
+    loadInitialData()
   }, [])
-  
-
-
-
-    //obtener niveles
-
-
-  useEffect(() => {
-    const fetchLevels = async () => {
-      try {
-        const res = await fetch("http://127.0.0.1:5000/lesson/get_levels", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        })
-        const data = await res.json()
-        setLevels(data)
-      } catch (error) {
-        console.error("Error al obtener visibilidades:", error)
-      }
-    }
-
-    fetchLevels()
-  }, [])
-
-
 
   const getCoverImageUrl = () => {
-    if (!lesson.coverImage) return "/placeholder.svg";
+    if (!lesson.coverImage) return "/placeholder.svg"
+    if (lesson.coverImage.startsWith("blob:")) return lesson.coverImage
+    return lesson.coverImage
+  }
 
-    // Si ya es una URL completa
-    if (lesson.coverImage.startsWith("blob:http")) return lesson.coverImage;
-
-    // Si solo es un ID de Drive
-    return `https://drive.google.com/uc?export=view&id=${lesson.coverImage}`;
-  };
-
-
-  //obtener leccion y demas
-  useEffect(() => {
-    if (isEditing) {
-      const obtenerLeccion = async () => {
-        try {
-          //leccion
-          let res = await fetch("http://127.0.0.1:5000/lesson/get_lesson", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ lesson_code:Number(id) }),
-          })
-
-          let data = await res.json()
-          console.log("Leccion:", data)
-          
-          setCoverInitial(data.lesson_front_page)
-          
-          setLesson({
-
-            title: data.lesson_title,
-            description: data.lesson_description,
-            level:data.level_code,
-            coverImage: data.lesson_front_page,
-            visibility: data.visibility_code
-
-            
-          })
-          //topicos   
-
-          res = await fetch("http://127.0.0.1:5000/topic/get_topics", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ lesson_code:Number(id) }),
-          })
-
-          data = await res.json()
-          console.log("topicos:", data)
-          const topicos_con_todo = [];
-          for (const t of data) {
-            try {
-                res = await fetch("http://127.0.0.1:5000/exercise/get_exercises", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ topic_code: Number(t.topic_code) }),
-              });
-              let excerc = []
-              const ejercicios = await res.json();
-              console.log("ejercicios para topic", t.topic_code, ":", ejercicios);
-              for (const e of ejercicios){
-                /*res = await fetch("http://127.0.0.1:5000/exercise_material/get_materials_by_lesson", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ topic_code: Number(t.topic_code) }),
-                });*/
-
-
-
-
-                excerc.push({
-                  id: e.exercise_code,
-                  title: e.exercise_title,
-                  description:e.exercise_instructions,
-                  documents:[],
-                  hasCodeEditor:e.with_python_code,
-                  starterCode:e.exercise_initial_python_code,
-                  expectedOutput:e.exercise_answer
-                });
-              }
-              topicos_con_todo.push({
-                id: t.topic_code,
-                title: t.topic_title,
-                description: t.topic_description,
-                duration: 30,
-                materials: [],
-                exercises: excerc,
-                order: t.topic_index,
-              });
-            } catch (error) {
-              console.error("Error al obtener los ejercicios:", error);
-            }
-          }
-          setTopics(topicos_con_todo);
-
-          /*      id: "-1",
-      title: "",
-      description: "",
-      duration: 30,
-      materials: [],
-      exercises: [],
-      order: 1, */
-
-        
-        } catch (error) {
-          console.error("Error al obtener lección:", error)
-        }
-      }
-
-      obtenerLeccion()
-    }
-  }, [id, isEditing])
-
-
-
-  // Validación en tiempo real solo para campos tocados
+  // Validación en tiempo real
   useEffect(() => {
     const errors = {}
 
@@ -227,8 +83,9 @@ const CrearLeccion = () => {
     if (touchedFields.level && !lesson.level) {
       errors.level = "Selecciona un nivel"
     }
+
     if (touchedFields.visibility && !lesson.visibility) {
-      errors.level = "Selecciona una visibilidad"
+      errors.visibility = "Selecciona una visibilidad"
     }
 
     const topicErrors = {}
@@ -383,7 +240,7 @@ const CrearLeccion = () => {
   }
 
   const getTotalMaterials = () => {
-    return topics.reduce((total, topic) => total + topic.materials.length, 0)
+    return topics.reduce((total, topic) => topic.materials.length, 0)
   }
 
   const getCompletionPercentage = () => {
@@ -391,6 +248,7 @@ const CrearLeccion = () => {
       lesson.title,
       lesson.description,
       lesson.level,
+      lesson.visibility,
       topics.length > 0 && topics[0].title,
       topics.length > 0 && topics[0].description,
     ]
@@ -400,6 +258,69 @@ const CrearLeccion = () => {
 
   const isFormValid = () => {
     return Object.keys(validationErrors).length === 0 && getCompletionPercentage() >= 80
+  }
+
+  const handleSaveLesson = async () => {
+    if (!isFormValid()) {
+      alert("Por favor completa todos los campos requeridos")
+      return
+    }
+
+    // Prevenir múltiples clics
+    if (saving) {
+      console.log("Ya se está guardando, ignorando clic adicional")
+      return
+    }
+
+    setSaving(true)
+
+    try {
+      console.log("=== INICIANDO GUARDADO DE LECCIÓN ===")
+
+      const lessonData = {
+        title: lesson.title,
+        description: lesson.description,
+        level: lesson.level,
+        visibility: lesson.visibility,
+        coverFile: coverFile,
+      }
+
+      console.log("Datos a enviar:", { lessonData, topics })
+
+      const result = await crearLeccionCompleta(lessonData, topics)
+
+      console.log("Resultado del guardado:", result)
+
+      if (result.success) {
+        alert("¡Lección creada exitosamente!")
+        // Limpiar el formulario después del éxito
+        setLesson({ title: "", description: "", level: "", coverImage: null, visibility: "" })
+        setTopics([{ id: "-1", title: "", description: "", duration: 30, materials: [], exercises: [], order: 1 }])
+        setCoverFile(null)
+        setActiveTab("general")
+        setCurrentTopicIndex(0)
+        // navigate("/listar") // Descomenta si quieres redirigir
+      } else {
+        alert(`Error: ${result.error}`)
+      }
+    } catch (error) {
+      console.error("Error en handleSaveLesson:", error)
+      alert("Error al guardar la lección: " + error.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const nextTopic = () => {
+    if (currentTopicIndex < topics.length - 1) {
+      setCurrentTopicIndex(currentTopicIndex + 1)
+    }
+  }
+
+  const prevTopic = () => {
+    if (currentTopicIndex > 0) {
+      setCurrentTopicIndex(currentTopicIndex - 1)
+    }
   }
 
   const renderMaterialPreview = (material) => {
@@ -441,69 +362,9 @@ const CrearLeccion = () => {
     return <i className={`document-type-icon ${iconClass}`}></i>
   }
 
-  const handleSaveLesson = () => {
-    if(isEditing){
-      //leccion
-      const actualizar_leccion = async () => {
-        try {
-          const formData = new FormData()
-          formData.append("lesson_code", id)
-          formData.append("level_code", lesson.level)
-          formData.append("visibility_code", lesson.visibility)
-          formData.append("title", lesson.title)
-          formData.append("description", lesson.description)
-          formData.append("front_page", coverInitial)
-          if (coverFile) {
-            formData.append('file', coverFile);
-          }
-
-
-          const res = await fetch("http://127.0.0.1:5000/lesson/update_lesson", {
-            method: "PUT",
-            body: formData,
-          })
-
-          const data = await res.json()
-          console.log("Leccion:", data)
-
-          //topicos
-
-
-        
-        } catch (error) {
-          console.error("Error al guardar lección:", error)
-        }
-      }
-      actualizar_leccion()
-
-      //topicos
-
-
-        //ejercicios
-    }else{
-
-    }
-
-
-    console.log("Guardando lección:", { lesson, topics })
-    alert("Lección guardada exitosamente!")
-  }
-
-  const nextTopic = () => {
-    if (currentTopicIndex < topics.length - 1) {
-      setCurrentTopicIndex(currentTopicIndex + 1)
-    }
-  }
-
-  const prevTopic = () => {
-    if (currentTopicIndex > 0) {
-      setCurrentTopicIndex(currentTopicIndex - 1)
-    }
-  }
-
   return (
     <div className="crear-leccion-container">
-      {/* Header mejorado */}
+      {/* Header */}
       <header className="header">
         <div className="header-content">
           <div className="header-left">
@@ -539,16 +400,16 @@ const CrearLeccion = () => {
 
           <button
             onClick={handleSaveLesson}
-            className={`save-btn ${isFormValid() ? "enabled" : "disabled"}`}
-            disabled={!isFormValid()}
+            className={`save-btn ${isFormValid() && !saving ? "enabled" : "disabled"}`}
+            disabled={!isFormValid() || saving}
           >
             <span className="icon-save">💾</span>
-            <span>{isEditing ? "Actualizar Lección" : "Guardar Lección"}</span>
+            <span>{saving ? "Guardando..." : "Crear Lección"}</span>
           </button>
         </div>
 
         <div className="content-grid">
-          {/* Sidebar compacto */}
+          {/* Sidebar */}
           <div className="sidebar">
             <div className="summary-card">
               <div className="summary-header">
@@ -605,11 +466,7 @@ const CrearLeccion = () => {
             </div>
           </div>
 
-
-
-
-
-          {/* Contenido principal */}
+          {/* Main Panel */}
           <div className="main-panel">
             <div className="tabs-container">
               <div className="tabs-list">
@@ -701,6 +558,28 @@ const CrearLeccion = () => {
                             </select>
                             {validationErrors.level && <p className="error-message">{validationErrors.level}</p>}
                           </div>
+
+                          <div className="form-group">
+                            <label className="form-label">
+                              Visibilidad <span className="required">*</span>
+                            </label>
+                            <select
+                              value={lesson.visibility}
+                              onChange={(e) => setLesson((prev) => ({ ...prev, visibility: Number(e.target.value) }))}
+                              onBlur={() => handleFieldTouch("visibility")}
+                              className={`form-select ${validationErrors.visibility ? "error" : ""}`}
+                            >
+                              <option value="">Seleccionar visibilidad</option>
+                              {visibilities.map((v) => (
+                                <option key={v.visibility_code} value={v.visibility_code}>
+                                  {v.visibility_name}
+                                </option>
+                              ))}
+                            </select>
+                            {validationErrors.visibility && (
+                              <p className="error-message">{validationErrors.visibility}</p>
+                            )}
+                          </div>
                         </div>
 
                         <div className="image-upload-section">
@@ -725,7 +604,7 @@ const CrearLeccion = () => {
                             {lesson.coverImage ? (
                               <div className="image-preview">
                                 <img
-                                  src={getCoverImageUrl()}
+                                  src={getCoverImageUrl() || "/placeholder.svg"}
                                   alt="Portada"
                                   className="preview-image"
                                 />
@@ -733,7 +612,9 @@ const CrearLeccion = () => {
                                   className="remove-image-btn"
                                   onClick={(e) => {
                                     e.stopPropagation()
-                                    if (lesson.coverImage) URL.revokeObjectURL(lesson.coverImage)
+                                    if (lesson.coverImage && lesson.coverImage.startsWith("blob:")) {
+                                      URL.revokeObjectURL(lesson.coverImage)
+                                    }
                                     setLesson((prev) => ({ ...prev, coverImage: null }))
                                     setCoverFile(null)
                                   }}
@@ -749,31 +630,7 @@ const CrearLeccion = () => {
                               </div>
                             )}
                           </div>
-
-
-                          
                         </div>
-                      </div>
-
-                      {/* Visibility Settings */}
-                      <div className="form-group">
-                            <label className="form-label">
-                              Visibilidad <span className="required">*</span>
-                            </label>
-                            <select
-                              value={lesson.visibility}
-                              onChange={(e) => setLesson((prev) => ({ ...prev, visibility: Number(e.target.value) }))}
-                              onBlur={() => handleFieldTouch("visibility")}
-                              className={`form-select ${validationErrors.visibility ? "error" : ""}`}
-                            >
-                              <option value="">Seleccionar nivel</option>
-                              {visibilities.map((v) => (
-                                <option key={v.visibility_code} value={v.visibility_code}>
-                                  {v.visibility_name}
-                                </option>
-                              ))}
-                            </select>
-                            {validationErrors.visibility && <p className="error-message">{validationErrors.visibility}</p>}
                       </div>
                     </div>
                   </div>
@@ -1105,7 +962,7 @@ const CrearLeccion = () => {
                                       )}
                                     </div>
 
-                                    {/* Code Editor Mejorado */}
+                                    {/* Code Editor */}
                                     <div className="code-editor-section">
                                       <div className="code-editor-header">
                                         <label className="switch-container">
