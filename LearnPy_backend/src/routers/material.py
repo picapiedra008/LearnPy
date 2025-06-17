@@ -52,11 +52,11 @@ def delete_material():
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
 
-@main.route('/get_materials_by_lesson', methods=['POST'])
-def get_materials_by_lesson():
+@main.route('/get_materials_by_topic', methods=['POST'])
+def get_materials_by_topic():
     try:
-        lesson_code = int(request.json['lesson_code'])
-        result, resp = Material.get_materials_by_lesson(lesson_code)
+        topic_code = int(request.json['topic_code'])
+        result, resp = Material.get_materials_by_topic(topic_code)
         return jsonify(result), resp
     except Exception as ex:
         return jsonify({'message': str(ex)}), 500
