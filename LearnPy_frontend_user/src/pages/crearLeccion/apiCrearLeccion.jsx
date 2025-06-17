@@ -2,11 +2,11 @@
 const API_BASE_URL = "http://127.0.0.1:5000"
 
 // Mapeo de tipos de material del frontend al backend
-const materialTypeMapping = {
-  document: 1, // Documentos
-  video: 2, // Videos
-  image: 3, // Imágenes
-}
+//const materialTypeMapping = {
+//  document: 1, // Documentos
+//  video: 2, // Videos
+//  image: 3, // Imágenes
+//}
 
 const getMaterialTypeCode = (type) => {
   return materialTypeMapping[type] || 1
