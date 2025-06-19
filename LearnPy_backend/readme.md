@@ -1,4 +1,4 @@
-# 📘 API – Plataforma LearnPy
+#  API – Plataforma LearnPy
 
 Este documento detalla los endpoints disponibles en la API del backend de LearnPy, organizados por módulos funcionales: Usuarios, Ejercicios, Lecciones y Materiales.
 
@@ -42,7 +42,7 @@ Respuesta: Usuario autenticado
 ```
 #### Obtener lista de usuarios por tipo
 - **URL**: `/user/get_users`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "type": 1
@@ -52,7 +52,7 @@ Respuesta: Lista de usuarios por tipo
 
 #### Obtener usuario por codigo
 - **URL**: `/user/get_user`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "code": 12
@@ -62,7 +62,7 @@ Respuesta: Usuario con el código especificado
 
 #### Eliminar usuario
 - **URL**: `/user/delete_user`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "code": 123
@@ -72,7 +72,7 @@ Respuesta: Usuario eliminado
 
 #### Eliminar múltiples usuarios
 - **URL**: `/user/delete_users`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "codes": [2, 4, 5]
@@ -114,20 +114,21 @@ Respuesta: Usuario actualizado correctamente
 - **Método**: `POST`
 ```json
 {
-  "lesson_code": 101,
+  "topic_code": 101,
   "title": "Ejercicio 1",
   "instructions": "Resuelve el siguiente problema de variables.",
-  "content": "print('Hola, Mundo')"
+  "answer": "72",
+  "initial_code": "####"
 }
 ```
 Respuesta: Ejercicio creado correctamente
 
-#### Obtener ejercicios por lección
+#### Obtener ejercicios por topico
 - **URL**: `/exercise/get_exercises`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
-  "lesson_code": 101
+  "topic_code": 101
 }
 ```
 Respuesta: Lista de ejercicios asociados a la lección.
@@ -138,7 +139,7 @@ Respuesta: Lista de ejercicios asociados a la lección.
 ```json
 {
   "exercise_code": 5,
-  "lesson_code": 101,
+  "topic_code": 101,
   "title": "Ejercicio 1 (Actualizado)",
   "instructions": "Completa el siguiente código.",
   "content": "print('Hola, Python')"
@@ -148,7 +149,7 @@ Respuesta: Ejercicio actualizado correctamente.
 
 #### Eliminar ejercicio
 - **URL**: `/exercise/delete_exercise`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "exercise_code": 5
@@ -174,7 +175,7 @@ Respuesta: La leccion a sido creada correctamente
 
 #### Obtener lección por codigo
 - **URL**: `/lesson/get_lesson`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 12
@@ -192,7 +193,7 @@ Respuesta: la leccion fue actualizado correctamente
 
 #### Eliminar lección
 - **URL**: `/lesson/delete_lesson`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 12,
@@ -215,7 +216,7 @@ Respuesta: Las visibilidades a sido obtenido correctamente
 
 #### Obtener lecciones de un usuario
 - **URL**: `/lesson/get_lessons`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "user_code": 2
@@ -230,7 +231,16 @@ Respuesta: Las lecciones han sido obtenido correctamente
 - **URL**: `/material/create_material`
 - **Método**: `POST`
 **FormData**:
-- `lesson_code`: int  
+- `topic_code`: int  
+- `material_type_code`: int  
+- `material_name`: string  
+- `file`: archivo  
+
+#### Crear material de ejercicio
+- **URL**: `/material/create_material_of_exercise`
+- **Método**: `POST`
+**FormData**:
+- `exercise_code`: int  
 - `material_type_code`: int  
 - `material_name`: string  
 - `file`: archivo  
@@ -239,7 +249,7 @@ Respuesta: El materia fue creado correctamente
 
 #### Eliminar material
 - **URL**: `/material/delete_material`
-- **Método**: `DELETE`
+- **Método**: `POST`
 ```json
 {
   "material_code": 1,
@@ -250,7 +260,7 @@ Respuesta: El materia fue eliminado correctamente
 
 #### Obtener materiales por lección
 - **URL**: `/material/get_materials_by_lesson`
-- **Método**: `GET`
+- **Método**: `POST`
 ```json
 {
   "lesson_code": 101
@@ -264,3 +274,57 @@ Respuesta: Los materiales fueron obtenidos por leccion correctamente
 
 ---
 Respuesta: Los tipos de materiales fueron obtenidos correctamente
+---
+
+##  API de Exercise Materials
+
+#### Eliminar material
+- **URL**: `/exercise_material/delete_exercise_material`
+- **Método**: `POST`
+```json
+{
+  "exercise_material_code": 1,
+  "rute": "ruta_del_archivo"
+}
+```
+Respuesta: El materia de ejercicio fue eliminado correctamente
+
+--
+
+##  API de Topicos
+
+### Crear Topico
+- **URL**: `/lesson/topics`
+- **Método**: `POST`
+```json
+{
+  "lesson_code": 1,
+  "topics": [
+        {
+            "index": 1,
+            "topic_title": "Topic",
+            "topic_description": "Description",
+            "material_code": 4,
+            "exercises": [3, 2]
+        },
+        {
+            "index": 2,
+            "topic_title": "Topic2",
+            "topic_description": "Description2",
+            "material_code": 5,
+            "exercises": [5, 4]
+        }
+    ] 
+}
+```
+
+### Eliminar topico
+- **URL**: `/topic/delete_topic`
+- **Método**: `POST`
+```json
+{
+  "topic_code": 5
+}
+```
+Respuesta: Topico eliminado correctamente.
+---

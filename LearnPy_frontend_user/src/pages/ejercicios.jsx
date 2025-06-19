@@ -64,8 +64,8 @@ const CardContent = ({ children, className = "" }) => {
 
 const Ejercicios = () => {
 
-  
-  
+
+
 
   const handleExerciseChange = (index, field, value) => {
     const newExercises = [...exercises]

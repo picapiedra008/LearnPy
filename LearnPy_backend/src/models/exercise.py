@@ -1,20 +1,14 @@
 from src.database.postgres import get_connection
-from src.utils.security import convert_bcrypt, validate_password, email_exists, get_connection, is_password_secure, is_valid_email, is_valid_name
+from src.utils.security import  get_connection
 
 class Exercise():
-
-
-
+    
     @classmethod
-    def insert_exercise(self, lesson_code: int, title: str, instructions: str, content: str):
+    def insert_exercise(self, topic_code: int, title: str, instructions: str, answer: str, initial_code: str, with_python_code: bool):
         try:
             db = get_connection()
             cursor = db.cursor()
-
-            cursor.execute('''
-                SELECT insert_exercises(%s, %s, %s, %s);
-            ''', (lesson_code, title, instructions, content))
-
+            cursor.execute('SELECT insert_exercise(%s, %s, %s, %s, %s, %s);', (topic_code, title, instructions, answer, initial_code, with_python_code))
             new_code = cursor.fetchone()[0]
             db.commit()
 
@@ -29,15 +23,11 @@ class Exercise():
 
 
     @classmethod
-    def update_exercise(self, exercise_code: int, lesson_code: int, title: str, instructions: str, content: str):
+    def update_exercise(self,exercise_code, topic_code: int, title: str, instructions: str, answer: str, initial_code: str, with_python_code: bool):
         try:
             db = get_connection()
             cursor = db.cursor()
-
-            cursor.execute('''
-                SELECT update_exercises(%s, %s, %s, %s, %s);
-            ''', (exercise_code, lesson_code, title, instructions, content))
-
+            cursor.execute('SELECT update_exercises(%s, %s, %s, %s, %s, %s, %s);', (exercise_code,topic_code, title, instructions, answer, initial_code, with_python_code))
             updated_code = cursor.fetchone()[0]
             db.commit()
 
@@ -69,30 +59,31 @@ class Exercise():
             db.close()
 
     @classmethod
-    def get_exercises(self, lesson_code: int):
+    def get_exercises(self, topic_code: int):
         try:
             db = get_connection()
             cursor = db.cursor()
 
             cursor.execute('''
-                SELECT exercise_code, exercise_title, 
-                       exercise_instructions, exercise_answer
+                SELECT *
                 FROM get_exercises(%s);
-            ''', (lesson_code,))
+            ''', (topic_code,))
 
-            row = cursor.fetchone()
-
-            if row is None:
-                return {}, 204
-
-            exercise = {
+            rows = cursor.fetchall()
+            exercises = []
+            for row in rows:
+                exercises.append({
                 "exercise_code": int(row[0]),
                 "exercise_title": str(row[1]).strip(),
                 "exercise_instructions": str(row[2]).strip(),
-                "exercise_content": str(row[3]).strip()
-            }
+                "exercise_answer": str(row[3]).strip(),
+                "exercise_intial_python_code":str(row[4]).strip(),
+                "with_python_code":bool(row[5])
+                })
+            
 
-            return exercise, 200
+
+            return exercises, 200 if exercises else 204
 
         except Exception as ex:
             return {"error": f"Error retrieving exercise: {str(ex)}"}, 500

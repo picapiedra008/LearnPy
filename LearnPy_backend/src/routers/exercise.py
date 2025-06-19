@@ -1,47 +1,61 @@
 from flask import Blueprint, jsonify, request
+from functools import wraps
 from src.models.exercise import Exercise
 
 main = Blueprint('exercises_blueprint', __name__)
 
+def handle_exceptions(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as ex:
+            return jsonify({'message': str(ex)}), 500
+    return wrapper
+
+# Función auxiliar para obtener parámetros del JSON
+def get_param(name, cast_type=str):
+    return cast_type(request.json[name])
+
 @main.route('/create_exercise', methods=['POST'])
+@handle_exceptions
 def create_exercise():
     try:
-        lesson_code = int(request.json['lesson_code'])
-        title = str(request.json['title'])
-        instructions = str(request.json['instructions'])
-        content = str(request.json['content'])
-        result, resp = Exercise.insert_exercise(lesson_code, title, instructions, content)
-        return jsonify(result), resp
-    except Exception as ex:
-        return jsonify({'message': str(ex)}), 500
+        topic_code = get_param('topic_code', int)
+    except Exception:
+        topic_code = None
+
+    title = get_param('title')
+    instructions = get_param('instructions')
+    answer = get_param('answer')
+    initial_code = get_param('initial_code')
+    with_python_code = get_param('with_python_code')
+    result, resp = Exercise.insert_exercise(topic_code, title, instructions, answer, initial_code,with_python_code)
+    return jsonify(result), resp
 
 @main.route('/get_exercises', methods=['POST'])
+@handle_exceptions
 def get_exercises():
-    try:
-        lesson_code = int(request.json['lesson_code'])
-        result, resp = Exercise.get_exercises(lesson_code)
-        return jsonify(result), resp
-    except Exception as ex:
-        return jsonify({'message': str(ex)}), 500
+    topic_code = get_param('topic_code', int)
+    result, resp = Exercise.get_exercises(topic_code)
+    return jsonify(result), resp
 
 @main.route('/update_exercise', methods=['PUT'])
+@handle_exceptions
 def update_exercise():
-    try:
-        exercise_code = int(request.json['exercise_code'])
-        lesson_code = int(request.json['lesson_code'])
-        title = str(request.json['title'])
-        instructions = str(request.json['instructions'])
-        content = str(request.json['content'])
-        result, resp = Exercise.update_exercise(exercise_code, lesson_code, title, instructions, content)
-        return jsonify(result), resp
-    except Exception as ex:
-        return jsonify({'message': str(ex)}), 500
+    topic_code = get_param('topic_code', int)
+    exercise_code = get_param('exercise_code', int)
+    title = get_param('title')
+    instructions = get_param('instructions')
+    answer = get_param('answer')
+    initial_code = get_param('initial_code')
+    with_python_code = get_param('with_python_code')
+    result, resp = Exercise.update_exercise(exercise_code,topic_code,  title, instructions, answer, initial_code, with_python_code)
+    return jsonify(result), resp
 
 @main.route('/delete_exercise', methods=['POST'])
+@handle_exceptions
 def delete_exercise():
-    try:
-        exercise_code = int(request.json['exercise_code'])
-        result, resp = Exercise.delete_exercise(exercise_code)
-        return jsonify(result), resp
-    except Exception as ex:
-        return jsonify({'message': str(ex)}), 500
+    exercise_code = get_param('exercise_code', int)
+    result, resp = Exercise.delete_exercise(exercise_code)
+    return jsonify(result), resp

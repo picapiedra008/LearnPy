@@ -150,9 +150,8 @@ class User():
             
             try:
                 send_email(name, email, password)
-            except Exception as email_ex:
-                print(f"Error al enviar correo: {email_ex}")
-            
+            except Exception:
+                pass
             return {"message": "User registered successfully."}, 201
         except Exception as ex:
             return {"error": f"Error registering user: {str(ex)}"}, 500
