@@ -152,13 +152,15 @@ const CrearLeccion = () => {
                 if(res.status !== 204){
                   for (const tm of materiales_topicos){
                     to_mat.push({
-                      id:"t"+tm.exercise_material_code,
+                      id:"t"+tm.material_code,
                       type:tm.material_type_name,
                       title:tm.material_name,
                       file:null,
                       url:tm.material_rute,
                       description:"",
-                      fileExtension:tm.material_type_name
+                      fileExtension:tm.material_type_name,
+                      code:tm.material_code,
+                      state:"from_drive"
                     })
                   }
                 }
@@ -185,13 +187,15 @@ const CrearLeccion = () => {
                     if(materiales_ejercicios[0]){
                       for (const em of materiales_ejercicios){
                         ex_mat.push({
-                          id:em.exercise_material_code,
+                          id:"em"+em.exercise_material_code,
                           type:em.material_type_name,
                           title:em.material_name,
                           file:null,
                           url:em.material_rute,
                           description:"",
-                          fileExtension:em.material_type_name
+                          fileExtension:em.material_type_name,
+                          code:em.exercise_material_code,
+                          state:"from_drive"
                         })
                       }
                     }
@@ -338,6 +342,8 @@ const CrearLeccion = () => {
         url,
         description: "",
         fileExtension: fileExtension,
+        code:"-1",
+        state:"new_file"
       }
       newMaterials.push(newMaterial)
     })
