@@ -8,8 +8,8 @@ const KEYWORDS = [
   "return", "import", "from", "class", "try", "except", "with", "as", "True", "False", "None"
 ];
 
-export default function Compilador() {
-  const [code, setCode] = useState("");
+export default function Compilador({ onCodeChange, onTerminalChange, initialCode = "" }) {
+  const [code, setCode] = useState(initialCode);
   const [terminal, setTerminal] = useState(">>>>");
   const [editableFrom, setEditableFrom] = useState(4);
   const [running, setRunning] = useState(false);
@@ -52,6 +52,14 @@ export default function Compilador() {
       if (socketRef.current) socketRef.current.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    if (onCodeChange) onCodeChange(code);
+  }, [code, onCodeChange]);
+
+  useEffect(() => {
+    if (onTerminalChange) onTerminalChange(terminal);
+  }, [terminal, onTerminalChange]);
 
   const runCode = () => {
     if (code.trim() === "") return;
@@ -109,7 +117,7 @@ export default function Compilador() {
     const before = terminal.slice(0, editableFrom);
     const after = terminal.slice(editableFrom);
     const words = after.split(/\s+/);
-    words.pop(); // Remove the last partial word
+    words.pop();
     const completed = before + words.join(" ") + (words.length ? " " : "") + suggestion + " ";
     setTerminal(completed);
     setEditableFrom(completed.length);
@@ -119,12 +127,13 @@ export default function Compilador() {
   const updateCursorPosition = () => {
     if (textareaRef.current) {
       const { offsetTop, offsetLeft } = textareaRef.current;
-      setCursorPosition({ top: offsetTop + 100, left: offsetLeft + 20 }); // ajuste simple
+      setCursorPosition({ top: offsetTop + 100, left: offsetLeft + 20 });
     }
   };
 
   return (
     <div className="python-editor">
+       
       <div className="code-header">apartado de código</div>
       <div className="file-header"> apartado_personal.py</div>
 

@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
+
 import { Link } from "react-router-dom"
 import { Code, X } from "lucide-react"
-import "./ejercicios.css"
 
 // Componentes personalizados
 const Button = ({ children, type = "button", className = "", variant = "default", onClick, disabled }) => {
