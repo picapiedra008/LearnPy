@@ -1,0 +1,21 @@
+CodProducto,Descripción,CodigoProveedor,CodTipoProducto,Costo,Precio
+P001,Smartphone X1,PR01,TP01,250,450
+P002,Laptop Pro 15,PR01,TP01,600,950
+P003,TV 42" LED,PR01,TP01,300,520
+P004,Cereal Integral,PR02,TP02,10,18
+P005,Galletas de Avena,PR02,TP02,5,9
+P006,Jugo Natural 1L,PR02,TP02,8,12
+P007,Jeans Slim Fit,PR03,TP03,20,35
+P008,Camiseta Deportiva,PR03,TP03,1/2,2/5
+P009,Zapatillas Running,PR03,TP03,30,60
+P010,Silla de Oficina,PR04,TP04,40,75
+P011,Escritorio de Madera,PR04,TP04,70,120
+P012,Lámpara de Escritorio,PR04,TP04,15,30
+P013,Tablet 10”,PR05,TP01,200,350
+P014,Teclado Inalámbrico,PR05,TP01,25,45
+P015,Mouse Ergonómico,PR05,TP01,20,38
+P016,Yogur Natural,PR02,TP02,6,10
+P017,Pan Integral,PR02,TP02,3,6
+P018,Bufanda de Lana,PR03,TP03,15,28
+P019,Ropero 3 puertas,PR04,TP04,100,180
+P020,Mesa de Centro,PR04,TP04,60,95
