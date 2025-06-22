@@ -17,8 +17,8 @@ def create_material():
         material_type_code = request.form.get('material_type_code')
         material_name = request.form.get('material_name')
 
-        print("request.form:", request.form)
-        
+       
+
         file = request.files['file']
         print("request.files:", request.files)
         
