@@ -8,9 +8,9 @@ LearnPy es una plataforma educativa que consta de un backend en Python y dos fro
 
 El proyecto está dividido en tres carpetas principales:
 
-1. **Backend**: Aplicación en Python que maneja la lógica del servidor.
-2. **Frontend Administrador**: Interfaz para administradores (React + Vite).
-3. **Frontend Usuario**: Interfaz para usuarios regulares (React + Vite).
+1. **backend**: Aplicación en Python que maneja la lógica del servidor.
+2. **admin**: Interfaz para administradores (React + Vite).
+3. **user**: Interfaz para usuarios regulares (React + Vite).
 
 ---
 
@@ -38,10 +38,10 @@ cd LearnPy
 
 ### 2. Instalar Dependencias del Backend
 
-El backend está en la carpeta `LearnPy_backend`. Para instalar sus dependencias, usa el siguiente comando:
+El backend está en la carpeta `backend`. Para instalar sus dependencias, usa el siguiente comando:
 
 \`\`\`bash
-pip install -r LearnPy_backend/requirements.txt
+pip install -r backend/requirements.txt
 \`\`\`
 
 ### 3. Instalar Dependencias de Frontend
@@ -49,8 +49,8 @@ pip install -r LearnPy_backend/requirements.txt
 El proyecto tiene dos frontends: uno para el administrador y otro para el usuario. Para instalar las dependencias de ambos, ejecuta:
 
 \`\`\`bash
-npm install --prefix LearnPy_frontend_administrator
-npm install --prefix LearnPy_frontend_user
+npm install --prefix admin
+npm install --prefix user
 \`\`\`
 
 También puedes usar `yarn` si prefieres ese gestor de paquetes.
@@ -108,10 +108,9 @@ Aquí tienes algunos scripts adicionales que pueden ser útiles para tu desarrol
   \`\`\`
 
 ---
+
 ### Sandbox badge
-- ** ![CI](https://github.com/TU-USUARIO/TU-REPO/actions/workflows/ci.yml/badge.svg?branch=develop)
+
+- \*\* ![CI](https://github.com/TU-USUARIO/TU-REPO/actions/workflows/ci.yml/badge.svg?branch=develop)
 
 ![CI](https://github.com/TU-USUARIO/TU-REPO/actions/workflows/ci.yml/badge.svg?branch=develop)
-
-
-
