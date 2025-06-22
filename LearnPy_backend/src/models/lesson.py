@@ -254,7 +254,11 @@ class Lesson():
                     "level_name": str(row[1]).strip()
                 })
 
-            return levels, 200 if levels else 204
+
+            if levels:
+                return levels, 200
+            else:
+                return [], 200
 
         except Exception as ex:
             return {"error": f"Error retrieving levels: {str(ex)}"}, 500
@@ -316,7 +320,11 @@ class Lesson():
                     "lesson_description": str(row[5].strip())
                 })
 
-            return lessons, 200 if lessons else 204
+            if lessons:
+                return lessons, 200
+            else:
+                return [], 200
+            
 
         except Exception as ex:
             return {"error": f"Error retrieving lessons: {str(ex)}"}, 500

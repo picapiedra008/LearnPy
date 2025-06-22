@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 from src.models.material import Material
 
 main = Blueprint('materials_blueprint', __name__)
+def get_form_param(name, cast_type=str):
+    return cast_type(request.form.get(name))
 
 @main.route('/create_material', methods=['POST'])
 def create_material():
@@ -12,7 +14,7 @@ def create_material():
         
         topic_code_str = request.form.get('topic_code')
         topic_code = int(topic_code_str) if topic_code_str else None
-        material_type_code = int(request.form.get('material_type_code'))
+        material_type_code = request.form.get('material_type_code')
         material_name = request.form.get('material_name')
         file = request.files['file']
 
@@ -31,7 +33,7 @@ def create_material_of_exercise():
             return jsonify({'error': 'No file part (front_page)'}), 400
         
         exercise_code = int(request.form.get('exercise_code'))
-        material_type_code = int(request.form.get('material_type_code'))
+        material_type_code = request.form.get('material_type_code')
         material_name = request.form.get('material_name')
         file = request.files['file']
 

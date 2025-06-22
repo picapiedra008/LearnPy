@@ -52,10 +52,10 @@ const ListarLecciones = () => {
   
   const fetchTopicCount = async (lessonCode) => {
     try {
-      const res = await fetch("http://localhost:5000/lesson/get_topics", {
+      const res = await fetch("http://localhost:5000/topic/get_topics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lesson_code: lessonCode })
+        body: JSON.stringify({ lesson_code: Number(lessonCode) })
       })
       const data = await res.json()
       return Array.isArray(data) ? data.length : 0

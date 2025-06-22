@@ -23,11 +23,11 @@ class Exercise():
 
 
     @classmethod
-    def update_exercise(self,exercise_code, topic_code: int, title: str, instructions: str, answer: str, initial_code: str, with_python_code: bool):
+    def update_exercise(self,exercise_code: int, topic_code: int, title: str, instructions: str, answer: str, initial_code: str, with_python_code: bool):
         try:
             db = get_connection()
             cursor = db.cursor()
-            cursor.execute('SELECT update_exercises(%s, %s, %s, %s, %s, %s, %s);', (exercise_code,topic_code, title, instructions, answer, initial_code, with_python_code))
+            cursor.execute('SELECT update_exercise(%s, %s, %s, %s, %s, %s, %s);', (exercise_code,topic_code, title, instructions, answer, initial_code, with_python_code))
             updated_code = cursor.fetchone()[0]
             db.commit()
 
@@ -46,7 +46,7 @@ class Exercise():
             db = get_connection()
             cursor = db.cursor()
 
-            cursor.execute('SELECT delete_exercises(%s);', (exercise_code,))
+            cursor.execute('SELECT delete_exercise(%s);', (exercise_code,))
             db.commit()
 
             return {"message": "Exercise deleted successfully."}, 200
@@ -77,13 +77,15 @@ class Exercise():
                 "exercise_title": str(row[1]).strip(),
                 "exercise_instructions": str(row[2]).strip(),
                 "exercise_answer": str(row[3]).strip(),
-                "exercise_intial_python_code":str(row[4]).strip(),
+                "exercise_initial_python_code":str(row[4]).strip(),
                 "with_python_code":bool(row[5])
                 })
             
 
-
-            return exercises, 200 if exercises else 204
+            if exercises:
+                return exercises, 200
+            else:
+                return [], 200
 
         except Exception as ex:
             return {"error": f"Error retrieving exercise: {str(ex)}"}, 500

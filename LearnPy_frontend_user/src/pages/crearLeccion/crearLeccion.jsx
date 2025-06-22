@@ -26,8 +26,7 @@ const CrearLeccion = () => {
 
   //materiales y cover si se cambian
   const [coverInitial, setCoverInitial] = useState(null);
-  const [InitialMaterials, setInitialMaterials] = useState([]);
-  const [InitialExerciseMaterials, setInitialExerciseMaterials] = useState([]);
+
 
   const [coverFile,setCoverFile] = useState(null);
 
@@ -43,12 +42,14 @@ const CrearLeccion = () => {
       materials: [],
       exercises: [],
       order: 1,
+      
     },
   ])
 
   const [deleted_topics,setDeletedTopics] = useState([])
   const [deleted_exercises, setDeletedExercises] = useState([])
-
+  const [deleted_materials,setDeletedMaterials] = useState([])
+  const [deleted_exercise_materials, setDeletedExerciseMaterials] = useState([])
 
 
 
@@ -138,42 +139,45 @@ const CrearLeccion = () => {
                     if(materiales_ejercicios[0]){
                       for (const em of materiales_ejercicios){
                         ex_mat.push({
-                          id:"em"+em.exercise_material_code,
+                          id:Date.now().toString() + Math.random(),
                           type:em.material_type_name,
                           title:em.material_name,
                           file:null,
                           url:em.material_rute,
                           description:"",
                           fileExtension:em.material_type_name,
-                          code:em.exercise_material_code,
+                          code:em.material_code,
                           state:"from_drive"
                         })
                       }
                     }
                 }
                 
-               
-                
+
+
+
 
 
                 excerc.push({
-                  id: e.exercise_code,
+                  id: Date.now().toString() + Math.random(),
                   title: e.exercise_title,
                   description:e.exercise_instructions,
                   documents:ex_mat,
                   hasCodeEditor:e.with_python_code,
                   starterCode:e.exercise_initial_python_code,
-                  expectedOutput:e.exercise_answer
+                  expectedOutput:e.exercise_answer,
+                  code:e.exercise_code,
                 });
               }
               topicos_con_todo.push({
-                id: t.topic_code,
+                id: Date.now().toString() + Math.random(),
                 title: t.topic_title,
                 description: t.topic_description,
                 duration: 30,
                 materials: to_mat,
                 exercises: excerc,
                 order: t.topic_index,
+                topic_code:t.topic_code
               });
             } catch (error) {
               console.error("Error al obtener los ejercicios:", error);
@@ -288,6 +292,7 @@ const CrearLeccion = () => {
       materials: [],
       exercises: [],
       order: topics.length + 1,
+      topic_code:-1
     }
     setTopics([...topics, newTopic])
     setCurrentTopicIndex(topics.length)
@@ -317,7 +322,7 @@ const CrearLeccion = () => {
         url,
         description: "",
         fileExtension: fileExtension,
-        code:"-1",
+        code:-1,
         state:"new_file"
       }
       newMaterials.push(newMaterial)
@@ -334,13 +339,16 @@ const CrearLeccion = () => {
     if (material.url) {
       URL.revokeObjectURL(material.url)
     }
+    if(isEditing){
+      setDeletedMaterials([...deleted_materials,material])
+    }
     updatedTopics[topicIndex].materials.splice(materialIndex, 1)
     setTopics(updatedTopics)
   }
 
   const addExercise = (topicIndex) => {
     const newExercise = {
-      id: -1,
+      id: Date.now().toString() + Math.random(),
       title: "",
       description: "",
       hasCodeEditor: true,
@@ -348,6 +356,7 @@ const CrearLeccion = () => {
       expectedOutput: "",
       materials: [],
       documents: [],
+      code:-1
     }
     const updatedTopics = [...topics]
     updatedTopics[topicIndex].exercises.push(newExercise)
@@ -370,6 +379,7 @@ const CrearLeccion = () => {
         url,
         type: fileType,
         size: fileSize,
+        code:-1,
       }
       newDocuments.push(newDocument)
     })
@@ -384,6 +394,9 @@ const CrearLeccion = () => {
     const document = updatedTopics[topicIndex].exercises[exerciseIndex].documents[documentIndex]
     if (document.url) {
       URL.revokeObjectURL(document.url)
+    }
+    if(isEditing){
+      setDeletedExerciseMaterials([...deleted_exercise_materials,document])
     }
     updatedTopics[topicIndex].exercises[exerciseIndex].documents.splice(documentIndex, 1)
     setTopics(updatedTopics)
@@ -412,6 +425,313 @@ const CrearLeccion = () => {
     ]
     const completedFields = requiredFields.filter(Boolean).length
     return Math.round((completedFields / requiredFields.length) * 100)
+  }
+
+
+
+
+  const createExercise = async (exercise, topic_code) => {
+      try {
+        console.log("el  ejercicio a crear:", exercise)
+        
+
+        const res = await fetch("http://127.0.0.1:5000/exercise/create_exercise", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            topic_code: topic_code,
+
+            title: exercise.title,
+            instructions: exercise.description,
+            answer: exercise.expectedOutput ?? "",
+            initial_code: exercise.starterCode ?? "",
+            with_python_code: exercise.hasCodeEditor
+          }),
+        });
+
+        const data = await res.json()
+        console.log("ejercicio creado:",data)
+        let exercise_code = data.exercise_code
+
+        await Promise.all(
+          exercise.documents.map(exercise_material => 
+            createExerciseMaterial(exercise_material, exercise_code)
+          )
+        );
+
+      } catch (error) {
+        console.error("Error al crear el ejercicio:", error)
+      }
+  }
+
+ const createMaterial = async (material, topic_code) => {
+    try {
+      console.log("el material a crear:", material);
+
+      const formData = new FormData();
+      formData.append("topic_code", topic_code);
+      formData.append("material_name", material.title);
+      formData.append("material_type_code", material.fileExtension); // ya no es necesario pero bueno
+      formData.append("file", material.file); 
+
+      const res = await fetch("http://127.0.0.1:5000/material/create_material", {
+        method: "POST",
+        body: formData, 
+      });
+
+      const data = await res.json();
+      console.log("material creado:", data);
+
+    } catch (error) {
+      console.error("Error al crear el material:", error);
+    }
+  };
+
+  const createTopic = async (topic)  => {
+    try {
+      console.log("el topico que queremos crear:", topic)
+      const formData = new FormData()
+      formData.append("lesson_code", Number(id))
+      formData.append("topic_index", topic.order )
+      formData.append("topic_title",  topic.title)
+      formData.append("topic_description", topic.description)
+
+      const res = await fetch("http://127.0.0.1:5000/topic/create_topic", {
+        method: "POST",
+        body: formData,
+      })
+
+      const data = await res.json()
+      console.log("topico creado:",data)
+      let topic_code = data.topic_code
+
+      await Promise.all(
+        topic.materials.map(material => 
+          createMaterial(material, topic_code)
+        )
+      );
+
+
+      for(const exercise of topic.exercises){
+        createExercise(exercise,topic_code)
+      }
+
+
+    } catch (error) {
+      console.error("Error al crear el topico:", error)
+    }
+  }
+
+  const createExerciseMaterial = async (exercise_material,exercise_code) => {
+
+
+    try {
+        console.log("el  ejercicio a crear:", exercise_material)
+        
+        const formData = new FormData();
+        formData.append("exercise_code", exercise_code);
+        formData.append("material_name", exercise_material.title);
+        formData.append("material_type_code", exercise_material.fileExtension); // ya no es necesario pero bueno
+        formData.append("file", exercise_material.file); 
+
+        const res = await fetch("http://127.0.0.1:5000/material/create_material_of_exercise", {
+          method: "POST",
+          body: formData, 
+        });
+
+        const data = await res.json()
+        console.log("material creado:",data)
+
+      } catch (error) {
+        console.error("Error al crear el material:", error)
+    }
+
+  }
+
+  const deleteExerciseMaterial = async (exercise_material) => {
+      try {
+        console.log("material de ejercicio que queremos borrar:", exercise_material)
+        const res = await fetch("http://127.0.0.1:5000/exercise_material/delete_exercise_material", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            exercise_material_code: exercise_material.code,
+            rute:exercise_material.url
+          }),
+        });
+
+        const data = await res.json()
+        console.log("material de ejercicio borrado:",data)
+
+      } catch (error) {
+        console.error("Error al borrar el material de ejercicio", error)
+      }
+  }
+
+  const deleteMaterial = async (material) => {
+    try {
+
+      const res = await fetch("http://127.0.0.1:5000/material/delete_material", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          material_code: material.code,
+          rute:material.url
+        }),
+      });
+
+      const data = await res.json()
+      console.log("material borrado:",data)
+        
+        
+    } catch (error) {
+      console.error("Error al borrar el material", error)
+    }
+  }
+
+  const deleteExercise = async (exercise) => {
+     try {
+
+      for(const exercise_material of exercise.documents){
+        if(exercise_material.code != -1){
+          await deleteExerciseMaterial(exercise_material)
+        }
+        
+      }
+      
+
+      const res = await fetch("http://127.0.0.1:5000/exercise/delete_exercise", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          exercise_code: exercise.code
+        }),
+      });
+
+      const data = await res.json()
+      console.log("ejercicio borrado:",data)
+
+    } catch (error) {
+      console.error("Error al borrar el ejercicio", error)
+    }
+  }
+
+  const deleteTopic = async (topic) => {
+    try {
+      for(const material of topic.materials){
+        if(material.code != -1){
+          await deleteMaterial(material)
+        }
+      }
+
+      for(const exercise of topic.exercises){
+        if(exercise.code != -1){
+          await deleteExercise(exercise)
+        }
+      }
+
+
+      const res = await fetch("http://127.0.0.1:5000/topic/delete_topic", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          topic_code: topic.topic_code
+        }),
+      });
+
+      const data = await res.json()
+      console.log("topico borrado:",data)
+    } catch (error) {
+      console.error("Error al borrar el topico", error)
+    }
+  }
+
+
+  const updateExercise = async (exercise, topic_code) => {
+    try {
+      console.log("el  ejercicio a actualizar:", exercise)
+      
+
+      const res = await fetch("http://127.0.0.1:5000/exercise/update_exercise", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          topic_code: topic_code,
+          exercise_code: exercise.code,
+          title: exercise.title,
+          instructions: exercise.description,
+          answer: exercise.expectedOutput ?? "",
+          initial_code: exercise.starterCode ?? "",
+          with_python_code: exercise.hasCodeEditor
+        }),
+      });
+
+      for(const exercise_material of exercise.documents){
+        if(exercise_material.code == -1){
+          createExerciseMaterial(exercise_material,exercise.code)
+        }
+      }
+
+      const data = await res.json()
+      console.log("ejercicio actualizado:",data)
+
+    } catch (error) {
+      console.error("Error al guardar lección:", error)
+    }
+  }
+
+
+  const updateTopic_to_route = async (topic) => {//simplemente le puse ese nombre para diferenciar
+    try {
+      console.log("el topico que queremos actualizar:", topic)
+      const formData = new FormData()
+      formData.append("topic_code", topic.topic_code)
+      formData.append("topic_index", topic.order )
+      formData.append("topic_title",  topic.title)
+      formData.append("topic_description", topic.description)
+
+      const res = await fetch("http://127.0.0.1:5000/topic/update_topic", {
+        method: "PUT",
+        body: formData,
+      })
+
+      const data = await res.json()
+      console.log("topico actualizado:", data)
+
+      for(const material of topic.materials){
+        if(material.code == -1){
+          createMaterial(material,topic.topic_code)
+        }
+      }
+
+      for(const exercise of topic.exercises){
+
+        if(exercise.code == -1){
+          createExercise(exercise)
+        }else{
+          updateExercise(exercise,topic.topic_code)
+        }
+
+      }
+
+
+
+    
+    } catch (error) {
+      console.error("Error al guardar lección:", error)
+    }
   }
 
   const isFormValid = () => {
@@ -458,20 +778,50 @@ const CrearLeccion = () => {
           const data = await res.json()
           console.log("Leccion:", data)
 
-          //topicos
-
-
-        
         } catch (error) {
           console.error("Error al guardar lección:", error)
         }
       }
-      actualizar_leccion()
+      await actualizar_leccion()
+
+
+
+      //borrar cosas eliminadas, por la logica del formulario, no deberian poder cruzarse info en cada uno de estos for
+      for(const topic of deleted_topics){
+        if(topic.topic_code != -1){
+          await deleteTopic(topic)
+        }
+      }
+
+      for(const material of deleted_materials){
+        if(material.code != -1){
+          await deleteMaterial(material)
+        }
+      }
+
+      for(const exercise of deleted_exercises){
+          if(exercise.code != -1){
+            await deleteExercise(exercise)
+          }
+      }
+      for(const exercise_material of deleted_exercise_materials){
+        if(exercise_material.code != -1){
+          await deleteExerciseMaterial(exercise_material)
+        }
+      }
 
       //topicos
+      for(const topic of topics){
+        if(topic.topic_code == -1){//crear_topico
+           await createTopic(topic)
+        }else{ 
+          await updateTopic_to_route(topic)
+        }
+        
+      }
 
-
-        //ejercicios
+      alert("¡Lección editada exitosamente!")
+      navigate('/listar')
     }else{
       
       console.log("=== INICIANDO GUARDADO DE LECCIÓN ===")
@@ -880,6 +1230,7 @@ const CrearLeccion = () => {
                             className="delete-topic-btn"
                             onClick={() => {
                               const newTopics = topics.filter((_, i) => i !== currentTopicIndex)
+                              setDeletedTopics([...deleted_topics,topics[currentTopicIndex]])
                               setTopics(newTopics)
                               if (currentTopicIndex >= newTopics.length) {
                                 setCurrentTopicIndex(Math.max(0, newTopics.length - 1))
@@ -995,29 +1346,13 @@ const CrearLeccion = () => {
                             {topics[currentTopicIndex].materials.length > 0 ? (
                               <div className="materials-grid">
                                 {topics[currentTopicIndex].materials.map((material, materialIndex) => (
-                                  <div key={material.id} className="material-item">
-                                    <div className="material-preview">
+
+                                  <div key={material.id} className="document-item">
+                                    <div className="document-icon-container">
                                       {renderMaterialPreview(material)}
-                                      <button
-                                        className="remove-material-btn"
-                                        onClick={() => removeMaterial(currentTopicIndex, materialIndex)}
-                                      >
-                                        <span className="icon-x">×</span>
-                                      </button>
                                     </div>
-                                    <div className="material-info">
-                                      <input
-                                        type="text"
-                                        placeholder="Título del material"
-                                        value={material.title}
-                                        onChange={(e) => {
-                                          const updatedTopics = [...topics]
-                                          updatedTopics[currentTopicIndex].materials[materialIndex].title =
-                                            e.target.value
-                                          setTopics(updatedTopics)
-                                        }}
-                                        className="material-title-input"
-                                      />
+                                    <div className="document-info">
+                                      <p className="document-title">{material.title}</p>
                                       <div className="material-type">
                                         <span className={`icon-${material.type}`}>
                                           {material.type === "document" && "📄"}
@@ -1027,7 +1362,15 @@ const CrearLeccion = () => {
                                         <span>{material.fileExtension || material.type}</span>
                                       </div>
                                     </div>
+                                    <button
+                                      className="remove-document-btn"
+                                      onClick={() =>
+                                        removeMaterial(currentTopicIndex, materialIndex)}
+                                    >
+                                      <span className="icon-x">×</span>
+                                    </button>
                                   </div>
+
                                 ))}
                               </div>
                             ) : (
@@ -1060,6 +1403,7 @@ const CrearLeccion = () => {
                                       className="delete-exercise-btn"
                                       onClick={() => {
                                         const updatedTopics = [...topics]
+                                        setDeletedExercises([...deleted_exercises,topics[currentTopicIndex].exercises[exerciseIndex]])
                                         updatedTopics[currentTopicIndex].exercises.splice(exerciseIndex, 1)
                                         setTopics(updatedTopics)
                                       }}

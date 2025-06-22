@@ -14,7 +14,7 @@ class Exercise_Material():
             db = get_connection()
             cursor = db.cursor()
 
-            cursor.execute('SELECT delete_exercise_material(%s);', (exercise_material_code))
+            cursor.execute('SELECT delete_exercise_material(%s);', (exercise_material_code,))
             db.commit()
 
             return {"message": "Exercise Material deleted successfully."}, 200
@@ -25,6 +25,8 @@ class Exercise_Material():
         finally:
             cursor.close()
             db.close()
+
+    
     @classmethod
     def get_exercise_materials_by_exercise(self, exercise_code: int):
         try:
@@ -47,7 +49,11 @@ class Exercise_Material():
                     "material_rute": str(row[4]).strip(),
                 })
 
-            return exercise_materials, 200 if exercise_materials else 204
+        
+            if exercise_materials:
+                return exercise_materials, 200
+            else:
+                return [], 200
 
         except Exception as ex:
             return {"error": f"Error geting exercise material: {str(ex)}"}, 500

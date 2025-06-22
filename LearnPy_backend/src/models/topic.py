@@ -10,7 +10,7 @@ class Topic():
             db = get_connection()
             cursor = db.cursor()
 
-            cursor.execute('SELECT delete_topic(%s);', (topic_code))
+            cursor.execute('SELECT delete_topic(%s);', (topic_code,))
             db.commit()
 
             return {"message": "Topic deleted successfully."}, 200
@@ -43,7 +43,10 @@ class Topic():
                     "topic_description": str(row[3]).strip()
                 })
 
-            return topics, 200 if topics else 204
+            if topics:
+                return topics, 200
+            else:
+                return [], 200
     
         except Exception as ex:
             return {"error": f"Error geting topic: {str(ex)}"}, 500
@@ -52,3 +55,67 @@ class Topic():
             cursor.close()
             db.close()
 
+
+
+    @classmethod
+    def update_topic(cls, topic_code: int, topic_index: int, topic_title: str, topic_description: str):
+        
+        db = None
+        cursor = None
+        try:
+            db = get_connection()
+            cursor = db.cursor()
+
+            cursor.execute('''
+                SELECT update_topic(%s, %s, %s, %s);
+            ''', (
+                topic_code,
+                topic_index,
+                topic_title,
+                topic_description
+            ))
+
+            db.commit()
+            return {"message": "Topic updated successfully."}, 200
+
+        except Exception as ex:
+            return {"error": f"Error updating topic: {str(ex)}"}, 500
+
+        finally:
+            cursor.close()
+            db.close()
+
+
+
+    @classmethod
+    def create_topic(self, lesson_code: int, topic_index: int, topic_title: str, topic_description: str):
+
+        db = None
+        cursor = None
+
+        try:
+
+            db = get_connection()
+            cursor = db.cursor()
+
+            cursor.execute('''
+                SELECT create_topic(%s, %s, %s, %s);
+            ''', (lesson_code, topic_index, topic_title,
+                topic_description))
+            db.commit()
+            result = cursor.fetchone()
+
+            if result is None:
+                return {"message": "Topic not created"}, 400
+            print(result)
+            return {"topic_code": result[0], "message": "Topic created successfully."}, 201
+        
+        except Exception as ex:
+            return {"error": f"Error creating Topic: {str(ex)}"}, 500
+
+        finally:
+
+            if cursor:
+                cursor.close()
+            if db:
+                db.close()

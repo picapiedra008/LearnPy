@@ -5,47 +5,66 @@ import os
 class Material():
 
     @classmethod
-    def create_material(self, topic_code: int, file, material_type_code: int, material_name: str):
+    def create_material(self, topic_code: int, file, material_type_code, material_name: str):
         try:
-            # Subir archivo a Google Drive
             if file.filename == '':
                 return {'error': 'No selected file'}, 400
+
+            fn = file.filename
+            _, ext = os.path.splitext(fn)
+            ext = ext.lower().strip().lstrip('.')
 
             file_path = f"./{file.filename}"
             file.save(file_path)
 
-            # Subir a Google Drive            
             uploaded_file = upload_file_to_drive(file_path, file.filename, file.mimetype)
             file_id = uploaded_file.get('id')
 
-            # Eliminar el archivo temporal después de la subida
             os.remove(file_path)
 
             conn = get_connection()
             cur = conn.cursor()
 
             cur.execute(
-                "SELECT create_material(%s, %s, %s, %s)",
-                (topic_code, material_type_code, material_name, file_id)
+                "SELECT get_material_type_by_material_type_name(%s)",
+                (ext,)
             )
-            new_material_code = cur.fetchone()[0]
-            conn.commit()
+            mtc_result = cur.fetchone()
             cur.close()
-            conn.close()
 
-            return {"material_code": new_material_code, "message": "Material creado correctamente"}, 201
+            if mtc_result and mtc_result[0]:
+                mtc = mtc_result[0]
+
+                cur = conn.cursor()
+                cur.execute(
+                    "SELECT create_material(%s, %s, %s, %s)",
+                    (topic_code, mtc, material_name, file_id)
+                )
+                new_material_code = cur.fetchone()[0]
+                conn.commit()
+                cur.close()
+                conn.close()
+
+                return {"material_code": new_material_code, "message": "Material creado correctamente"}, 201
+            else:
+                conn.close()
+                return {'error': f"No material type found for extension '{ext}'"}, 400
 
         except Exception as e:
-
             return {"error": str(e)}, 500
 
+
     @classmethod
-    def create_material_of_exercise(self, exercise_code: int, file, material_type_code: int, material_name: str):
+    def create_material_of_exercise(self, exercise_code: int, file, material_type_code , material_name: str):
         try:
             # Subir archivo a Google Drive
             if file.filename == '':
                 return {'error': 'No selected file'}, 400
 
+            fn = file.filename
+            _, ext = os.path.splitext(fn)
+            ext = ext.lower().strip().lstrip('.')
+            
             file_path = f"./{file.filename}"
             file.save(file_path)
 
@@ -56,19 +75,36 @@ class Material():
             # Eliminar el archivo temporal después de la subida
             os.remove(file_path)
 
+
+
             conn = get_connection()
             cur = conn.cursor()
 
             cur.execute(
-                "SELECT create_exercise_material(%s, %s, %s, %s)",
-                (exercise_code, material_type_code, material_name, file_id)
+                "SELECT get_material_type_by_material_type_name(%s)",
+                (ext,)
             )
-            new_material_code = cur.fetchone()[0]
-            conn.commit()
+            mtc_result = cur.fetchone()
             cur.close()
-            conn.close()
 
-            return {"material_code": new_material_code, "message": "Material creado correctamente"}, 201
+            if mtc_result and mtc_result[0]:
+                mtc = mtc_result[0]
+
+                cur = conn.cursor()
+                cur.execute(
+                    "SELECT create_exercise_material(%s, %s, %s, %s)",
+                    (exercise_code, mtc, material_name, file_id)
+                )
+                new_material_code = cur.fetchone()[0]
+                conn.commit()
+                cur.close()
+                conn.close()
+
+                return {"material_code": new_material_code, "message": "Material creado correctamente"}, 201
+            else:
+                conn.close()
+                return {'error': f"No material type found for extension '{ext}'"}, 400
+
 
         except Exception as e:
 
