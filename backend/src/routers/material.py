@@ -16,8 +16,12 @@ def create_material():
         topic_code = int(topic_code_str) if topic_code_str else None
         material_type_code = request.form.get('material_type_code')
         material_name = request.form.get('material_name')
-        file = request.files['file']
 
+        print("request.form:", request.form)
+        
+        file = request.files['file']
+        print("request.files:", request.files)
+        
         print("###########")
         result, resp = Material.create_material(topic_code, file, material_type_code, material_name)
         return jsonify(result), resp

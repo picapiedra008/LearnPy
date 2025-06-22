@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import { crearLeccionCompleta, obtenerNiveles, obtenerVisibilidades } from "./apiCrearLeccion"
+//import { crearLeccionCompleta, obtenerNiveles, obtenerVisibilidades } from "./apiCrearLeccion"
 import "./crearLeccion.css"
 
 const CrearLeccion = () => {

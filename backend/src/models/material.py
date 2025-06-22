@@ -58,8 +58,8 @@ class Material():
     def create_material_of_exercise(self, exercise_code: int, file, material_type_code , material_name: str):
         try:
             # Subir archivo a Google Drive
-            if file.filename == '':
-                return {'error': 'No selected file'}, 400
+            if not file or not file.filename:
+                return {'error': 'No valid file'}, 400
 
             fn = file.filename
             _, ext = os.path.splitext(fn)
