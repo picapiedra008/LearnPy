@@ -3,20 +3,9 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Eye, Edit, Trash2, Plus, BookOpen, Brain, Lightbulb, NotebookPen, Library,
-          Layers3, Dumbbell, FileText, Search} from "lucide-react"
+          Layers3, Dumbbell, FileText, Search } from "lucide-react"
 import "./listarLecciones.css"
 
-const getRandomLucideIcon = () => {
-  const icons = [BookOpen, Brain, Lightbulb, NotebookPen]
-  return icons[Math.floor(Math.random() * icons.length)]
-}
-const normalizeText = (text) =>
-  text
-    .toLowerCase()
-    .normalize("NFD")            // separa letras y acentos
-    .replace(/[\u0300-\u036f]/g, "") // remueve los acentos
-
-/*lecciones de prueba por si no conecta con la bd */
 const leccionDePrueba = {
   code: "demo123",
   title: "Lección de prueba",
@@ -36,6 +25,17 @@ const leccionDePrueba02 = {
   visibility_name: "Público",
 }
 
+const getRandomLucideIcon = () => {
+  const icons = [BookOpen, Brain, Lightbulb, NotebookPen]
+  return icons[Math.floor(Math.random() * icons.length)]
+}
+
+const normalizeText = (text) =>
+  text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+
 const ListarLecciones = () => {
   const [lessons, setLessons] = useState([leccionDePrueba, leccionDePrueba02])
   const [searchTerm, setSearchTerm] = useState("")
@@ -49,101 +49,89 @@ const ListarLecciones = () => {
   const lessonsPerPage = 6
   const navigate = useNavigate()
 
-  
-  const fetchTopicCount = async (lessonCode) => {
+  const fetchLessonStats = async (lessonCode) => {
     try {
-      const res = await fetch("http://localhost:5000/lesson/get_topics", {
+      const resTopics = await fetch("http://localhost:5000/topic/get_topics", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lesson_code: lessonCode })
+        body: JSON.stringify({ lesson_code: Number(lessonCode) })
       })
-      const data = await res.json()
-      return Array.isArray(data) ? data.length : 0
+      const topics = await resTopics.json()
+      if (!Array.isArray(topics)) return { topicCount: 0, exerciseCount: 0, materialCount: 0 }
+
+      const topicCount = topics.length
+
+      const statsByTopic = await Promise.all(
+        topics.map(async (topic) => {
+          const resExercises = await fetch("http://localhost:5000/exercise/get_exercises", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic_code: topic.topic_code })
+          })
+          const exercises = await resExercises.json()
+          const exerciseCount = Array.isArray(exercises) ? exercises.length : 0
+
+          const resMaterials = await fetch("http://localhost:5000/material/get_materials_by_topic", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ topic_code: topic.topic_code })
+          })
+          const materials = await resMaterials.json()
+          const materialCount = Array.isArray(materials) ? materials.length : 0
+
+          return { exerciseCount, materialCount }
+        })
+      )
+
+      const exerciseCount = statsByTopic.reduce((sum, s) => sum + s.exerciseCount, 0)
+      const materialCount = statsByTopic.reduce((sum, s) => sum + s.materialCount, 0)
+
+      return { topicCount, exerciseCount, materialCount }
+
     } catch (error) {
-      console.error(`Error al obtener tópicos para ${lessonCode}:`, error)
-      return 0
+      console.error(`Error al obtener stats para ${lessonCode}:`, error)
+      return { topicCount: 0, exerciseCount: 0, materialCount: 0 }
     }
   }
 
-  const fetchExerciseCountByTopic = async (topicCode) => {
-    try {
-      const res = await fetch("http://localhost:5000/exercise/get_exercises", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic_code: topicCode })
-      })
-      const data = await res.json()
-      return Array.isArray(data) ? data.length : 0
-    } catch (error) {
-      console.error("Error al contar ejercicios:", error)
-      return 0
-    }
-  }
-
-  const fetchMaterialCountByLesson = async (lessonCode) => {
-    try {
-      const res = await fetch("http://localhost:5000/material/get_materials_by_lesson", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lesson_code: lessonCode })
-      })
-      const data = await res.json()
-      return Array.isArray(data) ? data.length : 0
-    } catch (error) {
-      console.error("Error al contar materiales:", error)
-      return 0
-    }
-  }
   useEffect(() => {
     const fetchLessons = async () => {
       try {
         const userCode = localStorage.getItem("user_code") || 1
         const res = await fetch("http://localhost:5000/lesson/get_lessons", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_code: userCode })
         })
 
-        if (!res.ok) {
-          throw new Error(`Error del servidor: ${res.status}`)
-        }
+        if (!res.ok) throw new Error(`Error del servidor: ${res.status}`)
 
         const data = await res.json()
-        if (Array.isArray(data)) {
-          setLessons(data)
+        if (!Array.isArray(data)) throw new Error("Datos inválidos recibidos del servidor")
 
-          const countsArray = await Promise.all(
-            data.map(async (lesson) => {
-              const count = await fetchTopicCount(lesson.lesson_code)
-              return [lesson.lesson_code, count]
-            })
-          )
-          const counts = Object.fromEntries(countsArray)
-          setTopicCounts(counts)
+        setLessons(data)
 
-          const exerciseArray = await Promise.all(
-            data.map(async (lesson) => {
-              const count = await fetchExerciseCountByTopic(lesson.lesson_code)
-              return [lesson.lesson_code, count]
-            })
-          )
-          const exerciseMap = Object.fromEntries(exerciseArray)
-          setExerciseCounts(exerciseMap)
+        const statsArray = await Promise.all(
+          data.map(async (lesson) => {
+            const stats = await fetchLessonStats(lesson.lesson_code)
+            return [lesson.lesson_code, stats]
+          })
+        )
 
-          const materialArray = await Promise.all(
-            data.map(async (lesson) => {
-              const count = await fetchMaterialCountByLesson(lesson.lesson_code)
-              return [lesson.lesson_code, count]
-            })
-          )
-          const materialMap = Object.fromEntries(materialArray)
-          setMaterialCounts(materialMap)
+        const topicsMap = {}
+        const exercisesMap = {}
+        const materialsMap = {}
 
-        } else {
-          setError("Datos inválidos recibidos del servidor.")
+        for (const [code, stats] of statsArray) {
+          topicsMap[code] = stats.topicCount
+          exercisesMap[code] = stats.exerciseCount
+          materialsMap[code] = stats.materialCount
         }
+
+        setTopicCounts(topicsMap)
+        setExerciseCounts(exercisesMap)
+        setMaterialCounts(materialsMap)
+
       } catch (err) {
         console.error("Error al cargar las lecciones:", err)
         setError("No se pudo conectar al servidor.")
@@ -155,7 +143,6 @@ const ListarLecciones = () => {
     fetchLessons()
   }, [])
 
-
   const filteredLessons = lessons.filter((lesson) => {
     const title = lesson.lesson_title || ""
     const description = lesson.lesson_description || ""
@@ -163,7 +150,6 @@ const ListarLecciones = () => {
 
     const matchesSearch = normalizeText(title).includes(safeSearch) ||
                           normalizeText(description).includes(safeSearch)
-
 
     const matchesLevel =
       selectedLevel === "Todos" ||
@@ -182,6 +168,12 @@ const ListarLecciones = () => {
   const handleView = (code) => navigate(`/ver-leccion/${code}`)
   const handleEdit = (code) => navigate(`/editar-leccion/${code}`)
   const handleDelete = (code) => navigate(`/eliminar-leccion/${code}`)
+  const handleSoftDelete = (code) => {
+  if (window.confirm("¿Estás seguro de que deseas eliminar esta lección?")) {
+    setLessons((prevLessons) => prevLessons.filter(lesson => lesson.lesson_code !== code))
+  }
+}
+
 
   return (
     <div className="listar-lecciones-container">
@@ -212,7 +204,7 @@ const ListarLecciones = () => {
       <div className="title-bar">
         <h2 className="title-with-icon">
           <Library size={30} className="title-icon" />
-            Mis Lecciones
+          Mis Lecciones
         </h2>
         <Link to="/crear-leccion" className="new-lesson-btn">
           <Plus size={18} /> Nueva lección
@@ -221,10 +213,7 @@ const ListarLecciones = () => {
 
       <div className="filters-bar">
         <div className="search-container">
-          <span className="search-icon">
-              <Search size={18} />
-          </span>
-
+          <span className="search-icon"><Search size={18} /></span>
           <input
             type="text"
             placeholder="Buscar lecciones..."
@@ -246,9 +235,7 @@ const ListarLecciones = () => {
           }}
         >
           {levels.map((level) => (
-            <option key={level} value={level}>
-              {level}
-            </option>
+            <option key={level} value={level}>{level}</option>
           ))}
         </select>
       </div>
@@ -263,7 +250,6 @@ const ListarLecciones = () => {
             {paginatedLessons.length > 0 ? (
               paginatedLessons.map((lesson) => (
                 <div key={lesson.lesson_code} className="lesson-card">
-                  {/*muestra imagen */}
                   <div className="lesson-image-wrapper">
                     {lesson.lesson_front_page && (
                     <img
@@ -284,57 +270,32 @@ const ListarLecciones = () => {
                         })()}
                     </div>
                   </div>
-                  {/**/}
 
-                <div className="lesson-info-row">
-                  <div className="lesson-meta">
-                    <span className="lesson-level">
-                      {lesson.level_name || "Desconocido"}
-                    </span>
-                    <span className="lesson-visibility">
-                      {lesson.visibility_name || "Desconocido"}
-                    </span>
+                  <div className="lesson-info-row">
+                    <div className="lesson-meta">
+                      <span className="lesson-level">{lesson.level_name || "Desconocido"}</span>
+                      <span className="lesson-visibility">{lesson.visibility_name || "Desconocido"}</span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="lesson-header">
-                  <h3>{lesson.lesson_title || "Sin título"}</h3>
-                  
-                </div>
-                <p>{lesson.lesson_description || "Sin descripción"}</p>
-                {/*<p>{lesson.lesson_code || "Sin codigo"}</p>*/}
-                {/*<p>{lesson.topic_code || "Sin codigo"}</p>*/}
-                {/*topicos*/}
-                <div className="lesson-stats">
-                    <span>
-                      <Layers3 size={16} style={{ marginRight: "4px" }} />
-                      {topicCounts[lesson.lesson_code] ?? "..."} Tópicos
-                    </span>
-                    <span>
-                      <Dumbbell size={16} style={{ marginRight: "4px" }} />
-                      {exerciseCounts[lesson.lesson_code] ?? "..."} Ejercicios
-                    </span>
-                    <span>
-                      <FileText size={16} style={{ marginRight: "4px" }} />
-                      {materialCounts[lesson.lesson_code] ?? "..."} Materiales
-                    </span>
-                </div>
-                {/*<p>{lesson.lesson_front_page || "no hay imagen"}</p>*/}
-
-                  {/*<p className="lesson-date">
-                    {new Date().toLocaleDateString()}
-                  </p>*/}
+                  <div className="lesson-header">
+                    <h3>{lesson.lesson_title || "Sin título"}</h3>
+                  </div>
+                  <p>{lesson.lesson_description || "Sin descripción"}</p>
+                  {/*<p>{topic.topic_code || "Sin topic"}</p>*/}
+                  {/*<p>{lesson.lesson_code || "Sin codigo"}</p>*/}
+                  <div className="lesson-stats">
+                    <span><Layers3 size={16} style={{ marginRight: 4 }} />{topicCounts[lesson.lesson_code] ?? "..."} Tópicos</span>
+                    <span><Dumbbell size={16} style={{ marginRight: 4 }} />{exerciseCounts[lesson.lesson_code] ?? "..."} Ejercicios</span>
+                    <span><FileText size={16} style={{ marginRight: 4 }} />{materialCounts[lesson.lesson_code] ?? "..."} Materiales</span>
+                  </div>
 
                   <div className="lesson-actions">
-                    <button title="Ver" onClick={() => handleView(lesson.lesson_code)}>
-                      <Eye size={18} />
-                    </button>
-                    <button title="Editar" onClick={() => handleEdit(lesson.lesson_code)}>
-                      <Edit size={18} />
-                    </button>
-                    <button title="Eliminar" onClick={() => handleDelete(lesson.lesson_code)}>
-                      <Trash2 size={18} />
-                    </button>
+                    <button title="Ver" onClick={() => handleView(lesson.lesson_code)}><Eye size={18} /></button>
+                    <button title="Editar" onClick={() => handleEdit(lesson.lesson_code)}><Edit size={18} /></button>
+                    {/*<button title="Eliminar" onClick={() => handleDelete(lesson.lesson_code)}><Trash2 size={18} /></button>*/}
+                    <button title="Eliminar" onClick={() => handleSoftDelete(lesson.lesson_code)}><Trash2 size={18} /></button>
+
                   </div>
                 </div>
               ))
@@ -351,7 +312,6 @@ const ListarLecciones = () => {
             >
               « Anterior
             </button>
-
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={`page-${index}`}
@@ -362,7 +322,6 @@ const ListarLecciones = () => {
                 {index + 1}
               </button>
             ))}
-
             <button
               className="page-btn"
               disabled={filteredLessons.length === 0 || currentPage === totalPages}
