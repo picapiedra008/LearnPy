@@ -89,13 +89,13 @@ function App() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="nav-links"
           >
-            <a href="#" className="nav-link">
+            <a href="/listar" className="nav-link">
               Inicio
             </a>
             <a href="#features" className="nav-link">
               Características
             </a>
-            <a href="/listar" className="nav-link">
+            <a href="#courses" className="nav-link">
               lecciones
             </a>
             <a href="#testimonials" className="nav-link">

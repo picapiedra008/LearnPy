@@ -11,10 +11,9 @@ import ListarLecciones from "./pages/listarLecciones/listarLecciones";
 import CrearLeccion from "./pages/crearLeccion/crearLeccion"; // Para crear y editar
 import VerLeccion from "./pages/verLecciones/verLeccion";
 
-import Ejercicios from "./pages/ejercicios";
 import Compilador from "./pages/Compilador/compilador";
 
-import EjerciciosEstudiante from "./pages/ejerciciosEstudiante";
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -34,10 +33,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/curso/:id" element={<VerLeccion />} />
 
         {/* Otros módulos */}
-        <Route path="/ejercicios" element={<Ejercicios />} />
+
         <Route path="/compilador" element={<Compilador />} />
         
-        <Route path="/entorno" element={<EjerciciosEstudiante/>} />
+        <Route path="/ver-leccion/:lessonCode" element={<VerLeccion />} />
+
+        {/* Ver lección como estudiante */}
+        <Route path="/curso/:id" element={<VerLeccion />} />
+
       </Routes>
     </Router>
   </React.StrictMode>
