@@ -214,6 +214,45 @@ const CrearLeccion = () => {
     loadInitialData()
   }, [])
 
+
+  const obtenerVisibilidades = async () => {
+    try {
+          //leccionget_levels
+
+          let res = await fetch("http://127.0.0.1:5000/lesson/get_visibilities", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          })
+
+          let data = await res.json()
+
+          return data
+        
+        } catch (error) {
+          console.error("Error al obtener lección:", error)
+          return []
+        }
+  }
+
+  const obtenerNiveles = async () => {
+    try {
+
+          let res = await fetch("http://127.0.0.1:5000/lesson/get_levels", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          })
+
+          let data = await res.json()
+
+          return data
+        
+        } catch (error) {
+          console.error("Error al obtener lección:", error)
+          return []
+        }
+  }
+
+
   const getCoverImageUrl = () => {
     if (!lesson.coverImage) return "/placeholder.svg"
     if (lesson.coverImage.startsWith("blob:")) return lesson.coverImage
