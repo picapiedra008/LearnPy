@@ -9,7 +9,7 @@ const CrearLeccion = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const isEditing = Boolean(id)
-
+  const user_id = 1//caso que tubieramos inicio de sesion y auth le cambiamos supongamos nomas nadie va a hacer :u
   const [activeTab, setActiveTab] = useState("general")
   const [validationErrors, setValidationErrors] = useState({})
   const [touchedFields, setTouchedFields] = useState({})
@@ -528,11 +528,11 @@ const CrearLeccion = () => {
     }
   };
 
-  const createTopic = async (topic)  => {
+  const createTopic = async (topic, lesson_code)  => {
     try {
       console.log("el topico que queremos crear:", topic)
       const formData = new FormData()
-      formData.append("lesson_code", Number(id))
+      formData.append("lesson_code", Number(lesson_code))
       formData.append("topic_index", topic.order )
       formData.append("topic_title",  topic.title)
       formData.append("topic_description", topic.description)
@@ -562,6 +562,9 @@ const CrearLeccion = () => {
       console.error("Error al crear el topico:", error)
     }
   }
+
+
+  
 
   const createExerciseMaterial = async (exercise_material,exercise_code) => {
 
@@ -852,7 +855,7 @@ const CrearLeccion = () => {
       //topicos
       for(const topic of topics){
         if(topic.topic_code == -1){//crear_topico
-           await createTopic(topic)
+           await createTopic(topic,id)
         }else{ 
           await updateTopic_to_route(topic)
         }
@@ -862,35 +865,44 @@ const CrearLeccion = () => {
       alert("¡Lección editada exitosamente!")
       navigate('/listar')
     }else{
+      const crear_leccion = async () => {
+
+        try {
+          const formData = new FormData()
+          formData.append("user_code", user_id)
+          formData.append("level_code", lesson.level)
+          formData.append("visibility_code", lesson.visibility)
+          formData.append("title", lesson.title)
+          formData.append("description", lesson.description)
+          formData.append("front_page", coverInitial)
+          if (coverFile) {
+            formData.append('file', coverFile);
+          }
+
+
+          const res = await fetch("http://127.0.0.1:5000/lesson/create_lesson", {
+            method: "POST",
+            body: formData,
+          })
+
+          const data = await res.json()
+          console.log("Leccion:", data)
+          const new_lesson_code = data.lesson_code
+
+          for(const topic of topics){
+            await createTopic(topic,new_lesson_code)
+          }
+
+          alert("¡Lección creada exitosamente!")
+          navigate('/listar')
+
+        } catch (error) {
+          console.error("Error al crear el leccion:", error)
+        }
+      }
+      await crear_leccion()
       
-      console.log("=== INICIANDO GUARDADO DE LECCIÓN ===")
-
-      const lessonData = {
-        title: lesson.title,
-        description: lesson.description,
-        level: lesson.level,
-        visibility: lesson.visibility,
-        coverFile: coverFile,
-      }
-
-      console.log("Datos a enviar:", { lessonData, topics })
-
-      const result = await crearLeccionCompleta(lessonData, topics)
-
-      console.log("Resultado del guardado:", result)
-
-      if (result.success) {
-        alert("¡Lección creada exitosamente!")
-        // Limpiar el formulario después del éxito
-        setLesson({ title: "", description: "", level: "", coverImage: null, visibility: "" })
-        setTopics([{ id: "-1", title: "", description: "", duration: 30, materials: [], exercises: [], order: 1 }])
-        setCoverFile(null)
-        setActiveTab("general")
-        setCurrentTopicIndex(0)
-        // navigate("/listar") // Descomenta si quieres redirigir
-      } else {
-        alert(`Error: ${result.error}`)
-      }
+      
     }
 
 

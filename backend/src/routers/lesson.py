@@ -25,17 +25,18 @@ def get_form_param(name, cast_type=str):
 @main.route('/create_lesson', methods=['POST'])
 @handle_exceptions
 def create_lesson():
-    if 'front_page' not in request.files:
-        return jsonify({'error': 'No file part (front_page)'}), 400
+
     
     user_code = get_form_param('user_code', int)
     level_code = get_form_param('level_code', int)
     visibility_code = get_form_param('visibility_code', int)
     title = get_form_param('title')
     description = get_form_param('description')
-    file = request.files['front_page']
+    front_page = get_form_param('front_page')
+    file = request.files.get('file')
 
-    result, resp = Lesson.create_lesson(user_code, level_code, visibility_code, title, description, file)
+
+    result, resp = Lesson.create_lesson(user_code, level_code, visibility_code, title, description, front_page, file)
     return jsonify(result), resp
 
 @main.route('/topics', methods=['POST'])

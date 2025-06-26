@@ -6,32 +6,39 @@ class Lesson():
 
     @classmethod
     def create_lesson(self, user_code: int, level_code: int, visibility_code: int,
-                    lesson_title: str, lesson_description: str, file):
+                    lesson_title: str, lesson_description: str, front_page: str, file):
 
         db = None
         cursor = None
 
         try:
-            if file.filename == '':
-                return {'error': 'No selected file'}, 400
 
-            file_path = f"./{file.filename}"
-            file.save(file_path)
 
-            # Subir a Google Drive            
-            uploaded_file = upload_file_to_drive(file_path, file.filename, file.mimetype)
-            file_id = uploaded_file.get('id')
 
-            # Eliminar el archivo temporal después de la subida
-            os.remove(file_path)
 
             db = get_connection()
             cursor = db.cursor()
+            print("file:", file)
+            print("file.filename:", file.filename if file else "None")
+            if file and file.filename:
+                delete_file_from_drive(front_page)
+
+                file_path = f"./{file.filename}"
+                file.save(file_path)
+
+                # Subir a Google Drive
+                uploaded_file = upload_file_to_drive(file_path, file.filename, file.mimetype)
+                file_id = uploaded_file.get('id')
+
+                # Eliminar el archivo temporal después de la subida
+                os.remove(file_path)
+
+                front_page = file_id
 
             cursor.execute('''
                 SELECT create_lesson(%s, %s, %s, %s, %s, %s);
             ''', (user_code, level_code, visibility_code,
-                lesson_title, lesson_description, file_id))
+                lesson_title, lesson_description, front_page))
             db.commit()
             result = cursor.fetchone()
 
