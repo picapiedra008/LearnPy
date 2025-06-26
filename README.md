@@ -1,6 +1,7 @@
 # **LearnPy - Plataforma de Aprendizaje**
 
 LearnPy es una plataforma educativa que consta de un backend en Python y dos frontends en React (Vite) para administradores y usuarios. Esta guía te ayudará a configurar y ejecutar el proyecto en tu entorno local.
+![image](https://github.com/user-attachments/assets/238036a0-c5c1-42a0-9493-eb7b5dd29636)
 
 ---
 
