@@ -1,32 +1,33 @@
-#  API – Plataforma LearnPy
+# API – Plataforma LearnPy
 
-Este documento detalla los endpoints disponibles en la API del backend de LearnPy, organizados por módulos funcionales: Usuarios, Ejercicios, Lecciones y Materiales.
+Documentación de los endpoints disponibles en el backend de LearnPy, organizados por módulos funcionales: Usuarios, Ejercicios, Lecciones, Materiales, Tópicos y más.
 
 ---
 
-##  API de Usuarios
+## Tabla de Contenidos
+
+- [API de Usuarios](#api-de-usuarios)
+- [API de Ejercicios](#api-de-ejercicios)
+- [API de Lecciones](#api-de-lecciones)
+- [API de Materiales](#api-de-materiales)
+- [API de Materiales de Ejercicio](#api-de-materiales-de-ejercicio)
+- [API de Tópicos](#api-de-tópicos)
+- [API de Validación de Código](#api-de-validación-de-código)
+- [Dominios](#dominios)
+
+---
+
+## API de Usuarios
 
 ### Glosario
-
-- email: Correo electrónico del usuario.
-- password: Contraseña del usuario.
-- type: Tipo de usuario
-    - 1: Administrador
-    - 2: Estudiante
-    - 3: Docente
-- code: Id de un usuario.
-- codes: Arreglo de ids de usuarios.
-- name: Nombre del usuario.
+- **email**: Correo electrónico del usuario.
+- **password**: Contraseña del usuario.
+- **type**: Tipo de usuario (1: Administrador, 2: Estudiante, 3: Docente).
+- **code**: ID del usuario.
+- **codes**: Arreglo de IDs de usuarios.
+- **name**: Nombre del usuario.
 
 ### Endpoints
-
-### Dominios
-
-```
-Dominio local: http://127.0.0.1:5000/
-
-Dominio global: 
-```
 
 #### Login de usuario
 - **URL**: `/user/login_user`
@@ -37,9 +38,9 @@ Dominio global:
   "password": "123456",
   "type": 2
 }
-
-Respuesta: Usuario autenticado
 ```
+Respuesta: Usuario autenticado
+
 #### Obtener lista de usuarios por tipo
 - **URL**: `/user/get_users`
 - **Método**: `POST`
@@ -50,7 +51,7 @@ Respuesta: Usuario autenticado
 ```
 Respuesta: Lista de usuarios por tipo
 
-#### Obtener usuario por codigo
+#### Obtener usuario por código
 - **URL**: `/user/get_user`
 - **Método**: `POST`
 ```json
@@ -106,8 +107,10 @@ Respuesta: Usuario registrado exitosamente
 ```
 Respuesta: Usuario actualizado correctamente
 ---
+- **Descripción**:  
+API de Usuarios: Gestiona operaciones relacionadas con los usuarios del sistema, incluyendo registro, inicio de sesión y recuperación de información del perfil.
 
-##  API de Ejercicios
+## API de Ejercicios
 
 #### Crear ejercicio
 - **URL**: `/exercise/create_exercise`
@@ -123,7 +126,7 @@ Respuesta: Usuario actualizado correctamente
 ```
 Respuesta: Ejercicio creado correctamente
 
-#### Obtener ejercicios por topico
+#### Obtener ejercicios por tópico
 - **URL**: `/exercise/get_exercises`
 - **Método**: `POST`
 ```json
@@ -156,24 +159,21 @@ Respuesta: Ejercicio actualizado correctamente.
 }
 ```
 Respuesta: Ejercicio eliminado correctamente.
----
 
-##  API de Lecciones
+- **Descripción**:  
+API de Ejercicios: Permite crear, editar, eliminar y consultar ejercicios asociados a lecciones o tópicos educativos.
 
-#### Crear lección (con imagen)
+## API de Lecciones
+
+#### Crear lección
 - **URL**: `/lesson/create_lesson`
 - **Método**: `POST`
 **FormData**:
-- `user_code`: int
-- `level_code`: int
-- `visibility_code`: int
-- `title`: string
-- `description`: string
-- `front_page`: archivo (imagen)
+- `user_code`, `level_code`, `visibility_code`, `title`, `description`, `front_page` (archivo)
 
 Respuesta: La leccion a sido creada correctamente
 
-#### Obtener lección por codigo
+#### Obtener lección por código
 - **URL**: `/lesson/get_lesson`
 - **Método**: `POST`
 ```json
@@ -183,7 +183,7 @@ Respuesta: La leccion a sido creada correctamente
 ```
 Respuesta: El codigo a sido obtenido correctamente
 
-#### Actualizar lección (con archivo)
+#### Actualizar lección
 - **URL**: `/lesson/update_lesson`
 - **Método**: `PUT`
 **FormData**:
@@ -224,28 +224,27 @@ Respuesta: Las visibilidades a sido obtenido correctamente
 ```
 Respuesta: Las lecciones han sido obtenido correctamente
 ---
+- **Descripción**:  
+API de Lecciones: Administra las lecciones dentro de un tópico. Cada lección puede contener múltiples ejercicios y materiales de apoyo.
 
-##  API de Materiales
+
+## API de Materiales
 
 #### Crear material
 - **URL**: `/material/create_material`
 - **Método**: `POST`
 **FormData**:
-- `topic_code`: int  
-- `material_type_code`: int  
-- `material_name`: string  
-- `file`: archivo  
+- `topic_code`, `material_type_code`, `material_name`, `file`
+
+Respuesta: El materia fue creado correctamente
 
 #### Crear material de ejercicio
 - **URL**: `/material/create_material_of_exercise`
 - **Método**: `POST`
 **FormData**:
-- `exercise_code`: int  
-- `material_type_code`: int  
-- `material_name`: string  
-- `file`: archivo  
+- `exercise_code`, `material_type_code`, `material_name`, `file`
 
-Respuesta: El materia fue creado correctamente
+Respuesta: El materia del ejercicio fue creado correctamente
 
 #### Eliminar material
 - **URL**: `/material/delete_material`
@@ -274,11 +273,10 @@ Respuesta: Los materiales fueron obtenidos por leccion correctamente
 
 ---
 Respuesta: Los tipos de materiales fueron obtenidos correctamente
----
 
-##  API de Exercise Materials
+## API de Materiales de Ejercicio
 
-#### Eliminar material
+#### Eliminar material de ejercicio
 - **URL**: `/exercise_material/delete_exercise_material`
 - **Método**: `POST`
 ```json
@@ -288,37 +286,40 @@ Respuesta: Los tipos de materiales fueron obtenidos correctamente
 }
 ```
 Respuesta: El materia de ejercicio fue eliminado correctamente
+---
 
---
+- **Descripción**:  
+API de Exercise Materials: Relaciona materiales específicos con ejercicios individuales para reforzar el aprendizaje práctico.
 
-##  API de Topicos
+## API de Tópicos
 
-### Crear Topico
+#### Crear tópico
 - **URL**: `/lesson/topics`
 - **Método**: `POST`
 ```json
 {
   "lesson_code": 1,
   "topics": [
-        {
-            "index": 1,
-            "topic_title": "Topic",
-            "topic_description": "Description",
-            "material_code": 4,
-            "exercises": [3, 2]
-        },
-        {
-            "index": 2,
-            "topic_title": "Topic2",
-            "topic_description": "Description2",
-            "material_code": 5,
-            "exercises": [5, 4]
-        }
-    ] 
+    {
+      "index": 1,
+      "topic_title": "Topic",
+      "topic_description": "Description",
+      "material_code": 4,
+      "exercises": [3, 2]
+    },
+    {
+      "index": 2,
+      "topic_title": "Topic2",
+      "topic_description": "Description2",
+      "material_code": 5,
+      "exercises": [5, 4]
+    }
+  ]
 }
 ```
+Respuesta: El Topico fue creado correctamente.
 
-### Eliminar topico
+#### Eliminar tópico
 - **URL**: `/topic/delete_topic`
 - **Método**: `POST`
 ```json
@@ -328,3 +329,39 @@ Respuesta: El materia de ejercicio fue eliminado correctamente
 ```
 Respuesta: Topico eliminado correctamente.
 ---
+
+- **Descripción**:  
+API de Tópicos: Organiza las unidades temáticas que agrupan lecciones relacionadas dentro del contenido de la plataforma.
+
+## API de Validación de Código
+
+### Validar código de ejercicio
+- **URL**: `/validate_code`  
+- **Método**: `POST`  
+- **Body (JSON)**:
+```json
+{
+  "enunciado": "Calcula el área de un círculo dado su radio.",
+  "codigo": "def area_circulo(r): return 3.14 * r * r"
+}
+```
+
+- **Respuesta (JSON)**:
+```json
+{
+  "respuesta": "Correcto"
+}
+```
+
+- **Descripción**:  
+Este endpoint recibe un enunciado y un bloque de código Python. Luego, utiliza la función `Code.validate(enunciado, codigo)` para validar la solución enviada. Devuelve un mensaje indicando si la solución es correcta o incorrecta, junto con el código HTTP correspondiente.
+
+- **Errores posibles**:
+  - `500 Internal Server Error`: Si hay un fallo en la ejecución del validador.
+
+## Dominios
+
+```
+Dominio local: http://127.0.0.1:5000/
+Dominio global: 
+```
