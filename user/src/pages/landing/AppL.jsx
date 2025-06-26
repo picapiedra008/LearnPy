@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react"
 // eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
+import { motion } from "framer-motion"
 import { CheckCircle, Code, Zap, BookOpen, MessageSquare, Smartphone, BarChart } from "lucide-react"
 import ParticlesContainer from "./components/ParticlesContainer"
 import Button from "./components/Button"
 import Card from "./components/Card"
-import "./AppL.css";
+import Chatbot from "./chatbot/Chatbot"
+import "./AppL.css"
 
 function App() {
   const [scrollY, setScrollY] = useState(0)
@@ -89,13 +90,13 @@ function App() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="nav-links"
           >
-            <a href="/listar" className="nav-link">
+            <a href="#" className="nav-link">
               Inicio
             </a>
             <a href="#features" className="nav-link">
               Características
             </a>
-            <a href="#courses" className="nav-link">
+            <a href="/listar" className="nav-link">
               lecciones
             </a>
             <a href="#testimonials" className="nav-link">
@@ -183,8 +184,8 @@ function App() {
                     transition={{ duration: 0.5, delay: 0.4 }}
                     className="hero-description"
                   >
-                    Aprende a programar con Python de manera efectiva con nuestros Lecciones y cursos interactivos, simuladores
-                    visuales y evaluaciones en tiempo real.
+                    Aprende a programar con Python de manera efectiva con nuestros Lecciones y cursos interactivos,
+                    simuladores visuales y evaluaciones en tiempo real.
                   </motion.p>
                 </div>
                 <motion.div
@@ -531,7 +532,7 @@ function App() {
                 </div>
                 <h2 className="section-title">Lo que dicen nuestros estudiantes</h2>
                 <p className="section-description">
-                  Miles de estudiantes han transformado sus carreras con nuestros Lecciones y cursos 
+                  Miles de estudiantes han transformado sus carreras con nuestros Lecciones y cursos
                 </p>
               </div>
             </motion.div>
@@ -931,6 +932,9 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Chatbot Component */}
+      <Chatbot />
     </div>
   )
 }
