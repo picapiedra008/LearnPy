@@ -9,7 +9,7 @@ import "./index.css";
 // Páginas
 import ListarLecciones from "./pages/listarLecciones/listarLecciones";
 import CrearLeccion from "./pages/crearLeccion/crearLeccion"; // Para crear y editar
-import VerLeccion from "./pages/verLecciones/verLeccion";
+import VerLeccion from "./pages/verLeccion/verLeccion";
 
 import Compilador from "./pages/Compilador/compilador";
 
@@ -29,8 +29,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/crear-leccion" element={<CrearLeccion />} />
         <Route path="/editar-leccion/:id" element={<CrearLeccion />} />
 
-        {/* Ver lección como estudiante */}
-        <Route path="/curso/:id" element={<VerLeccion />} />
+        {/* Ver lección c*/}
+        <Route path="/VerLecion" element={<VerLeccion />} />
 
         {/* Otros módulos */}
 
