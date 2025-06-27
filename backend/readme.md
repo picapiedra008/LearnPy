@@ -391,3 +391,9 @@ TC_LE_311: Obtener niveles
 TC_LE_113: Obtener visibilidades
 TC_LE_331: Obtener todas las lecciones de un usuario
 ```
+
+## TestCase en Detalle
+
+```
+Link directo a los TCs detallados: https://drive.google.com/file/d/1sdXPsGfAhBCOsJTxZHbQTQHB2_ljIaXk/view?usp=sharing
+```
