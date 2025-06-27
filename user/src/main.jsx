@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         {/* Ver lección c*/}
         <Route path="/VerLecion" element={<VerLeccion />} />
         <Route path="/compilador" element={<Compilador />} />   
-        <Route path="/ver-leccion/:lessonCode" element={<VerLeccion />} />
+        <Route path="/ver-leccion/:lesson_code" element={<VerLeccion />} />
         <Route path="/curso/:id" element={<VerLeccion />} />
        <Route path="/ver-ejercicio/:topicCode/:exerciseId" element={<VerEjercicio />} />
 

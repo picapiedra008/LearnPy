@@ -12,7 +12,7 @@ const VerLeccion = () => {
   const [selectedExercise, setSelectedExercise] = useState(null)
   const [showExerciseModal, setShowExerciseModal] = useState(false)
 
-  const {lesson_code} = useParams()
+  const { lesson_code } = useParams()
 
 
   const [mockCourse, setMockCourse] = useState({
@@ -62,13 +62,13 @@ const VerLeccion = () => {
           res = await fetch("http://127.0.0.1:5000/topic/get_topics", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ lesson_code:Number(lesson_codeid) }),
+            body: JSON.stringify({ lesson_code:Number(lesson_code) }),
           })
 
           let topicos = await res.json()
           console.log("topicos:", topicos)
           const topicos_con_todo = [];
-          for (const t of data) {
+          for (const t of topicos) {
             try {
                 res = await fetch("http://127.0.0.1:5000/material/get_materials_by_topic", {
                   method: "POST",
