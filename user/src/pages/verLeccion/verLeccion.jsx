@@ -1,252 +1,224 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect} from "react"
 import Ejercicio from "./ejercicio"
 import "./verLeccion.css"
+import { useParams } from "react-router-dom"
 
 // Datos de ejemplo basados en la estructura de crear lecciones
-const mockCourse = {
-  id: 1,
-  title: "Fundamentos de Python",
-  description:
-    "Aprende los conceptos básicos de Python desde cero: variables, tipos de datos, operadores y estructuras básicas de programación",
-  level: "Principiante",
-  duration: "5h 30m",
-  lessons: 12,
-  students: 1250,
-  rating: 4.8,
-  reviews: 324,
-  progress: 65,
-  coverImage: "/placeholder.svg?height=300&width=400",
-  isEnrolled: true,
-  lastAccessed: "2024-01-15",
-  topics: [
-    {
-      id: 1,
-      title: "Introducción a Python",
-      description:
-        "Conoce los fundamentos del lenguaje Python, su historia y características principales que lo hacen ideal para principiantes.",
-      duration: 45,
-      completed: true,
-      locked: false,
-      materials: [
-        {
-          id: "m1",
-          type: "document",
-          title: "Guía de instalación de Python",
-          fileExtension: "pdf",
-          url: "#",
-          size: "2.1 MB",
-        },
-        {
-          id: "m2",
-          type: "video",
-          title: "¿Qué es Python? - Introducción",
-          fileExtension: "mp4",
-          url: "#",
-          duration: "15:30",
-        },
-        {
-          id: "m3",
-          type: "image",
-          title: "Diagrama de sintaxis Python",
-          fileExtension: "png",
-          url: "#",
-          size: "850 KB",
-        },
-      ],
-      exercises: [
-        {
-          id: "e1",
-          title: "Tu primer programa",
-          description: "Crea tu primer programa en Python usando print() y variables básicas.",
-          hasCodeEditor: true,
-          starterCode:
-            "# Tu primer programa en Python\n# Escribe un programa que salude al usuario\n\nnombre = input('¿Cuál es tu nombre? ')\nprint(f'¡Hola, {nombre}! Bienvenido a Python')",
-          expectedOutput: "¿Cuál es tu nombre? Juan\n¡Hola, Juan! Bienvenido a Python",
-          completed: true,
-          documents: [
-            {
-              id: "doc1",
-              title: "ejemplo_hola_mundo.py",
-              type: "py",
-              size: "0.5 KB",
-              url: "#",
-            },
-          ],
-        },
-        {
-          id: "e1b",
-          title: "Variables básicas",
-          description: "Aprende a declarar y usar variables en Python.",
-          hasCodeEditor: true,
-          starterCode: "# Declara variables de diferentes tipos\n# Tu código aquí\n",
-          expectedOutput: "Variables creadas correctamente",
-          completed: true,
-          documents: [],
-        },
-        {
-          id: "e1c",
-          title: "Operaciones matemáticas",
-          description: "Realiza operaciones matemáticas básicas con Python.",
-          hasCodeEditor: true,
-          starterCode: "# Realiza operaciones matemáticas\n# Tu código aquí\n",
-          expectedOutput: "Resultado: 42",
-          completed: false,
-          documents: [],
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "Variables y Tipos de Datos",
-      description:
-        "Aprende a declarar variables y trabajar con los diferentes tipos de datos en Python: enteros, flotantes, cadenas y booleanos.",
-      duration: 60,
-      completed: true,
-      locked: false,
-      materials: [
-        {
-          id: "m4",
-          type: "document",
-          title: "Tipos de datos en Python",
-          fileExtension: "pdf",
-          url: "#",
-          size: "1.8 MB",
-        },
-        {
-          id: "m5",
-          type: "video",
-          title: "Variables y asignación",
-          fileExtension: "mp4",
-          url: "#",
-          duration: "20:15",
-        },
-      ],
-      exercises: [
-        {
-          id: "e2",
-          title: "Calculadora básica",
-          description: "Crea una calculadora que realice operaciones básicas con números.",
-          hasCodeEditor: true,
-          starterCode:
-            "# Calculadora básica\n# Completa las funciones para realizar operaciones matemáticas\n\ndef sumar(a, b):\n    # Tu código aquí\n    pass\n\ndef restar(a, b):\n    # Tu código aquí\n    pass\n\n# Prueba tus funciones\nnum1 = float(input('Primer número: '))\nnum2 = float(input('Segundo número: '))\n\nprint(f'Suma: {sumar(num1, num2)}')\nprint(f'Resta: {restar(num1, num2)}')",
-          expectedOutput: "Primer número: 10\nSegundo número: 5\nSuma: 15.0\nResta: 5.0",
-          completed: true,
-          documents: [
-            {
-              id: "doc2",
-              title: "Operadores matemáticos.pdf",
-              type: "pdf",
-              size: "800 KB",
-              url: "#",
-            },
-          ],
-        },
-        {
-          id: "e3",
-          title: "Conversor de tipos",
-          description: "Practica la conversión entre diferentes tipos de datos.",
-          hasCodeEditor: true,
-          starterCode: "# Conversor de tipos\n# Convierte entre diferentes tipos de datos\n\n# Tu código aquí",
-          expectedOutput: "Conversión exitosa",
-          completed: false,
-          documents: [],
-        },
-        {
-          id: "e3b",
-          title: "Tipos de datos avanzados",
-          description: "Explora listas y diccionarios en Python.",
-          hasCodeEditor: true,
-          starterCode: "# Explora listas y diccionarios\n# Tu código aquí",
-          expectedOutput: "Listas y diccionarios creados",
-          completed: false,
-          documents: [],
-        },
-      ],
-    },
-    {
-      id: 3,
-      title: "Operadores y Expresiones",
-      description:
-        "Domina los operadores aritméticos, lógicos y de comparación para crear expresiones complejas en Python.",
-      duration: 50,
-      completed: false,
-      locked: false,
-      current: true,
-      materials: [
-        {
-          id: "m6",
-          type: "document",
-          title: "Guía de operadores",
-          fileExtension: "pdf",
-          url: "#",
-          size: "1.2 MB",
-        },
-        {
-          id: "m7",
-          type: "video",
-          title: "Operadores lógicos explicados",
-          fileExtension: "mp4",
-          url: "#",
-          duration: "18:45",
-        },
-      ],
-      exercises: [
-        {
-          id: "e4",
-          title: "Validador de contraseñas",
-          description: "Crea un sistema de validación usando operadores lógicos.",
-          hasCodeEditor: true,
-          starterCode:
-            "# Sistema de validación\n# Crea un validador de contraseñas\n\ndef validar_contraseña(contraseña):\n    # La contraseña debe tener al menos 8 caracteres\n    # Debe contener al menos una letra mayúscula\n    # Debe contener al menos un número\n    \n    # Tu código aquí\n    pass\n\n# Prueba tu función\ncontraseña = input('Ingresa una contraseña: ')\nif validar_contraseña(contraseña):\n    print('Contraseña válida')\nelse:\n    print('Contraseña inválida')",
-          expectedOutput: "Ingresa una contraseña: MiContraseña123\nContraseña válida",
-          completed: false,
-          current: true,
-          documents: [
-            {
-              id: "doc3",
-              title: "validador_ejemplo.py",
-              type: "py",
-              size: "1.1 KB",
-              url: "#",
-            },
-          ],
-        },
-        {
-          id: "e4b",
-          title: "Calculadora de IMC",
-          description: "Calcula el índice de masa corporal (IMC) usando operadores.",
-          hasCodeEditor: true,
-          starterCode: "# Calcula el IMC\n# Tu código aquí",
-          expectedOutput: "IMC: 24.5",
-          completed: false,
-          documents: [],
-        },
-        {
-          id: "e4c",
-          title: "Comparador de números",
-          description: "Compara dos números y determina cuál es mayor.",
-          hasCodeEditor: true,
-          starterCode: "# Compara dos números\n# Tu código aquí",
-          expectedOutput: "El número mayor es: 10",
-          completed: false,
-          documents: [],
-        },
-      ],
-    },
-  ],
-  requirements: [
-    "No se requiere experiencia previa en programación",
-    "Computadora con acceso a internet",
-    "Ganas de aprender",
-  ],
-}
 
 const VerLeccion = () => {
   const [activeTab, setActiveTab] = useState("contenido")
   const [selectedExercise, setSelectedExercise] = useState(null)
   const [showExerciseModal, setShowExerciseModal] = useState(false)
+
+  const {lesson_code} = useParams()
+
+
+  const [mockCourse, setMockCourse] = useState({
+    id: 1,
+    title: "Fundamentos de Python",
+    description:
+      "Aprende los conceptos básicos de Python desde cero: variables, tipos de datos, operadores y estructuras básicas de programación",
+    level: "Principiante",
+    visibility:"Borrador",
+    duration: "5h 30m",
+    lessons: 12,
+    students: 1250,
+    rating: 4.8,
+    reviews: 324,
+    progress: 65,
+    coverImage: "/placeholder.svg?height=300&width=400",
+    isEnrolled: true,
+    lastAccessed: "2024-01-15",
+    topics: [
+     
+    ],
+    requirements: [
+      "No se requiere experiencia previa en programación",
+      "Computadora con acceso a internet",
+      "Ganas de aprender",
+    ],
+  })
+
+  
+
+
+  useEffect(() => {
+      const obtenerLeccion = async () => {
+        try {
+          //leccion
+          let res = await fetch("http://127.0.0.1:5000/lesson/get_lesson", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lesson_code:Number(lesson_code) }),
+          })
+
+          let leccion = await res.json()
+          console.log("Leccion:", leccion)
+          
+          //topicos   
+
+          res = await fetch("http://127.0.0.1:5000/topic/get_topics", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ lesson_code:Number(lesson_codeid) }),
+          })
+
+          let topicos = await res.json()
+          console.log("topicos:", topicos)
+          const topicos_con_todo = [];
+          for (const t of data) {
+            try {
+                res = await fetch("http://127.0.0.1:5000/material/get_materials_by_topic", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ topic_code: Number(t.topic_code) }),
+                });
+                const materiales_topicos = await res.json();
+                console.log("materiales topico", ":", materiales_topicos);
+                let to_mat = []
+                if(res.status !== 204){
+                  for (const tm of materiales_topicos){
+                    to_mat.push({
+                      id:"t"+tm.material_code,
+                      type:tm.material_type_name,
+                      title:tm.material_name,
+                      url:tm.material_rute,
+                      fileExtension:tm.material_type_name,
+                      size: "2.1 MB"
+                    })
+                  }
+                }
+
+
+                res = await fetch("http://127.0.0.1:5000/exercise/get_exercises", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ topic_code: Number(t.topic_code) }),
+                });
+                let excerc = []
+                const ejercicios = await res.json();
+                console.log("ejercicios para topic", t.topic_code, ":", ejercicios);
+                for (const e of ejercicios){
+                  res = await fetch("http://127.0.0.1:5000/exercise_material/get_exercise_materials", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ exercise_code: Number(e.exercise_code) }),
+                  });
+                  let ex_mat = [];
+                  if(res.status !== 204){
+                      const materiales_ejercicios = await res.json();
+                      console.log("materiales", ":", materiales_ejercicios);
+                      if(materiales_ejercicios[0]){
+                        for (const em of materiales_ejercicios){
+                          ex_mat.push({
+                            id:Date.now().toString() + Math.random(),
+                            type:em.material_type_name,
+                            title:em.material_name,
+                            size: "0.5 KB",
+                            url:em.material_rute,
+                          })
+                        }
+                      }
+                  }
+                  
+                  excerc.push({
+                    id: Date.now().toString() + Math.random(),
+                    title: e.exercise_title,
+                    description:e.exercise_instructions,
+                    documents:ex_mat,
+                    hasCodeEditor:e.with_python_code,
+                    starterCode:e.exercise_initial_python_code,
+                    expectedOutput:e.exercise_answer,
+                    completed:true
+
+                  });
+
+                }
+
+              topicos_con_todo.push({
+                id: Date.now().toString() + Math.random(),
+                title: t.topic_title,
+                description: t.topic_description,
+                duration: 30,
+                materials: to_mat,
+                exercises: excerc,
+                completed: true,
+                locked:false
+              });
+            } catch (error) {
+              console.error("Error al obtener los ejercicios:", error);
+            }
+          }
+
+
+          //visibilidades 
+          res = await fetch("http://127.0.0.1:5000/lesson/get_visibilities", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          })
+
+          let visibilidades = await res.json()
+          let visibilidad = visibilidades.find(v => v.visibility_code === leccion.visibility_code);
+          let nombre_visibilidad = visibilidad ? visibilidad.visibility_name : "Borrador";
+
+
+          //niveles 
+          res = await fetch("http://127.0.0.1:5000/lesson/get_levels", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          })
+
+          let levels = await res.json()
+
+          let nivel = levels.find(l => l.level_code === leccion.level_code);
+          let nombre_nivel = nivel ? nivel.level_name : "Principiante";
+
+          let lecciones_totales = 0
+          for(const t of topicos_con_todo){
+            lecciones_totales = lecciones_totales + t.exercises.length;
+          }
+
+
+          setMockCourse({
+            id: leccion.lesson_code,
+            title: leccion.lesson_title,
+            description:leccion.lesson_description,
+            level: nombre_nivel,
+            visibility:nombre_visibilidad,
+            duration: "5h 30m",
+            lessons: lecciones_totales,
+            students: 1250,
+            rating: 4.8,
+            reviews: 324,
+            progress: 65,
+            coverImage: leccion.coverImage,
+            isEnrolled: true,
+            lastAccessed: "2024-01-15",
+            topics: topicos_con_todo,
+            requirements: [
+              "No se requiere experiencia previa en programación",
+              "Computadora con acceso a internet",
+              "Ganas de aprender",
+            ],
+          })
+
+
+        
+        } catch (error) {
+          console.error("Error al obtener lección:", error)
+        }
+      }
+
+      obtenerLeccion()
+  }, [lesson_code])
+
+
+
+
+
+
 
   const getMaterialIcon = (type) => {
     switch (type) {
@@ -451,7 +423,7 @@ const VerLeccion = () => {
                   </div>
                   <div className="badge-text">
                     <p>Visibilidad</p>
-                    <p>Público</p>
+                    <p>{mockCourse.visibility}</p>
                   </div>
                 </div>
               </div>
