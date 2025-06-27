@@ -762,7 +762,7 @@ const CrearLeccion = () => {
       for(const exercise of topic.exercises){
 
         if(exercise.code == -1){
-          createExercise(exercise)
+          createExercise(exercise,topic.topic_code)
         }else{
           updateExercise(exercise,topic.topic_code)
         }
