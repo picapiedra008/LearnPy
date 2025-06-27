@@ -365,3 +365,29 @@ Este endpoint recibe un enunciado y un bloque de código Python. Luego, utiliza 
 Dominio local: http://127.0.0.1:5000/
 Dominio global: 
 ```
+
+## TCs de Alto Nivel del BackEnd
+
+```
+TC_VA_001: Validar código correcto contra enunciado válido
+TC_VA_011: Enviar código que no cumple con el enunciado
+TC_VA_111: Verificar si faltan campos en la solicitud
+TC_VA_101: Tipos de datos incorrectos
+TC_VA_110: Verificar error interno simulado
+TC_VA_102: Validación de código en blanco
+TC_EX_201: Crear ejercicio exitosamente
+TC_EX_020: Crear ejercicio sin campo obligatorio
+TC_EX_202: Obtener ejercicios por topic
+TC_EX_022: Actualizar ejercicio
+TC_EX_222: Eliminar ejercicio
+TC_LE_003: Crear lección con archivo
+TC_LE_301: Crear lección sin archivo
+TC_LE_333: Obtener una lección
+TC_LE_030: Agregar temas a lección
+TC_LE_300: Actualizar lección
+TC_LE_331: Eliminar lección individual
+TC_LE_330: Eliminar múltiples lecciones
+TC_LE_311: Obtener niveles
+TC_LE_113: Obtener visibilidades
+TC_LE_331: Obtener todas las lecciones de un usuario
+```
