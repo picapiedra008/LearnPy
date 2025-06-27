@@ -167,6 +167,7 @@ const ListarLecciones = () => {
 
   const handleView = (code) => navigate(`/ver-leccion/${code}`)
   const handleEdit = (code) => navigate(`/editar-leccion/${code}`)
+  // eslint-disable-next-line no-unused-vars
   const handleDelete = (code) => navigate(`/eliminar-leccion/${code}`)
   const handleSoftDelete = (code) => {
   if (window.confirm("¿Estás seguro de que deseas eliminar esta lección?")) {

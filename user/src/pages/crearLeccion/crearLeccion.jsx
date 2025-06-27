@@ -441,6 +441,7 @@ const CrearLeccion = () => {
     setTopics(updatedTopics)
   }
 
+  // eslint-disable-next-line no-unused-vars
   const getTotalDuration = () => {
     return topics.reduce((total, topic) => total + topic.duration, 0)
   }

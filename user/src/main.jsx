@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import VerEjercicio from "./pages/verLeccion/verEjercicio";
 
 // Componentes principales
 import App from "./App";
@@ -31,15 +32,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
         {/* Ver lección c*/}
         <Route path="/VerLecion" element={<VerLeccion />} />
-
-        {/* Otros módulos */}
-
-        <Route path="/compilador" element={<Compilador />} />
-        
+        <Route path="/compilador" element={<Compilador />} />   
         <Route path="/ver-leccion/:lessonCode" element={<VerLeccion />} />
-
-        {/* Ver lección como estudiante */}
         <Route path="/curso/:id" element={<VerLeccion />} />
+       <Route path="/ver-ejercicio/:topicCode/:exerciseId" element={<VerEjercicio />} />
 
       </Routes>
     </Router>
